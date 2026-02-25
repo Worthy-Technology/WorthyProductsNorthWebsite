@@ -1,0 +1,388 @@
+{% comment %} START Unit Price System 3.0 – compact pill, GST toggle {% endcomment %}
+<script>
+window.upFreeze = false;
+
+
+window.calculateUnitPrices = function () {
+  const GST_RATE = 0.15;
+  const cards = document.querySelectorAll(
+  '.product-card-wrapper, .product-card, .card-product, .grid__item, .product__info-wrapper, .product__info-container'
+);
+
+  if (!cards.length) return;
+
+ cards.forEach(card => {
+    // 1. CLEANUP
+    card.querySelectorAll('.unit-price-js').forEach(el => el.remove());
+
+    // 2. GET TITLE
+    let titleEl = card.querySelector('.card__heading a'); 
+    if (!titleEl) {
+      titleEl = document.querySelector('.product__info-container h1'); 
+    }
+    if (!titleEl) return;
+    const title = titleEl.textContent.toLowerCase();
+
+    // 3. FIND PRICE ELEMENT (Defined ONCE here)
+    const priceEl =
+      card.querySelector('.price-item--sale.price-item--last') ||
+      card.querySelector('.price-item--regular.price-item--last') ||
+      card.querySelector('.price-item--regular');
+
+    if (!priceEl) return;
+
+    /* --- PACK QTY DETECTION --- */
+    let packQty = 1;
+
+    // A. Check Odoo Data
+    if (priceEl.dataset.packCount) {
+       packQty = parseFloat(priceEl.dataset.packCount);
+    } 
+    // B. Fallback to Title Regex
+    else {
+    let m = null;
+    if ((m = title.match(/(\d+)\s*x\s*(\d+)/))) {
+    // If format is 1x12, use 12. If format is 12x50g, use 12 (first number).
+    packQty = parseInt(m[1]) === 1 ? parseInt(m[2]) : parseInt(m[1]);
+    } else if ((m = title.match(/(?:ctn|carton|case|tray|pack|pk)\s*(?:of\s*)?(\d+)/))) {
+    packQty = parseInt(m[1]);
+    } else if ((m = title.match(/(\d+)\s*(ctn|carton|case|tray|pack|pk|s\b)/))) {
+    packQty = parseInt(m[1]);
+    } else {
+              // Explicitly default to 1 if no UOM pattern is found
+              packQty = 1; 
+            }
+    }
+    
+    if (!Number.isFinite(packQty) || packQty < 1) packQty = 1;
+
+    /* --- BASE PRICE --- */
+    // Uses the same priceEl defined above
+    const basePrice = parseFloat(priceEl.textContent.replace(/[^0-9.]/g, ''));
+    if (!basePrice) return;
+
+    /* --- UNIT PRICE MATH --- */
+    const unitEx = basePrice / packQty;
+    const unitInc = unitEx * (1 + GST_RATE);
+
+    /* --- SAVINGS --- */
+    let savePerUnitEx = null;
+    let savePerUnitInc = null;
+
+    const compareEl = card.querySelector('s.price-item--regular, s.price-item--sale');
+    if (compareEl) {
+      const compareRaw = compareEl.textContent.replace(/[^0-9.,]/g, '').replace(/,/g, '');
+      const comparePrice = parseFloat(compareRaw);
+
+      if (Number.isFinite(comparePrice) && comparePrice > basePrice) {
+        const compareUnitEx = packQty > 1 ? comparePrice / packQty : comparePrice;
+        const saved = compareUnitEx - unitEx;
+
+        if (saved > 0.005) {
+          savePerUnitEx = saved;
+          savePerUnitInc = saved * (1 + GST_RATE); 
+        }
+      }
+    }
+
+
+/* Product Page Design */
+    const isProductPage = document.querySelector('.product__info-wrapper') !== null;
+    
+    // NEW: Check global preference before building HTML
+    const savedMode = localStorage.getItem('worthy_gst_mode') || 'exc';
+    const isInc = savedMode === 'inc';
+
+   /* HTML BUILD */
+      const wrap = document.createElement('div');
+      wrap.className = isProductPage ? 'unit-price-js up-product' : 'unit-price-js up-grid';
+
+      wrap.innerHTML = `
+      <div class="unit-price-box">
+
+      <div class="up-row up-row--main">
+      <span class="up-label">Unit Price</span>
+      <span class="up-value">
+      $<span class="js-unit-main"
+      data-ex="${unitEx.toFixed(4)}"
+      data-inc="${unitInc.toFixed(4)}">${isInc ? unitInc.toFixed(2) : unitEx.toFixed(2)}</span>
+      <span class="up-gst">${isInc ? 'Inc GST' : 'Ex GST'}</span>
+      </span>
+      </div>
+
+      ${savePerUnitEx ? `
+      <div class="up-save"
+        data-ex="${savePerUnitEx.toFixed(4)}"
+      data-inc="${savePerUnitInc ? savePerUnitInc.toFixed(4) : ''}">
+      Save $${isInc ? savePerUnitInc.toFixed(2) : savePerUnitEx.toFixed(2)}/Unit ${isInc ? 'Inc GST' : 'Ex GST'}
+      </div>` : ''}
+
+      <div class="up-switch-row">
+      <span class="up-switch-label">Ex GST</span>
+
+      <label class="up-switch">
+      <input type="checkbox" class="up-toggle" ${isInc ? 'checked' : ''} />
+      <span class="up-slider"></span>
+      </label>
+
+      <span class="up-switch-label">Inc GST</span>
+      </div>
+
+      </div>
+      `;
+
+    priceEl.parentElement.appendChild(wrap);
+  });
+};
+
+
+
+
+/* RE-RUN ON PAGE EVENTS */
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.upFreeze) window.calculateUnitPrices();
+
+  // Safety retries for async-loaded content (e.g. related products slider)
+  let upBootCount = 0;
+  const upBoot = setInterval(() => {
+    if (typeof window.calculateUnitPrices === 'function' && !window.upFreeze) {
+      window.calculateUnitPrices();
+    }
+    upBootCount++;
+    if (upBootCount >= 6) {
+      clearInterval(upBoot); // stop after ~3 seconds
+    }
+  }, 500);
+});
+
+['collection:updated','facet:updated','ajaxify:loaded','ajaxify:afterAppend','wholesale:prices-updated']
+  .forEach(ev => document.addEventListener(ev, () => {
+    if (!window.upFreeze) window.calculateUnitPrices();
+  }));
+
+
+/* GST SWITCH HANDLER */
+document.addEventListener('change', function (evt) {
+  const input = evt.target.closest('.up-toggle');
+  if (!input) return;
+
+  window.upFreeze = true;
+  setTimeout(() => (window.upFreeze = false), 300);
+
+  // 1. Save global preference
+  const newMode = input.checked ? 'inc' : 'exc';
+  localStorage.setItem('worthy_gst_mode', newMode);
+
+  // 2. Update ALL products on the page instantly
+  document.querySelectorAll('.unit-price-box').forEach(box => {
+    const boxInput = box.querySelector('.up-toggle');
+    if (boxInput && boxInput !== input) boxInput.checked = input.checked;
+
+    const mainSpan = box.querySelector('.js-unit-main');
+    const gstLabel = box.querySelector('.up-gst');
+    const saveEl = box.querySelector('.up-save');
+
+    if (input.checked) {
+      mainSpan.textContent = parseFloat(mainSpan.dataset.inc).toFixed(2);
+      gstLabel.textContent = 'Inc GST';
+      if (saveEl) {
+        const inc = parseFloat(saveEl.dataset.inc);
+        saveEl.textContent = `Save $${inc.toFixed(2)}/Unit Inc GST`;
+      }
+    } else {
+      mainSpan.textContent = parseFloat(mainSpan.dataset.ex).toFixed(2);
+      gstLabel.textContent = 'Ex GST';
+      if (saveEl) {
+        const ex = parseFloat(saveEl.dataset.ex);
+        saveEl.textContent = `Save $${ex.toFixed(2)}/Unit Ex GST`;
+      }
+    }
+  });
+});
+
+/* AFTER SCROLL OR AJAX — OBSERVE DOM */
+const grid = document.querySelector('#product-grid');
+
+if (grid && window.MutationObserver) {
+  const mo = new MutationObserver(mutations => {
+    if (window.upFreeze) return;
+
+    let needsUpdate = false;
+
+    mutations.forEach(m => {
+      m.addedNodes.forEach(n => {
+        if (n.nodeType === 1 && n.classList.contains('js-pagination__item')) {
+          needsUpdate = true;
+        }
+      });
+    });
+
+    if (needsUpdate) {
+      window.calculateUnitPrices();
+    }
+  });
+
+  mo.observe(grid, { childList: true, subtree: true });
+}
+</script>
+
+<style>
+
+.unit-price-box {
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04); /* Subtle premium lift */
+  padding: 12px;
+  border-radius: 8px; /* Slightly sharper, more modern corners */
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 9999;
+}
+
+/* Unit price row */
+.up-row--main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap:5px;
+}
+
+.up-value {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Savings */
+.up-save {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+/* SWITCH ROW */
+.up-switch-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Switch labels */
+.up-switch-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* Switch */
+.up-switch {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  display: inline-block;
+}
+
+.up-switch input { display: none; }
+
+.up-slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 20px;
+  transition: .2s;
+}
+
+.up-slider:before {
+  content: "";
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: #fff;
+  transition: .2s;
+}
+
+/* ON */
+.up-toggle:checked + .up-slider {
+  background: #2e7d32;
+}
+
+.up-toggle:checked + .up-slider:before {
+  transform: translateX(18px);
+}
+
+/* Make sure switch clickable over card overlay */
+.up-switch,
+.up-toggle {
+  position: relative;
+  z-index: 100000;
+  pointer-events: auto !important;
+}
+
+
+/* MOBILE FIX FOR UNIT PRICE BOX */
+@media (max-width: 480px) {
+
+  /* Unit price row stacks cleaner */
+  .up-row--main {
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .up-label {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .up-value {
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  /* Make the green box padding smaller */
+  .unit-price-box {
+    padding: 10px;
+    border-radius: 12px;
+    gap: 6px;
+  }
+
+  /* Savings text stays centered */
+  .up-save {
+    text-align: left;
+    font-size: 12px;
+    white-space: normal;
+    line-height: 1.3;
+  }
+
+  /* Switch row remains centered */
+  .up-switch-row {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Reduce switch size slightly */
+  .up-switch {
+    width: 36px;
+    height: 20px;
+  }
+
+  .up-switch .up-slider:before {
+    height: 14px;
+    width: 14px;
+    top: 3px;
+    left: 3px;
+  }
+}
+
+</style>
+{% comment %} End Unit Price Codes - Pratham {% endcomment %}

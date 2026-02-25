@@ -1,0 +1,970 @@
+{% comment %} Wholesale_Hub_Product_Visibility_Resource_Page Start {% endcomment %}
+{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility" %}{%- endcapture -%}
+{%- if hide_resource == "true" -%}
+  {% render "orbit_wholesale_page_replacement" %}
+{%- else -%}
+<!-- /templates/collection.liquid -->
+{% assign use_theme_colors = false %}
+{% if settings.colors_text and settings.colors_background_1 and settings.colors_background_2 and settings.colors_accent_1 and settings.colors_accent_2 %}
+  {% assign use_theme_colors = true %}
+{% endif %}
+<script  src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<style>
+  {% if use_theme_colors == true %}
+  {% comment %}Theme Color Scheme{% endcomment %}
+  .who-qof-wrapper {
+    --text-color: {{ settings.colors_text }};
+    --text-color-rgb: {{ settings.colors_text | color_extract: 'red' }},{{ settings.colors_text | color_extract: 'green' }},{{ settings.colors_text | color_extract: 'blue' }};
+    --background-color-1: {{ settings.colors_background_1 }};
+    --background-color-2: {{ settings.colors_background_2 }};
+    --accent-1: {{ settings.colors_accent_1 }};
+    --accent-2: {{ settings.colors_accent_2 }};
+  }
+  {% else %}
+  {% comment %}Light Color Scheme{% endcomment %}
+  .who-qof-wrapper {
+    --text-color: #3a3a3a;
+    --text-color-rgb: 58,58,58;
+    --background-color-1: white;
+    --background-color-2: grey;
+    --accent-1: #2c6ecb;
+    --accent-2: #24249a;
+  }
+  {% endif %}
+
+  .who-qof-wrapper a, .who-qof-wrapper a:link, .who-qof-wrapper a:visited {
+    color: var(--text-color) !important;
+    text-decoration: none;
+    border: none;
+  }
+
+  .who-qof-wrapper a:hover {
+    color: var(--text-color) !important;
+    text-decoration: underline;
+  }
+
+  .action-bar {
+    margin: 15px 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .action-bar.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .action-bar h1 {
+    margin: 0;
+  }
+
+  .action-bar h1:after {
+    display: none;
+  }
+
+  .action-bar.top .button {
+    margin: 0 0 0 auto;
+  }
+
+  /* Additional styles for table */
+  table.who-qof-table {
+    margin: 15px 0;
+    width: 100%;
+    color: var(--text-color);
+    background-color: var(--background-color-1);
+    table-layout: auto !important;
+    border-collapse: collapse;
+  }
+
+  table.who-qof-table th, table.who-qof-table td {
+    border: none;
+  }
+
+  table.who-qof-table th {
+    text-align: left;
+    padding-bottom: 1.8rem;
+    opacity: .85;
+    font-weight: 400;
+    border-bottom: 0.1rem solid var(--text-color);
+    border-bottom-color: rgba(var(--text-color-rgb), 0.08);
+    font-size: 1rem;
+    letter-spacing: .13rem;
+    text-transform: uppercase;
+    color: rgba(var(--text-color-rgb), .75);
+  }
+
+  table.who-qof-table tr th:first-child {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  table.who-qof-table tr td:last-child, table.who-qof-table tr th:last-child {
+    position: sticky;
+    right: 0;
+    z-index: auto;
+    background-color: var(--background-color-1);
+    padding-right: 0;
+  }
+
+  table.who-qof-table tr:first-child th:after, table.who-qof-table tr:first-child td:after {
+    display: none;
+  }
+
+  table.who-qof-table tr.row-variant td:first-child {
+    border-left: 10px solid var(--accent-1);
+    padding: 7px;
+  }
+
+  table.who-qof-table td {
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 6px;
+  }
+
+  table.who-qof-table td + td, table.who-qof-table th + th {
+    padding-left: 12px;
+  }
+
+  table.who-qof-table td.img {
+    background-color: var(--background-color-1) !important;
+    min-width: 75px;
+    text-align: center;
+    padding-left: 0;
+  }
+
+  table.who-qof-table td.img img {
+    vertical-align: middle;
+  }
+
+  table.who-qof-table th.price-header {
+    width: 9em;
+    text-align: right;
+    padding-left: 0;
+    padding-right: 12px;
+  }
+
+  .js-qty {
+    margin: 0 auto !important;
+    color: var(--text-color);
+  }
+
+  #pagination {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .p-hidden, .v-hidden {
+    pointer-events: none;
+  }
+
+  .row-variant > td, .row-variant > td * {
+    margin-top: 0 !important;
+    opacity: 1 !important;
+    transition: 100ms all, 250ms opacity ease-in;
+  }
+
+  .row-variant.p-hidden > td, .row-variant.p-hidden > td * {
+    margin-top: -150px !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    transition: 250ms all, 100ms opacity ease-out;
+  }
+
+  .show-variants, .hide-variants {
+    width: auto !important;
+  }
+
+  a.show-variants:link, a.show-variants:hover, a.show-variants:focus, a.hide-variants:link, a.hide-variants:hover, a.hide-variants:focus {
+    color: var(--accent-1) !important;
+    text-decoration: none;
+    border-color: transparent !important;
+    opacity: 1;
+    padding: 6px;
+  }
+
+  .who-disc {
+    padding: 0 0.5em;
+    display: inline-block;
+  }
+
+  .who-disc::after {
+    content: "";
+    border-bottom: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    width: 0.5em;
+    height: 0.5em;
+    transform: translate(-1px, -1px);
+    display: inline-block;
+    transition: 250ms transform;
+  }
+
+  .show-variants .who-disc::after {
+    transform: rotate(-45deg);
+  }
+
+  .hide-variants .who-disc::after {
+    transform: rotate(45deg);
+  }
+
+  .who-qof-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .who-qof-scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  quantity-input.quantity.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    table.who-qof-table td.img {
+      min-width: 100px;
+    }
+  }
+
+  @media (max-width: 960px) {
+    table {
+      font-size: 14px;
+    }
+
+    .show-variants, .hide-variants {
+      font-size: 12px;
+      padding: 0;
+      width: 6em !important;
+    }
+
+  }
+  {% if use_theme_colors == false %}
+  .page-width {
+    padding: 0;
+  }
+
+  table.who-qof-table th {
+    font-size: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* visually hidden fill for legacy themes */
+  .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    word-wrap: normal !important;
+  }
+
+  /* quantity fill for legacy themes */
+  .quantity {
+    color: var(--text-color);
+    position: relative;
+    width: 133px;
+    display: flex;
+    min-height: 36px;
+    opacity: .85;
+    border-right: 1px solid transparent;
+  }
+
+  .quantity:before {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 2px;
+  }
+
+  .quantity:after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+    border: .1rem solid transparent;
+    box-shadow: 0 0 0 1px var(--text-color);
+    transition: box-shadow 500ms ease;
+    z-index: 1;
+    border-radius: 2px;
+  }
+
+  .quantity__input {
+    color: currentColor;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: center;
+    background-color: transparent !important;
+    border: 0;
+    padding: 0 .5rem;
+    width: 100%;
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0 !important;
+  }
+
+  input[type=number].quantity__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  .quantity__button {
+    width: 40px;
+    flex-shrink: 0;
+    font-size: 1.4rem;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    padding: 0;
+  }
+
+  .quantity__button svg {
+    width: 0.8rem;
+    pointer-events: none;
+    fill: currentColor;
+  }
+
+  .page-width {
+    padding-left: 55px;
+    padding-right: 55px;
+  }
+
+  .rte a:not(.image-link):after {
+    display: none;
+  }
+  .rte tbody tr {
+    border:none;
+  }
+
+  @media only screen and (max-width: 749px) {
+    .page-width {
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+  }
+  {% endif %}
+</style>
+
+<div id="collection" class="rte wrapper main content main-wrapper page-width">
+<div style="max-width: 1100px; margin: auto;">
+
+{% paginate collection.products by 100 %}
+
+{% if collection.products_count > 0 %}
+  <div class="action-bar top">
+    <h1>{% if template contains 'page' %}{{ page.title }}{% else %}{{ collection.title }}{% endif %}</h1>
+    <button class=" add-to-cart-order-form button button--primary btn btn-primary btn-lg  btn_c action-button action_button submit solid cart-checkout-button ProductForm__AddToCart Button Button--primary"
+           type="submit"
+            value="Add to cart">Add to Cart</button>
+  </div>
+{% else %}
+  <h1>{% if template contains 'page' %}{{ page.title }}{% else %}{{ collection.title }}{% endif %}</h1>
+{% endif %}
+
+{% if template contains 'page' and page.content.size > 0 %}
+  <div class="rte">
+    {{ page.content }}
+  </div>
+{% elsif collection.description.size > 0 %}
+  <div class="rte">
+    {{ collection.description }}
+  </div>
+{% endif %}
+
+
+<div id="collection-filters-container" class="cf-select-wrapper"></div>
+
+{% if collection.products_count > 0 %}
+  <div class="who-qof-wrapper">
+  <div class="who-qof-scroll">
+  <table class="who-qof-table">
+  <thead>
+    <tr>
+      <th colspan="2">Product</th>
+      <th>SKU</th>
+      <th class="price-header">Price</th>
+      <th style="text-align: right;">Quantity</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for product in collection.products %}
+      {% comment %} Wholesale_Hub_Product_Visibility_For_Loop Start {% endcomment %}
+      {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: product %}{%- endcapture -%}
+      {%- if hide_resource == "true" -%}
+        {% continue %}
+      {%- endif -%}
+      {% comment %} Wholesale_Hub_Product_Visibility_For_Loop End {% endcomment %}
+    {% unless product.type == "Gift Card" %}
+      {% comment %}
+      {% include "saw_product_display" with product %}
+      {% if saw_display == "SHOW" %}
+      {% endif %}
+      {% endcomment %}
+
+   {% comment %} Wholesale_Hub_Product_Prices Start {% endcomment %}
+    {% assign base_product = product %}
+    {% assign base_variant = product.selected_or_first_available_variant %}
+    {% assign WCNonFractionalCurrencies = "AFN, ALL, BIF, CLP, DJF, GNF, ISK, JPY, KMF, KRW, LAK, LBP, MGA, MMK, PYG, RSD, RWF, SLL, STD, UGX, VND, VUV, XAF, XOF, XPF, YER" | split: ", "%}
+
+    {% assign WCCartUsingNonFractionalCurrency = false %}
+    {% for non_fractional_currency in WCNonFractionalCurrencies %}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
+    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: non_fractional_currency %}{%- endcapture -%}
+    {%- if hide_resource == "true" -%}
+      {% continue %}
+    {%- endif -%}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
+
+      {% if cart.currency.iso_code == non_fractional_currency %}
+        {% assign WCCartUsingNonFractionalCurrency = true %}
+      {% endif %}
+    {% endfor %}
+
+
+    {% assign WCCartUsingSecondaryMarketDiscount = false %}
+    {% unless shop.metafields.sawholesale.primary_market_id == blank %}
+      {% if localization.market.id != shop.metafields.sawholesale.primary_market_id %}
+        {% assign WCCartUsingSecondaryMarketDiscount = true %}
+      {% endif %}
+    {% endunless%}
+
+    {% if shop.metafields.sawholesale['base_price'] == blank %}
+      {% assign base_price = 'compare_at_price' %}
+    {% else %}
+      {% assign base_price = shop.metafields.sawholesale['base_price'] %}
+    {% endif %}
+
+    {% assign saw_discount = 0 %}{% assign saw_has_discount = false %}
+
+    {% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == false %}
+      {% for mf in base_product.metafields.sawholesale %}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
+    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: mf %}{%- endcapture -%}
+    {%- if hide_resource == "true" -%}
+      {% continue %}
+    {%- endif -%}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
+
+        {% capture product_customer_tag %}{{ mf | first | replace: 'discount_', '' }}{% endcapture %}
+        {% if customer.tags contains product_customer_tag %}
+          {% assign saw_has_discount = true %}
+          {% assign discount_key = product_customer_tag | prepend: 'discount_' %}
+          {% assign price_key = product_customer_tag | prepend: 'price_' %}
+          {% assign saw_discount = base_product.metafields.sawholesale[discount_key] | divided_by: 100.0 %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == true %}
+      {% for collection in base_product.collections %}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
+    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: collection %}{%- endcapture -%}
+    {%- if hide_resource == "true" -%}
+      {% continue %}
+    {%- endif -%}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
+
+        {% for discount in collection.metafields.sawholesale.discounts.value %}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
+    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: discount %}{%- endcapture -%}
+    {%- if hide_resource == "true" -%}
+      {% continue %}
+    {%- endif -%}
+    {%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
+
+          {% if customer.tags contains discount.tag %}
+            {% assign saw_has_discount = true %}
+            {% assign this_discount = discount.discount_percent | divided_by: 100.0 %}
+            {% if this_discount > saw_discount %}{% assign saw_discount = this_discount %}{% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+
+    {% comment %}
+      Rather than calculating the percentage remaining after a discount the secondary
+      markets logic uses the raw discount percentage to calculate the saw_variant_price
+      For a 10% discount:
+        In the primary market the saw_discount would be: 90%
+        In the secondary market the saw_discount would be: 10%
+    {% endcomment %}
+    {% unless WCCartUsingSecondaryMarketDiscount %}
+      {% assign saw_discount = 1 | minus: saw_discount %}
+    {% endunless %}
+
+    {% if WCCartUsingSecondaryMarketDiscount == true or base_price == 'price' or base_variant.compare_at_price == blank or base_variant.compare_at_price == 0 or base_variant.compare_at_price < base_variant.price %}
+      {% assign saw_variant_compare_at_price = base_variant.price %}
+    {% else %}
+      {% assign saw_variant_compare_at_price = base_variant.compare_at_price %}
+    {% endif %}
+
+    {% assign cpe = shop.metafields.sawholesale['cpe'] | default: "true" %}
+
+    {% if base_variant.metafields.sawholesale[price_key] != blank and cpe == "true" %}
+      {% assign saw_variant_price = base_variant.metafields.sawholesale[price_key] %}
+    {% else %}
+      {% comment %}
+        For a 10% discount on a variant price of 100:
+          In the primary market the saw_variant_price would be: 100 * 0.90 = 90
+          In the secondary market the saw_variant_price would be: 100 * 0.10 = 10
+          So saw_variant_price is not made available to the global scope in a secondary
+          market. Doing so might cause strange behaviour if not properly accounted for.
+      {% endcomment %}
+      {% if WCCartUsingSecondaryMarketDiscount %}
+        {% assign WCVariant_DiscountAmount = saw_variant_compare_at_price | times: saw_discount %}
+      {% else %}
+        {% assign saw_variant_price = saw_variant_compare_at_price | times: saw_discount %}
+        {% assign WCVariant_DiscountAmount = 0 %}
+      {% endif %}
+    {% endif %}
+    {% if WCCartUsingSecondaryMarketDiscount %}
+      {% assign WCVariant_Price = saw_variant_compare_at_price %}
+    {% else %}
+      {% assign WCVariant_Price = saw_variant_price %}
+    {% endif %}
+
+    {% if saw_has_discount == false or saw_variant_price >= saw_variant_compare_at_price %}
+      {% assign WCProduct_Price = base_product.price %}
+      {% assign WCProduct_ComparePrice = base_product.compare_at_price %}
+      {% assign WCProduct_PriceMin = base_product.price_min %}
+      {% assign WCProduct_ComparePriceMin = base_product.compare_at_price_min %}
+      {% assign WCProduct_PriceMax = base_product.price_max %}
+      {% assign WCProduct_ComparePriceMax = base_product.compare_at_price_max %}
+      {% assign WCProduct_VariantPrice = base_variant.price %}
+      {% assign WCProduct_VariantComparePrice = base_variant.compare_at_price %}
+    {% else %}
+      {% assign WCProduct_Price =  WCVariant_Price | minus: WCVariant_DiscountAmount %}
+      {% assign WCProduct_PriceMin = base_product.price_min | times: saw_discount %}
+      {% assign WCProduct_PriceMax = base_product.price_max | times: saw_discount %}
+      {% assign WCProduct_ComparePrice = saw_variant_compare_at_price %}
+      {% if base_product.compare_at_price_min != 0 %}{% assign WCProduct_ComparePriceMin = base_product.compare_at_price_min %}{% else %}{% assign WCProduct_ComparePriceMin = base_product.price_min %}{% endif %}
+      {% if base_product.compare_at_price_max != 0 %}{% assign WCProduct_ComparePriceMax = base_product.compare_at_price_max %}{% else %}{% assign WCProduct_ComparePriceMax = base_product.price_max %}{% endif %}
+      {% assign WCProduct_VariantPrice = WCVariant_Price | minus: WCVariant_DiscountAmount %}
+      {% assign WCProduct_VariantComparePrice = saw_variant_compare_at_price %}
+    {% endif %}
+    {% comment %} Wholesale_Hub_Product_Prices End {% endcomment %}
+
+    {% if saw_discount < 1 %} <!-- only discounted -->
+    {% endif %}
+
+    {% if product.available %}
+      {% if product.variants.size > 1 %}
+        {% assign product_featured_image = product.featured_image %}
+
+      <tr>
+        <td class="img">
+          <a href="{{ product.url | collection }}">
+            <img src="{{ product_featured_image | img_url: 'small' }}"
+                 alt="{{ product_featured_image.alt | escape }}" />
+          </a>
+        </td>
+
+        <td style="white-space: normal;text-align: left;min-width:12em;">
+          <a href="{{ product.url | collection }}">
+            {{ product.title }}
+          </a>
+          <br>
+          {% for tag in product.tags %}
+            {% if tag contains 'Minimum' or tag contains 'units' %}
+              <b>{{ tag }}</b>
+            {% endif %}
+          {% endfor %}
+        </td>
+
+        <td class="qo-sku">
+
+        </td>
+
+        <td style="text-align:right;">
+          {% if product.price_varies %}from {% endif %}
+            {{ WCProduct_VariantPrice | money }}
+            {% if WCProduct_VariantComparePrice %}
+            <del>{{ WCProduct_VariantComparePrice | money }}</del>
+            {% endif %}
+        </td>
+
+        <td style="text-align: center;">
+          <a href="#" class="show-variants" data-product-id="{{ product.id }}">variants<span
+                    class="who-disc"></span></a>
+        </td>
+
+      </tr>
+
+      {% else %}
+      {% endif %}
+
+        {% for variant in product.variants %}
+        {% comment %} Wholesale_Hub_Product_Prices Start {% endcomment %}
+        {% assign base_product = product %}
+        {% assign base_variant = variant %}
+        {% assign WCNonFractionalCurrencies = "AFN, ALL, BIF, CLP, DJF, GNF, ISK, JPY, KMF, KRW, LAK, LBP, MGA, MMK, PYG, RSD, RWF, SLL, STD, UGX, VND, VUV, XAF, XOF, XPF, YER" | split: ", "%}
+
+        {% assign WCCartUsingNonFractionalCurrency = false %}
+        {% for non_fractional_currency in WCNonFractionalCurrencies %}
+          {% if cart.currency.iso_code == non_fractional_currency %}
+            {% assign WCCartUsingNonFractionalCurrency = true %}
+          {% endif %}
+        {% endfor %}
+
+
+        {% assign WCCartUsingSecondaryMarketDiscount = false %}
+        {% unless shop.metafields.sawholesale.primary_market_id == blank %}
+          {% if localization.market.id != shop.metafields.sawholesale.primary_market_id %}
+            {% assign WCCartUsingSecondaryMarketDiscount = true %}
+          {% endif %}
+        {% endunless%}
+
+        {% if shop.metafields.sawholesale['base_price'] == blank %}
+          {% assign base_price = 'compare_at_price' %}
+        {% else %}
+          {% assign base_price = shop.metafields.sawholesale['base_price'] %}
+        {% endif %}
+
+        {% assign saw_discount = 0 %}{% assign saw_has_discount = false %}
+
+        {% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == false %}
+          {% for mf in base_product.metafields.sawholesale %}
+            {% capture product_customer_tag %}{{ mf | first | replace: 'discount_', '' }}{% endcapture %}
+            {% if customer.tags contains product_customer_tag %}
+              {% assign saw_has_discount = true %}
+              {% assign discount_key = product_customer_tag | prepend: 'discount_' %}
+              {% assign price_key = product_customer_tag | prepend: 'price_' %}
+              {% assign saw_discount = base_product.metafields.sawholesale[discount_key] | divided_by: 100.0 %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == true %}
+          {% for collection in base_product.collections %}
+            {% for discount in collection.metafields.sawholesale.discounts.value %}
+              {% if customer.tags contains discount.tag %}
+                {% assign saw_has_discount = true %}
+                {% assign this_discount = discount.discount_percent | divided_by: 100.0 %}
+                {% if this_discount > saw_discount %}{% assign saw_discount = this_discount %}{% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+
+        {% comment %}
+          Rather than calculating the percentage remaining after a discount the secondary
+          markets logic uses the raw discount percentage to calculate the saw_variant_price
+          For a 10% discount:
+            In the primary market the saw_discount would be: 90%
+            In the secondary market the saw_discount would be: 10%
+        {% endcomment %}
+        {% unless WCCartUsingSecondaryMarketDiscount %}
+          {% assign saw_discount = 1 | minus: saw_discount %}
+        {% endunless %}
+
+        {% if WCCartUsingSecondaryMarketDiscount == true or base_price == 'price' or base_variant.compare_at_price == blank or base_variant.compare_at_price == 0 or base_variant.compare_at_price < base_variant.price %}
+          {% assign saw_variant_compare_at_price = base_variant.price %}
+        {% else %}
+          {% assign saw_variant_compare_at_price = base_variant.compare_at_price %}
+        {% endif %}
+
+        {% assign cpe = shop.metafields.sawholesale['cpe'] | default: "true" %}
+
+        {% if base_variant.metafields.sawholesale[price_key] != blank and cpe == "true" %}
+          {% assign saw_variant_price = base_variant.metafields.sawholesale[price_key] %}
+        {% else %}
+          {% comment %}
+            For a 10% discount on a variant price of 100:
+              In the primary market the saw_variant_price would be: 100 * 0.90 = 90
+              In the secondary market the saw_variant_price would be: 100 * 0.10 = 10
+              So saw_variant_price is not made available to the global scope in a secondary
+              market. Doing so might cause strange behaviour if not properly accounted for.
+          {% endcomment %}
+          {% if WCCartUsingSecondaryMarketDiscount %}
+            {% assign WCVariant_DiscountAmount = saw_variant_compare_at_price | times: saw_discount %}
+          {% else %}
+            {% assign saw_variant_price = saw_variant_compare_at_price | times: saw_discount %}
+            {% assign WCVariant_DiscountAmount = 0 %}
+          {% endif %}
+        {% endif %}
+        {% if WCCartUsingSecondaryMarketDiscount %}
+          {% assign WCVariant_Price = saw_variant_compare_at_price %}
+        {% else %}
+          {% assign WCVariant_Price = saw_variant_price %}
+        {% endif %}
+
+        {% if saw_has_discount == false or saw_variant_price >= saw_variant_compare_at_price %}
+          {% assign WCProduct_Price = base_product.price %}
+          {% assign WCProduct_ComparePrice = base_product.compare_at_price %}
+          {% assign WCProduct_PriceMin = base_product.price_min %}
+          {% assign WCProduct_ComparePriceMin = base_product.compare_at_price_min %}
+          {% assign WCProduct_PriceMax = base_product.price_max %}
+          {% assign WCProduct_ComparePriceMax = base_product.compare_at_price_max %}
+          {% assign WCProduct_VariantPrice = base_variant.price %}
+          {% assign WCProduct_VariantComparePrice = base_variant.compare_at_price %}
+        {% else %}
+          {% assign WCProduct_Price =  WCVariant_Price | minus: WCVariant_DiscountAmount %}
+          {% assign WCProduct_PriceMin = base_product.price_min | times: saw_discount %}
+          {% assign WCProduct_PriceMax = base_product.price_max | times: saw_discount %}
+          {% assign WCProduct_ComparePrice = saw_variant_compare_at_price %}
+          {% if base_product.compare_at_price_min != 0 %}{% assign WCProduct_ComparePriceMin = base_product.compare_at_price_min %}{% else %}{% assign WCProduct_ComparePriceMin = base_product.price_min %}{% endif %}
+          {% if base_product.compare_at_price_max != 0 %}{% assign WCProduct_ComparePriceMax = base_product.compare_at_price_max %}{% else %}{% assign WCProduct_ComparePriceMax = base_product.price_max %}{% endif %}
+          {% assign WCProduct_VariantPrice = WCVariant_Price | minus: WCVariant_DiscountAmount %}
+          {% assign WCProduct_VariantComparePrice = saw_variant_compare_at_price %}
+        {% endif %}
+        {% comment %} Wholesale_Hub_Product_Prices End {% endcomment %}
+          {% unless variant.title contains '% Off' %}
+          {% assign vtitle = variant.title | append: product.title | downcase %}
+            {% unless vtitle contains 'luer slip syringe' or vtitle contains 'luer lock syringe' %}
+
+          {% if variant.available %}
+
+          {% assign featured_image = variant.featured_image | default: product.featured_image %}
+
+      <tr class="variants-product-id{{ product.id }} {% if product.variants.size > 1 %}p-hidden{% endif %} {% if product.variants.size > 1 %}row-variant{% endif %} row-variant-id{{ variant.id }} v-hidden">
+        <td class="img">
+          <a href="{{ variant.url }}">
+            <img src="{{ featured_image | img_url: 'small' }}" alt="{{ featured_image.alt | escape }}" />
+          </a>
+          {% if product_featured_image != featured_image %}
+          {% endif %}
+        </td>
+
+        <td style="white-space: normal;text-align:left;">
+          <a href="{{ product.url | collection }}">
+            {% if product.variants.size == 1 %}
+              {{ product.title }}<br>
+            {% endif %}
+            {% unless variant.title contains 'Default' %}{{ variant.title }}{% endunless %}
+          </a>
+          <br>
+          {% for tag in product.tags %}
+            {% if tag contains 'Minimum' or tag contains 'units' %}
+              <b>{{ tag }}</b>
+            {% endif %}
+          {% endfor %}
+        </td>
+
+        <td class="qo-sku">
+          {{ variant.sku }}
+        </td>
+
+        <td style="text-align:right;">
+          {{ WCProduct_VariantPrice | money }}
+          {% if WCProduct_VariantComparePrice %}
+            <del>{{ WCProduct_VariantComparePrice | money }}</del>
+          {% endif %}
+        </td>
+
+        <td style="text-align: center;">
+          {% assign disabled = "" %}
+          {% assign max = "" %}
+          {% unless variant.inventory_management == blank or variant.inventory_policy == 'continue' %}
+            {% assign max = variant.inventory_quantity %}
+            {% for item in cart.items %}
+              {% if item.id == variant.id %}
+                {% assign max = max | minus: item.quantity %}
+              {% endif %}
+            {% endfor %}
+          {% endunless %}
+          {%- unless variant.inventory_management == blank or variant.inventory_policy == 'continue' -%}
+            {% if max < 1 %}{% assign disabled = "disabled" %}{% endif %}
+          {%- endunless -%}
+          <quantity-input class="quantity {{ disabled }}">
+            <button class="quantity__button no-js-hidden" name="minus" type="button">
+              <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation"
+                   class="icon icon-minus" fill="none" viewBox="0 0 10 2">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z"
+                      fill="currentColor"></path>
+              </svg>
+            </button>
+
+            <input class="quantity__input"
+                   type="number"
+                   value="0"
+                   min="0"
+                   aria-label="{{ 'products.product.quantity.input_label' | t: product: product.title | escape }}"
+                   data-id="{{ variant.id }}"
+                   onfocus="this.select()"
+                   {% if max %}max="{{ max }}"{% endif %}
+                    {{ disabled }}
+            >
+            <button class="quantity__button no-js-hidden" name="plus" type="button">
+              <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation"
+                   class="icon icon-plus" fill="none" viewBox="0 0 10 10">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z"
+                      fill="currentColor"></path>
+              </svg>
+            </button>
+          </quantity-input>
+        </td>
+
+      </tr>
+{% endif %}
+{% endunless %}
+{% endunless %}
+{% endfor %}
+<script>
+if (typeof sawholesale_product_variants_json == "function") {
+let p = sawholesale_product_variants_json({{product | json}})
+p.variants.map(function(v) {
+jQuery(".row-variant-id" + v.id).removeClass("v-hidden")
+})
+} else {
+jQuery("tr").removeClass("v-hidden")
+}
+</script>
+
+{% endif %}
+{% endunless %}
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+<div class="action-bar">
+<button class="add-to-cart-order-form button button--primary btn btn-primary btn-lg btn_c action-button action_button submit solid cart-checkout-button cart__checkout ProductForm__AddToCart Button Button--primary" type="submit"
+        value="Add to cart">Add to cart</button>
+</div>
+{% else %}
+<p>There are no products in this view.</p>
+{% endif %}
+
+<div id="pagination">
+
+{% if paginate.previous %}
+{{ 'Previous page' | link_to: paginate.previous.url }}
+{% endif %}
+
+{% if paginate.next %}
+{{ 'Next page' | link_to: paginate.next.url }}
+{% endif %}
+</div>
+
+{% endpaginate %}
+
+{% if collection.products_count > 0 %}
+<script>
+  ShopifyQO = {};
+  ShopifyQO.itemsToAdd = [];
+  ShopifyQO.addItemstoTheCart = function() {
+    if (ShopifyQO.itemsToAdd.length) {
+      let item = ShopifyQO.itemsToAdd.pop();
+      $.ajax({
+        url: "/cart/add",
+        dataType: "json",
+        type: "post",
+        data: item,
+        success: ShopifyQO.addItemstoTheCart,
+        error: ShopifyQO.addItemstoTheCart
+      });
+    } else {
+      $(".quantity__input").val("0");
+      // Added to Cart
+      window.location.href = "/cart";
+    }
+  };
+  jQuery(function($) {
+    $("table .quantity__input:first").focus();
+    $("[max]").change(function() {
+      let max = parseInt($(this).attr("max"), 10);
+      let value = parseInt($(this).val(), 10) || 0;
+      if (value > max) {
+        alert("We only have " + max + " of this item in stock");
+        $(this).val(max);
+      }
+    });
+
+    {% comment %}
+    quantity polyfill for legacy themes
+    {% endcomment %}
+    {% if use_theme_colors == false %}
+    $(".quantity__button[name='plus']").click(function() {
+      $(this).siblings(".quantity__input").get(0).stepUp();
+    });
+    $(".quantity__button[name='minus']").click(function() {
+      $(this).siblings(".quantity__input").get(0).stepDown();
+    });
+    {% endif %}
+
+
+    $(".dd-variant-to-cart").click(function() {
+      let variant_id = $(this).attr("data-variant-id");
+      let quantity = $(".quantity__input[data-id='" + variant_id + "']").val();
+
+      $.ajax({
+        url: "/cart/add.js",
+        dataType: "json",
+        type: "post",
+        data: {
+          id: variant_id,
+          quantity: quantity
+        },
+        success: function() {
+          alert(quantity + " items added to cart");
+        }
+      });
+
+    });
+
+    $(".add-to-cart-order-form").click(function(ev) {
+      ev.preventDefault();
+      $(".add-to-cart-order-form").addClass("disabled").attr("disabled", "disabled");
+      // Resetting.
+      ShopifyQO.itemsToAdd = [];
+      $(".quantity__input").each(function() {
+        let quantity = parseInt($(this).val(), 10);
+        if (quantity && $(this).attr("data-id")) {
+          ShopifyQO.itemsToAdd.push({ id: $(this).attr("data-id"), quantity: quantity });
+        }
+      });
+      if (ShopifyQO.itemsToAdd.length) {
+        ShopifyQO.addItemstoTheCart();
+      } else {
+        alert("All quantities are set to zero.");
+        $(".add-to-cart-order-form").removeAttr("disabled").removeClass("disabled");
+      }
+    });
+
+    jQuery("body").on("click", ".show-variants", function(ev) {
+      ev.preventDefault();
+      let product_id = $(this).data("product-id");
+      $(".variants-product-id" + product_id).removeClass("p-hidden");
+      $(this).removeClass("show-variants").addClass("hide-variants");
+    });
+    jQuery("body").on("click", ".hide-variants", function(ev) {
+      ev.preventDefault();
+      let product_id = $(this).data("product-id");
+      $(".variants-product-id" + product_id).addClass("p-hidden");
+      $(this).removeClass("hide-variants").addClass("show-variants");
+    });
+  });
+
+</script>
+{% endif %}
+
+</div>
+</div>
+{%- endif -%}
+{% comment %} Wholesale_Hub_Product_Visibility_Resource_Page End {% endcomment %}

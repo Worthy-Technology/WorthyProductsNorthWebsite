@@ -1,0 +1,444 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+<div class="customer order section__inner">
+  <svg style="display:none">
+    <symbol id="icon-discount" viewBox="0 0 12 12">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0h3a2 2 0 012 2v3a1 1 0 01-.3.7l-6 6a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4l6-6A1 1 0 017 0zm2 2a1 1 0 102 0 1 1 0 00-2 0z" fill="currentColor"></path>
+    </symbol>
+  </svg>
+
+  <div class="flex flex-col-reverse text-left row-gap-1">
+    <div>
+      <h1 class="customer__title b-main-title">{{ 'customer.account.title' | t }}</h1>
+    </div>
+    <div>
+      <a href="{{ routes.account_url }}" class="button button--secondary button--small button-with-icon button-with-icon--left">
+        {% render 'icon-arrow' %}
+        {{ 'customer.account.return' | t }}
+      </a>
+    </div>
+  </div>
+
+  {%- comment -%} Build Buy Again Payloads {%- endcomment -%}
+  {%- assign items_available = '' -%}
+  {%- assign items_oos = '' -%}
+  {%- assign items_all = '' -%}
+
+  {%- for li in order.line_items -%}
+    {%- if li.variant and li.variant.id -%}
+
+      {%- assign numeric_variant_id = li.variant.id | split: '/' | last -%}
+      {%- assign qty = li.quantity -%}
+      {%- assign name_json = li.title | json -%}
+
+      {%- assign treat_oos = false -%}
+
+      {%- if li.variant.available == false -%}
+        {%- assign treat_oos = true -%}
+      {%- else -%}
+        {%- assign inv_qty = li.variant.inventory_quantity | default: 0 -%}
+        {%- if li.variant.inventory_policy == 'deny' and inv_qty < 1 -%}
+          {%- assign treat_oos = true -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- capture item_all -%}
+        {"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}
+      {%- endcapture -%}
+
+      {%- if items_all != '' -%}{%- assign items_all = items_all | append: ',' -%}{%- endif -%}
+      {%- assign items_all = items_all | append: item_all -%}
+
+      {%- if treat_oos -%}
+        {%- capture item_oos -%}
+          {"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}
+        {%- endcapture -%}
+
+        {%- if items_oos != '' -%}{%- assign items_oos = items_oos | append: ',' -%}{%- endif -%}
+        {%- assign items_oos = items_oos | append: item_oos -%}
+
+      {%- else -%}
+
+        {%- capture item_avail -%}
+          {"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}
+        {%- endcapture -%}
+
+        {%- if items_available != '' -%}{%- assign items_available = items_available | append: ',' -%}{%- endif -%}
+        {%- assign items_available = items_available | append: item_avail -%}
+
+      {%- endif -%}
+
+    {%- endif -%}
+  {%- endfor -%}
+
+  <div>
+    <div>
+
+      <!-- HEADER + BUY AGAIN BUTTON -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h2 class="h4">{{ 'customer.order.title' | t: name: order.name }}</h2>
+
+        {% if items_all != '' %}
+        <div>
+          <button
+            class="button button--secondary button--small button-with-icon button-with-icon--right buy-again-btn"
+            data-order-id="{{ order.id }}"
+          >
+            Buy again
+            {% render 'icon-arrow' %}
+          </button>
+
+          <script type="application/json" id="order-{{ order.id }}-items">
+            { "available":[{{ items_available }}], "oos":[{{ items_oos }}], "all":[{{ items_all }}] }
+          </script>
+        </div>
+        {% endif %}
+      </div>
+
+      {%- assign order_date = order.created_at | time_tag: format: 'date_at_time' -%}
+      <p>{{ 'customer.order.date_html' | t: date: order_date }}</p>
+
+      {%- if order.cancelled -%}
+        {%- assign cancelled_at = order.cancelled_at | time_tag: format: 'date_at_time' -%}
+        <p>{{ 'customer.order.cancelled_html' | t: date: cancelled_at }}</p>
+        <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label }}</p>
+      {%- endif -%}
+
+      <!-- ORDER TABLE -->
+      <div class="customer-table color-scheme-2 gradient">
+        <table role="table" class="order-details">
+
+          <thead role="rowgroup">
+            <tr role="row">
+              <th id="ColumnProduct">{{ 'customer.order.product' | t }}</th>
+              <th id="ColumnSku">{{ 'customer.order.sku' | t }}</th>
+              <th id="ColumnPrice">{{ 'customer.order.price' | t }}</th>
+              <th id="ColumnQuantity">{{ 'customer.order.quantity' | t }}</th>
+              <th id="ColumnTotal">{{ 'customer.order.total' | t }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {%- for line_item in order.line_items -%}
+
+              {%- comment -%}
+              WHOLESALE HUB PRICING LOGIC (FULL BLOCK)
+              DO NOT CHANGE
+              {%- endcomment -%}
+
+              {%- if line_item.product -%}
+                {%- assign base_product = line_item.product -%}
+              {%- else -%}
+                {%- assign base_product = line_item -%}
+              {%- endif -%}
+
+              {%- if line_item.variant -%}
+                {%- assign base_variant = line_item.variant -%}
+              {%- else -%}
+                {%- assign base_variant = line_item.selected_or_first_available_variant -%}
+              {%- endif -%}
+
+              {% assign WCNonFractionalCurrencies = "AFN, ALL, BIF, CLP, DJF, GNF, ISK, JPY, KMF, KRW, LAK, LBP, MGA, MMK, PYG, RSD, RWF, SLL, STD, UGX, VND, VUV, XAF, XOF, XPF, YER" | split: ", " %}
+              {% assign WCCartUsingNonFractionalCurrency = false %}
+              {% for non_fractional_currency in WCNonFractionalCurrencies %}
+                {% if cart.currency.iso_code == non_fractional_currency %}
+                  {% assign WCCartUsingNonFractionalCurrency = true %}
+                {% endif %}
+              {% endfor %}
+
+              {% assign WCCartUsingSecondaryMarketDiscount = false %}
+              {% unless shop.metafields.sawholesale.primary_market_id == blank %}
+                {% if localization.market.id != shop.metafields.sawholesale.primary_market_id %}
+                  {% assign WCCartUsingSecondaryMarketDiscount = true %}
+                {% endif %}
+              {% endunless%}
+
+              {% if shop.metafields.sawholesale['base_price'] == blank %}
+                {% assign base_price = 'compare_at_price' %}
+              {% else %}
+                {% assign base_price = shop.metafields.sawholesale['base_price'] %}
+              {% endif %}
+
+              {% assign saw_discount = 0 %}
+              {% assign saw_has_discount = false %}
+
+              {% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == false %}
+                {% for mf in base_product.metafields.sawholesale %}
+                  {% capture product_customer_tag %}{{ mf | first | replace: 'discount_', '' }}{% endcapture %}
+                  {% if customer.tags contains product_customer_tag %}
+                    {% assign saw_has_discount = true %}
+                    {% assign discount_key = product_customer_tag | prepend: 'discount_' %}
+                    {% assign price_key = product_customer_tag | prepend: 'price_' %}
+                    {% assign saw_discount = base_product.metafields.sawholesale[discount_key] | divided_by: 100.0 %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == true %}
+                {% for collection in base_product.collections %}
+                  {% for discount in collection.metafields.sawholesale.discounts.value %}
+                    {% if customer.tags contains discount.tag %}
+                      {% assign saw_has_discount = true %}
+                      {% assign this_discount = discount.discount_percent | divided_by: 100.0 %}
+                      {% if this_discount > saw_discount %}{% assign saw_discount = this_discount %}{% endif %}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              {% endif %}
+
+              {% unless WCCartUsingSecondaryMarketDiscount %}
+                {% assign saw_discount = 1 | minus: saw_discount %}
+              {% endunless %}
+
+              {% if WCCartUsingSecondaryMarketDiscount == true or base_price == 'price' or base_variant.compare_at_price == blank or base_variant.compare_at_price == 0 or base_variant.compare_at_price < base_variant.price %}
+                {% assign saw_variant_compare_at_price = base_variant.price %}
+              {% else %}
+                {% assign saw_variant_compare_at_price = base_variant.compare_at_price %}
+              {% endif %}
+
+              {% assign cpe = shop.metafields.sawholesale['cpe'] | default: "true" %}
+
+              {% if base_variant.metafields.sawholesale[price_key] != blank and cpe == "true" %}
+                {% assign saw_variant_price = base_variant.metafields.sawholesale[price_key] %}
+              {% else %}
+                {% if WCCartUsingSecondaryMarketDiscount %}
+                  {% assign WCVariant_DiscountAmount = saw_variant_compare_at_price | times: saw_discount %}
+                {% else %}
+                  {% assign saw_variant_price = saw_variant_compare_at_price | times: saw_discount %}
+                  {% assign WCVariant_DiscountAmount = 0 %}
+                {% endif %}
+              {% endif %}
+
+              {% if WCCartUsingSecondaryMarketDiscount %}
+                {% if WCCartUsingNonFractionalCurrency %}
+                  {% assign WCLineItem_DiscountAmount = WCVariant_DiscountAmount | times: line_item.quantity | round %}
+                {% else %}
+                  {% assign WCLineItem_DiscountAmount = WCVariant_DiscountAmount | times: line_item.quantity | floor %}
+                {% endif %}
+                {% assign WCVariant_Price = saw_variant_compare_at_price %}
+              {% else %}
+                {% assign WCLineItem_DiscountAmount = 0 %}
+                {% assign WCVariant_Price = saw_variant_price %}
+              {% endif %}
+
+              {% if saw_has_discount == false or saw_variant_price >= saw_variant_compare_at_price %}
+                {% assign WCLineItem_OriginalPrice = line_item.original_price %}
+                {% assign WCLineItem_FinalPrice = line_item.final_price %}
+                {% assign WCLineItem_Price = line_item.price %}
+                {% assign WCLineItem_CompareAtPrice = line_item.compare_at_price %}
+                {% assign WCLineItem_OriginalLinePrice = line_item.original_line_price %}
+                {% assign WCLineItem_FinalLinePrice = line_item.final_line_price %}
+              {% else %}
+                {% assign WCLineItem_OriginalPrice = saw_variant_compare_at_price %}
+                {% assign WCLineItem_FinalPrice = WCVariant_Price | minus: WCVariant_DiscountAmount %}
+                {% assign WCLineItem_Price = WCVariant_Price %}
+                {% assign WCLineItem_CompareAtPrice = saw_variant_compare_at_price %}
+                {% assign WCLineItem_OriginalLinePrice = WCLineItem_OriginalPrice | round | times: line_item.quantity %}
+                {% assign WCLineItem_FinalLinePrice = WCLineItem_Price | round | times: line_item.quantity | minus: WCLineItem_DiscountAmount %}
+              {% endif %}
+
+              <!-- TABLE ROW -->
+              <tr role="row">
+                <td>
+                  {% if line_item.url %}
+                    <a href="{{ line_item.url }}">{{ line_item.title | escape }}</a>
+                  {% else %}
+                    {{ line_item.title | escape }}
+                  {% endif %}
+                </td>
+
+                <td>{{ line_item.sku }}</td>
+
+                <td>
+                  {% if WCLineItem_OriginalPrice != WCLineItem_FinalPrice %}
+                    <s>{{ WCLineItem_OriginalPrice | money }}</s>
+                    {{ WCLineItem_FinalPrice | money }}
+                  {% else %}
+                    {{ WCLineItem_FinalPrice | money }}
+                  {% endif %}
+                </td>
+
+                <td>{{ line_item.quantity }}</td>
+
+                <td>{{ WCLineItem_FinalLinePrice | money }}</td>
+              </tr>
+
+            {%- endfor -%}
+
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="4">{{ 'customer.order.subtotal' | t }}</td>
+              <td>{{ order.line_items_subtotal_price | money }}</td>
+            </tr>
+
+            {%- for shipping_method in order.shipping_methods -%}
+            <tr>
+              <td colspan="4">{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</td>
+              <td>{{ shipping_method.price | money }}</td>
+            </tr>
+            {%- endfor -%}
+
+            <tr>
+              <td colspan="3">{{ 'customer.order.total' | t }}</td>
+              <td colspan="2">{{ order.total_net_amount | money_with_currency }}</td>
+            </tr>
+          </tfoot>
+
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Addresses -->
+    <div class="customer-addresses">
+      <div>
+        <h2 class="h5">{{ 'customer.order.billing_address' | t }}</h2>
+        <div class="border-radius-panel border color-scheme-2 gradient p-2 rte">
+          <p><strong>{{ 'customer.order.payment_status' | t }}:</strong> {{ order.financial_status_label }}</p>
+          {{ order.billing_address | format_address }}
+        </div>
+      </div>
+
+      <div class="lg:pt-s05">
+        <h2 class="h5">{{ 'customer.order.shipping_address' | t }}</h2>
+        <div class="border-radius-panel border color-scheme-2 gradient p-2 rte">
+          <p><strong>{{ 'customer.order.fulfillment_status' | t }}:</strong> {{ order.fulfillment_status_label }}</p>
+          {{ order.shipping_address | format_address }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BUY AGAIN MODAL -->
+<div id="buy-again-modal" aria-hidden="true"
+  style="position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999;">
+  <div class="bam-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.5);"></div>
+
+  <div class="bam-panel" style="background:#fff; max-width:560px; width:92%; border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2); padding:20px; position:relative;">
+    <h3 style="margin-top:0;">Some items are not in stock</h3>
+    <p style="margin-bottom:10px;">These products are currently unavailable:</p>
+
+    <ul id="bam-oos-list" style="margin-left:18px; list-style:disc;"></ul>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px;">
+      <button id="bam-cancel" class="button button--secondary button--small">Cancel</button>
+      <button id="bam-proceed" class="button button--primary button--small">Proceed</button>
+    </div>
+
+    <button id="bam-close" style="position:absolute; top:10px; right:12px; background:none; border:0; font-size:22px;">×</button>
+  </div>
+</div>
+
+<script>
+  function bamOpen(names) {
+    const modal = document.getElementById('buy-again-modal');
+    const list = document.getElementById('bam-oos-list');
+    list.innerHTML = '';
+    names.forEach(n => {
+      const li = document.createElement('li');
+      li.textContent = n;
+      list.appendChild(li);
+    });
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function bamClose() {
+    document.getElementById('buy-again-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function addBatch(items) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    });
+  }
+
+  let pending = null;
+
+  document.addEventListener('click', async (e) => {
+
+    if (e.target.id === 'bam-close' || e.target.id === 'bam-cancel' || e.target.classList.contains('bam-overlay')) {
+      bamClose();
+      if (pending?.btn) {
+        pending.btn.textContent = pending.original;
+        pending.btn.disabled = false;
+        pending = null;
+      }
+      return;
+    }
+
+    if (e.target.id === 'bam-proceed') {
+      if (!pending) return;
+
+      const { avail, btn, original } = pending;
+
+      try {
+        const r = await addBatch(avail);
+        if (!r.ok) throw 0;
+
+        bamClose();
+        window.location.href = '/cart';
+
+      } catch {
+        alert('Could not add items');
+        btn.textContent = original;
+        btn.disabled = false;
+      }
+
+      return;
+    }
+
+    const btn = e.target.closest('.buy-again-btn');
+    if (!btn) return;
+
+    const orderId = btn.dataset.orderId;
+    const jsonEl = document.getElementById(`order-${orderId}-items`);
+    const payload = JSON.parse(jsonEl.textContent);
+
+    const oos = payload.oos || [];
+    const avail = payload.available || [];
+
+    if (!avail.length && !oos.length) {
+      alert('There is nothing to add.');
+      return;
+    }
+
+    if (oos.length) {
+      bamOpen(oos.map(i => i.name));
+      btn.disabled = true;
+      pending = { avail, btn, original: btn.textContent };
+      btn.textContent = 'Ready';
+      return;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Adding...';
+
+    try {
+      const r = await addBatch(avail);
+      if (!r.ok) throw 0;
+      window.location.href = '/cart';
+    } catch {
+      alert('Could not add items.');
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Order"
+}
+{% endschema %}

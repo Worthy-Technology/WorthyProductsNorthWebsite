@@ -1,0 +1,377 @@
+{% comment %} Unit Price Display - Clean Version {% endcomment %}
+{% assign title_up = item.product.title | upcase %}
+{% assign pack_size = 1 %}
+
+{%- comment -%} Detect formats like 1X12, 12X50G, or 1x6 {%- endcomment -%}
+{% assign parts = title_up | split: "X" %}
+{% if parts.size > 1 %}
+  {% assign first_part = parts.first | split: " " | last | plus: 0 %}
+  {% assign second_part = parts[1] | remove: " " | plus: 0 %}
+  
+  {% if first_part == 1 and second_part > 0 %}
+    {% assign pack_size = second_part %}
+  {% elsif first_part > 0 %}
+    {% assign pack_size = first_part %}
+  {% endif %}
+{% endif %}
+
+{%- comment -%} Detect formats like 6S, 20S {%- endcomment -%}
+{% if pack_size == 1 %}
+  {% assign words = title_up | split: " " %}
+  {% for w in words %}
+    {% if w contains "S" and w.size > 1 %}
+      {% assign num = w | remove: "S" | remove:"'" | plus: 0 %}
+      {% if num > 0 %}{% assign pack_size = num %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{%- comment -%} PACK, PK, CT, COUNT {%- endcomment -%}
+{% if pack_size == 1 %}
+  {% for w in words %}
+    {% assign num = w | plus: 0 %}
+    {% if num > 0 %}
+      {% assign next = words[forloop.index] | default:"" %}
+      {% if next contains "PACK" or next contains "PK" or next contains "COUNT" or next contains "CT" %}
+        {% assign pack_size = num %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{%- comment -%} CASE OF / BOX OF {%- endcomment -%}
+
+{% if pack_size == 1 and title_up contains 'CASE OF' %}
+  {% assign arr = title_up | split: ' ' %}
+  {% for w in arr %}
+    {% if w == 'OF' %}
+      {% assign idx = forloop.index %}
+      {% assign num = arr[idx] | plus: 0 %}
+      {% if num > 0 %}{% assign pack_size = num %}{% endif %}
+    {% endif %}
+  {% endfor %}
+
+{% elsif pack_size == 1 and title_up contains 'BOX OF' %}
+  {% assign arr = title_up | split: ' ' %}
+  {% for w in arr %}
+    {% if w == 'OF' %}
+      {% assign idx = forloop.index %}
+      {% assign num = arr[idx] | plus: 0 %}
+      {% if num > 0 %}{% assign pack_size = num %}{% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+
+{%- comment -%} DOZEN / HALF DOZEN {%- endcomment -%}
+{% if pack_size == 1 %}
+  {% if title_up contains "HALF DOZEN" %}
+    {% assign pack_size = 6 %}
+  {% elsif title_up contains "DOZEN" %}
+    {% assign pack_size = 12 %}
+  {% endif %}
+{% endif %}
+
+{% assign cart_qty = item.quantity | default: 1 %}
+{% assign base_unit_price_final = WCItem_FinalLinePrice | divided_by: cart_qty | divided_by: pack_size %}
+{% assign base_unit_price_compare = WCItem_OriginalLinePrice | divided_by: cart_qty | divided_by: pack_size %}
+{% assign unit_price_savings = base_unit_price_compare | minus: base_unit_price_final %}
+
+<div class="cart-unit-price-block unit-price-box" data-row="{{ item.key }}">
+  
+  <div class="gst-toggle-wrap">
+    <span class="font-medium gst-label">
+      Price mode:
+      <span class="tooltip-icon" data-tip="Choose whether to view prices before GST or after GST."></span>
+    </span>
+
+    <button 
+      class="gst-toggle-btn" 
+      data-mode="exc" 
+      data-active="true"
+      aria-label="View price before GST"
+      aria-pressed="true"
+      title="EXC GST means price before GST">
+      EXC GST
+    </button>
+
+    <button 
+      class="gst-toggle-btn" 
+      data-mode="inc"
+      aria-label="View price including GST"
+      aria-pressed="false"
+      title="INC GST means price after GST">
+      INC GST
+    </button>
+  </div>
+
+  <div class="unit-price-row">
+    <span style="font-weight:600;">Unit Price:</span>
+    <span class="unit-price-value"
+          data-base="{{ base_unit_price_final | divided_by: 100.0 }}">
+      {{ base_unit_price_final | money }}
+    </span>
+    <span class="tooltip-icon" data-tip="Unit price updates based on EXC or INC GST."></span>
+  </div>
+
+  {% if unit_price_savings > 0 %}
+    <div class="unit-save-row" style="color:#d9534f;">
+      <span style="font-weight:600;">You Save:</span>
+      <span class="unit-save-value"
+            data-base="{{ unit_price_savings | divided_by: 100.0 }}">
+        {{ unit_price_savings | money }} Per Unit
+      </span>
+      <span class="tooltip-icon" data-tip="Savings also update depending on GST mode."></span>
+
+    </div>
+  {% endif %}
+
+  <div class="unit-info">
+   <a class="why-unit-price tooltip-icon-link">
+  Why unit price?
+  <span class="tooltip-icon" data-tip="Unit pricing helps compare products fairly across similar items."></span>
+</a>
+
+  </div>
+  <div id="unitPricePopup">
+  Unit price helps compare products fairly and is standard across wholesale pricing.
+</div>
+
+
+</div>
+
+<style>
+/* Cart Unit Price Container - Cleaned up & Spaced out */
+.cart-unit-price-block {
+  background: #f8f9fa; /* Very soft background to group the info */
+  padding: 14px 16px; /* Gives the text room to breathe */
+  border-radius: 8px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Un-squeezes the rows */
+  border: 1px solid #eaeaea; /* Soft, subtle border */
+  box-shadow: none !important; /* Removes any harsh shadows */
+  width: fit-content;
+  min-width: 260px;
+}
+
+/* Overriding any bleed from the global .unit-price-box */
+.cart-unit-price-block.unit-price-box {
+  background: #f8f9fa !important;
+  padding: 14px 16px !important;
+  margin-top: 10px !important;
+}
+
+/* Keep layout tight and minimal */
+.gst-toggle-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+/* GST buttons — clean minimal */
+.gst-toggle-btn {
+  padding: 4px 12px;
+  font-size: 11px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: #555;
+  border: 1px solid #ccc;
+  transition: all 0.2s ease;
+}
+
+/* Active button - Using your theme color #3e7add */
+.gst-toggle-btn[data-active="true"] {
+  background: #3e7add;
+  color: #fff;
+  border-color: #3e7add;
+}
+
+/* Mini "bounce" animation */
+.gst-toggle-btn.animate {
+  transform: scale(1.06);
+}
+
+/* Slide animation for numbers */
+.unit-price-value,
+.unit-save-value {
+  display: inline-block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Flex alignment for rows */
+.unit-price-row, 
+.unit-save-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* "Why unit price?" popup link */
+.info-link {
+  font-size: 11px;
+  opacity: 0.7;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: underline;
+  margin-top: 2px;
+}
+
+/* Tooltip container */
+.tooltip-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 14px;
+  height: 14px;
+  margin-left: 2px;
+  border-radius: 50%;
+  border: 1.5px solid #888;
+  font-size: 10px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  position: relative;
+}
+
+.tooltip-icon::before {
+  content: "i";
+  line-height: 1;
+  font-family: Arial, sans-serif;
+}
+
+/* Tooltip bubble */
+.tooltip-icon::after {
+  content: attr(data-tip);
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  transform: translateX(-50%) translateY(-100%);
+  background: #000;
+  color: #fff;
+  padding: 6px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: normal;
+  min-width: 140px;
+  max-width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.20s ease;
+  z-index: 9999;
+}
+
+.tooltip-icon:hover::after,
+.tooltip-icon:focus::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Popup bubble */
+#unitPricePopup {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #000;
+  color: #fff;
+  padding: 14px 16px;
+  border-radius: 6px;
+  max-width: 250px;
+  font-size: 13px;
+  display: none;
+  z-index: 99999;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const gstRate = 0.15;
+  const popup = document.getElementById("unitPricePopup");
+
+  function slide(el, newText) {
+    el.style.opacity = "0";
+    el.style.transform = "translateX(10px)";
+
+    setTimeout(() => {
+      el.textContent = newText;
+      el.style.transform = "translateX(-10px)";
+    }, 150);
+
+    setTimeout(() => {
+      el.style.opacity = "1";
+      el.style.transform = "translateX(0)";
+    }, 280);
+  }
+
+  function money(n) {
+    return n.toLocaleString("en-NZ", {
+      style: "currency",
+      currency: "NZD"
+    });
+  }
+
+  function updatePrices(block, mode) {
+    const multiplier = mode === "inc" ? 1 + gstRate : 1;
+
+    block.querySelectorAll(".unit-price-value").forEach(el => {
+      slide(el, money(parseFloat(el.dataset.base) * multiplier));
+    });
+
+    block.querySelectorAll(".unit-save-value").forEach(el => {
+      slide(el, money(parseFloat(el.dataset.base) * multiplier) + " Per Unit");
+    });
+  }
+
+  function updateButtons(block, mode) {
+    block.querySelectorAll(".gst-toggle-btn").forEach(btn => {
+      const active = btn.dataset.mode === mode;
+      btn.dataset.active = active ? "true" : "false";
+
+      btn.classList.remove("animate");
+      if (active) {
+        setTimeout(() => btn.classList.add("animate"), 10);
+        setTimeout(() => btn.classList.remove("animate"), 250);
+      }
+    });
+  }
+
+  /* Load global saved mode */
+  const globalSavedMode = localStorage.getItem("worthy_gst_mode") || "exc";
+  document.querySelectorAll(".cart-unit-price-block").forEach(block => {
+    updateButtons(block, globalSavedMode);
+    updatePrices(block, globalSavedMode);
+  });
+
+  /* Handle button clicks */
+  document.addEventListener("click", e => {
+    if (e.target.matches(".gst-toggle-btn")) {
+      const btn = e.target;
+      const mode = btn.dataset.mode;
+
+      // Save globally across the whole platform
+      localStorage.setItem("worthy_gst_mode", mode);
+      
+      // Update ALL blocks in the cart instantly
+      document.querySelectorAll(".cart-unit-price-block").forEach(block => {
+        updateButtons(block, mode);
+       updatePrices(block, mode);
+      });
+    }
+
+    /* Why unit price popup */
+    if (e.target.matches(".info-link")) {
+     popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 3500);
+    }
+  });
+
+});
+
+</script>

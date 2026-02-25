@@ -1,0 +1,42 @@
+{%- liquid
+  assign hide_resource = false
+  assign rule_tags = "" | split: ","
+  if shop.metafields.wc_pv.active == "true"
+    if template.name == "collection" and resource == nil
+      assign resource = collection
+    endif
+    if product and resource == nil
+      assign resource = product
+    endif
+    if resource.settings.collection
+      assign resource = collections[resource.settings.collection]
+    endif
+    if resource.object
+      assign resource = resource.object
+    endif
+    if resource.metafields.wc_pv.product_visibility.value
+      assign resource_tags = resource.metafields.wc_pv.product_visibility.value.customer_tags
+    else
+      assign resource_tags = resource.metafields.wc_pv.product_visibility.customer_tags
+    endif
+    if resource_tags
+      assign rule_tags = rule_tags | concat: resource_tags
+    endif
+    assign collections_tags = resource.collections | map: "metafields" | map: "wc_pv" | map: "product_visibility" | map: "value" | map: "customer_tags"
+    for collection_tags in collections_tags
+      if collection_tags
+        assign rule_tags = rule_tags | concat: collection_tags
+      endif
+    endfor
+    if rule_tags.size > 0
+      assign hide_resource = true
+    endif
+    for tag in rule_tags
+      if customer.tags contains tag
+        assign hide_resource = false
+      endif
+    endfor
+  endif
+
+  echo hide_resource
+-%}

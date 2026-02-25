@@ -1,0 +1,90 @@
+{% comment %}
+  Snippet: wishlist-button.liquid
+  Usage: {% render 'wishlist-button', product: product %}
+{% endcomment %}
+
+<div class="wishlist-button-container">
+  {% if customer %}
+    {% assign is_favorite = false %}
+    {% if customer.metafields.custom.favorites.value != blank %}
+      {% for item in customer.metafields.custom.favorites.value %}
+        {% if item.id == product.id %}
+          {% assign is_favorite = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <button type="button" 
+            class="wishlist-btn {% if is_favorite %}is-active{% endif %}" 
+            data-product-id="{{ product.id }}" 
+            data-customer-id="{{ customer.id }}"
+            aria-label="Add to favorites">
+      
+      {% comment %} Empty Heart {% endcomment %}
+      <svg class="heart-empty" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+
+      {% comment %} Filled Heart {% endcomment %}
+      <svg class="heart-filled" width="20" height="20" viewBox="0 0 24 24" fill="#e63946" stroke="none" style="display: none;">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+    </button>
+  {% else %}
+    {% comment %} If not logged in, show greyed out or link to login {% endcomment %}
+    <a href="{{ routes.account_login_url }}" class="wishlist-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+    </a>
+  {% endif %}
+</div>
+
+<style>
+  .wishlist-button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3; /* Above image, below popups */
+  }
+  
+  .wishlist-btn {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333;
+    padding: 0;
+  }
+
+  .wishlist-btn:hover {
+    transform: scale(1.1);
+    background: #f9f9f9;
+  }
+
+  /* Active State Logic */
+.wishlist-btn.is-active .heart-empty { display: none !important; }
+.wishlist-btn.is-active .heart-filled { display: block !important; }
+/* Clean styles for your specific snippet */
+.wishlist-btn.is-active .heart-empty { 
+  display: none !important; 
+}
+
+.wishlist-btn.is-active .heart-filled { 
+  display: block !important; 
+  fill: #e63946 !important; /* This ensures the red shows up */
+}
+
+/* Optional: Keep the nice "pop" animation when clicked */
+.wishlist-btn:active {
+  transform: scale(1.2);
+}
+</style>

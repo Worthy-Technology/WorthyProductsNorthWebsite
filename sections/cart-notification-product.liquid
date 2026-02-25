@@ -1,0 +1,202 @@
+{%- if cart != empty -%}
+  {%- for item in cart.items -%}
+{% comment %} Wholesale_Hub_Item_Prices Start {% endcomment %}
+{% if item.product %}{% assign base_product = item.product %}{% else %}{% assign base_product = item %}{% endif %}
+{% if item.variant %}{% assign base_variant = item.variant %}{% else %}{% assign base_variant = item.selected_or_first_available_variant %}{% endif %}
+{% assign WCNonFractionalCurrencies = "AFN, ALL, BIF, CLP, DJF, GNF, ISK, JPY, KMF, KRW, LAK, LBP, MGA, MMK, PYG, RSD, RWF, SLL, STD, UGX, VND, VUV, XAF, XOF, XPF, YER" | split: ", "%}
+
+{% assign WCCartUsingNonFractionalCurrency = false %}
+{% for non_fractional_currency in WCNonFractionalCurrencies %}
+  {% if cart.currency.iso_code == non_fractional_currency %}
+    {% assign WCCartUsingNonFractionalCurrency = true %}
+  {% endif %}
+{% endfor %}
+
+
+{% assign WCCartUsingSecondaryMarketDiscount = false %}
+{% unless shop.metafields.sawholesale.primary_market_id == blank %}
+  {% if localization.market.id != shop.metafields.sawholesale.primary_market_id %}
+    {% assign WCCartUsingSecondaryMarketDiscount = true %}
+  {% endif %}
+{% endunless%}
+
+{% if shop.metafields.sawholesale['base_price'] == blank %}
+  {% assign base_price = 'compare_at_price' %}
+{% else %}
+  {% assign base_price = shop.metafields.sawholesale['base_price'] %}
+{% endif %}
+
+{% assign saw_discount = 0 %}{% assign saw_has_discount = false %}
+
+{% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == false %}
+  {% for mf in base_product.metafields.sawholesale %}
+    {% capture product_customer_tag %}{{ mf | first | replace: 'discount_', '' }}{% endcapture %}
+    {% if customer.tags contains product_customer_tag %}
+      {% assign saw_has_discount = true %}
+      {% assign discount_key = product_customer_tag | prepend: 'discount_' %}
+      {% assign price_key = product_customer_tag | prepend: 'price_' %}
+      {% assign saw_discount = base_product.metafields.sawholesale[discount_key] | divided_by: 100.0 %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if customer.tags != blank and WCCartUsingSecondaryMarketDiscount == true %}
+  {% for collection in base_product.collections %}
+    {% for discount in collection.metafields.sawholesale.discounts.value %}
+      {% if customer.tags contains discount.tag %}
+        {% assign saw_has_discount = true %}
+        {% assign this_discount = discount.discount_percent | divided_by: 100.0 %}
+        {% if this_discount > saw_discount %}{% assign saw_discount = this_discount %}{% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+
+{% comment %}
+  Rather than calculating the percentage remaining after a discount the secondary
+  markets logic uses the raw discount percentage to calculate the saw_variant_price
+  For a 10% discount:
+    In the primary market the saw_discount would be: 90%
+    In the secondary market the saw_discount would be: 10%
+{% endcomment %}
+{% unless WCCartUsingSecondaryMarketDiscount %}
+  {% assign saw_discount = 1 | minus: saw_discount %}
+{% endunless %}
+
+{% if WCCartUsingSecondaryMarketDiscount == true or base_price == 'price' or base_variant.compare_at_price == blank or base_variant.compare_at_price == 0 or base_variant.compare_at_price < base_variant.price %}
+  {% assign saw_variant_compare_at_price = base_variant.price %}
+{% else %}
+  {% assign saw_variant_compare_at_price = base_variant.compare_at_price %}
+{% endif %}
+
+{% assign cpe = shop.metafields.sawholesale['cpe'] | default: "true" %}
+
+{% if base_variant.metafields.sawholesale[price_key] != blank and cpe == "true" %}
+  {% assign saw_variant_price = base_variant.metafields.sawholesale[price_key] %}
+{% else %}
+  {% comment %}
+    For a 10% discount on a variant price of 100:
+      In the primary market the saw_variant_price would be: 100 * 0.90 = 90
+      In the secondary market the saw_variant_price would be: 100 * 0.10 = 10
+      So saw_variant_price is not made available to the global scope in a secondary
+      market. Doing so might cause strange behaviour if not properly accounted for.
+  {% endcomment %}
+  {% if WCCartUsingSecondaryMarketDiscount %}
+    {% assign WCVariant_DiscountAmount = saw_variant_compare_at_price | times: saw_discount %}
+  {% else %}
+    {% assign saw_variant_price = saw_variant_compare_at_price | times: saw_discount %}
+    {% assign WCVariant_DiscountAmount = 0 %}
+  {% endif %}
+{% endif %}
+{% if WCCartUsingSecondaryMarketDiscount %}
+  {% if WCCartUsingNonFractionalCurrency %}
+    {% assign WCItem_DiscountAmount = WCVariant_DiscountAmount | times: item.quantity | round %}
+  {% else %}
+    {% assign WCItem_DiscountAmount = WCVariant_DiscountAmount | times: item.quantity | floor %}
+  {% endif %}
+  {% assign WCVariant_Price = saw_variant_compare_at_price %}
+{% else %}
+  {% comment %}
+  For primary markets the discount has already been applied to the WCVariant_Price and it
+  will be multiplied by the item quantity (if applicable).
+  {% endcomment %}
+  {% assign WCItem_DiscountAmount = 0 %}
+  {% assign WCVariant_Price = saw_variant_price %}
+{% endif %}
+
+{% if saw_has_discount == false or saw_variant_price >= saw_variant_compare_at_price %}
+  {% assign WCItem_OriginalPrice = item.original_price %}
+  {% assign WCItem_FinalPrice = item.final_price %}
+  {% assign WCItem_Price = item.price %}
+  {% assign WCItem_PriceMin = item.price_min %}
+  {% assign WCItem_PriceMax = item.price_max %}
+  {% assign WCItem_CompareAtPrice = item.compare_at_price %}
+  {% assign WCItem_CompareAtPriceMin = item.compare_at_price_min %}
+  {% assign WCItem_CompareAtPriceMax = item.compare_at_price_max %}
+  {% assign WCItem_OriginalLinePrice = item.original_line_price %}
+  {% assign WCItem_FinalLinePrice = item.final_line_price %}
+  {% assign WCItem_LinePrice = item.line_price %}
+{% else %}
+  {% assign WCItem_OriginalPrice = saw_variant_compare_at_price %}
+  {% assign WCItem_FinalPrice = WCVariant_Price | minus: WCVariant_DiscountAmount %}
+  {% assign WCItem_Price = WCVariant_Price %}
+  {% assign WCItem_PriceMin = item.price_min | times: saw_discount %}
+  {% assign WCItem_PriceMax = item.price_max | times: saw_discount %}
+  {% assign WCItem_CompareAtPrice = saw_variant_compare_at_price %}
+  {% if base_product.compare_at_price_min != 0 %}{% assign WCItem_CompareAtPriceMin = base_product.compare_at_price_min %}{% else %}{% assign WCItem_CompareAtPriceMin = base_product.price_min %}{% endif %}
+  {% if base_product.compare_at_price_max != 0 %}{% assign WCItem_CompareAtPriceMax = base_product.compare_at_price_max %}{% else %}{% assign WCItem_CompareAtPriceMax = base_product.price_max %}{% endif %}
+  {% assign WCItem_OriginalLinePrice = WCItem_OriginalPrice | round | times: item.quantity %}
+  {% assign WCItem_FinalLinePrice = WCItem_Price | round | times: item.quantity | minus: WCItem_DiscountAmount %}
+  {% assign WCItem_LinePrice = WCItem_OriginalPrice | round | times: item.quantity | minus: WCItem_DiscountAmount %}
+{% endif %}
+{% comment %} Wholesale_Hub_Item_Prices End {% endcomment %}
+
+    <div id="cart-notification-product-{{ item.key }}" class="cart-item">
+      <div class="cart-notification-product mt-05 p-2 border border-radius-panel color-{{ settings.cart_drawer_color_scheme }} gradient">
+        {%- if item.image -%}
+          <div class="cart-notification-product__image{% if settings.card_image_replace_background %} mix-blend-multiply{% endif %}">
+            <img
+              src="{{ item.image | image_url: width: 140 }}"
+              alt="{{ item.image.alt | escape }}"
+              width="70"
+              height="{{ 70 | divided_by: item.image.aspect_ratio | ceil }}"
+              loading="lazy"
+              fetchpriority="low"
+            >
+          </div>
+        {%- endif -%}
+
+        <div>
+          <h3 class="cart-notification-product__name text-body t3">{{ item.product.title | escape }}</h3>
+          <dl class="opacity-80">
+            {%- unless item.product.has_only_default_variant -%}
+              {%- for option in item.options_with_values -%}
+                <div class="product-option">
+                  <dt>{{ option.name }}:</dt>
+                  <dd>{{ option.value }}</dd>
+                </div>
+              {%- endfor -%}
+            {%- endunless -%}
+            {%- for property in item.properties -%}
+              {%- assign property_first_char = property.first | slice: 0 -%}
+              {%- if property.last != blank and property_first_char != '_' -%}
+                <div class="product-option">
+                  <dt>{{ property.first }}:</dt>
+                  <dd>
+                    {%- if property.last contains '/uploads/' -%}
+                      <a href="{{ property.last }}" class="link" target="_blank">
+                        {{ property.last | split: '/' | last }}
+                      </a>
+                    {%- else -%}
+                      {{ property.last }}
+                    {%- endif -%}
+                  </dd>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </dl>
+          {%- if item.selling_plan_allocation != null -%}
+            <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if settings.cart_related_show and settings.cart_related_show_in_popup -%}
+        <div class="cart__recommendations">
+          {%- render 'mini-card-list',
+              mode: 'related',
+              section_id: 'cart-drawer',
+              layout: settings.cart_related_layout,
+              make_collapsible_row: false,
+              enable_quick_add: settings.enable_quick_add,
+              product_list_limit: settings.cart_related_limit,
+              block_heading: settings.cart_related_heading,
+              products_per_page: 1,
+              color_scheme: settings.cart_related_color_scheme,
+              line_color_scheme: settings.cart_drawer_background_color_scheme
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endfor -%}
+{%- endif -%}

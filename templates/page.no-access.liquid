@@ -1,0 +1,256 @@
+<style>
+  :root{
+    --brand: #2659c3;
+    --brand-mid: #3f7adf;
+    --brand-light: #528ef6;
+    --brand-lighter: #7caefd;
+    --ink: #1b1b1b;
+    --muted: #6b7280;
+    --bg: #f8faff;
+    --card: #ffffff;
+    --ring: rgba(38,89,195,0.18);
+    --shadow: 0 10px 25px rgba(0,0,0,0.06);
+    --radius: 18px;
+  }
+
+  .no-access-wrapper {
+    min-height: 80vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: var(--bg);
+  }
+
+  .no-access-card {
+    width: min(920px, 92vw);
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--ring);
+    overflow: hidden;
+  }
+
+  .no-access-hero {
+    padding: 48px 28px;
+    background: linear-gradient(120deg, var(--brand-light) 0%, var(--brand-lighter) 100%);
+    color: #fff;
+    text-align: center;
+  }
+
+  .no-access-hero h1 {
+    margin: 0 0 12px 0;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+  }
+
+  .no-access-hero p {
+    margin: 0 auto;
+    font-size: clamp(16px, 1.5vw, 18px);
+    opacity: 0.95;
+    max-width: 70ch;
+  }
+
+  .no-access-actions {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn:active { transform: translateY(1px); }
+
+  /* Hero buttons */
+  .btn-primary {
+    background: #fff;
+    color: var(--brand);
+  }
+  .btn-primary:hover {
+    background: var(--brand-lighter);
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .btn-outline:hover {
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* Buttons inside white panels */
+  .btn-blue {
+    background: var(--brand);
+    color: #fff;
+    border: 1px solid var(--brand);
+  }
+  .btn-blue:hover {
+    background: var(--brand-mid);
+  }
+
+  .btn-blue-outline {
+    background: transparent;
+    color: var(--brand);
+    border: 1px solid var(--brand);
+  }
+  .btn-blue-outline:hover {
+    background: var(--brand-light);
+    color: #fff;
+  }
+
+  .no-access-content {
+    padding: 32px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 900px){
+    .no-access-content { grid-template-columns: 1fr; }
+  }
+
+  .no-access-panel {
+    border: 1px solid var(--ring);
+    border-radius: 14px;
+    padding: 20px;
+    background: #fff;
+  }
+
+  .no-access-panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+    color: var(--brand);
+  }
+
+  .no-access-panel p {
+    color: var(--muted);
+    margin: 8px 0;
+  }
+
+  .contact a {
+    color: var(--brand);
+    text-decoration: none;
+  }
+
+  .contact a:hover {
+    text-decoration: underline;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--ring);
+    margin: 10px 0;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .account-manager {
+    background: #f0f6ff;
+    border-left: 4px solid var(--brand-light);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+
+  .account-manager h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    color: var(--brand);
+  }
+
+  .account-manager p {
+    margin: 4px 0;
+    color: var(--muted);
+  }
+
+  .account-manager a {
+    color: var(--brand);
+    text-decoration: none;
+  }
+
+  .account-manager a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="no-access-wrapper">
+  <section class="no-access-card">
+    <div class="no-access-hero">
+      <h1>This product is unavailable for Caltex</h1>
+      <p>The item you are trying to view is not available for purchase under your Caltex account.  
+      If you believe this is an error, please contact our customer service team.</p>
+
+      <div class="no-access-actions">
+        <a href="https://worthyproducts.nz/collections/caltex" class="btn btn-primary">View Eligible Products</a>
+        {% comment %} <button class="btn btn-secondary" id="goBackBtn">Go Back</button> {% endcomment %}
+        <a href="/account" class="btn btn-outline">Go to My Account</a>
+      </div>
+    </div> 
+
+    <div class="no-access-content">
+      <div class="no-access-panel">
+        <h2>What you can do next</h2>
+        <p>Browse the Caltex product range that’s available for your store.  
+        You can also return to the homepage for more options or explore other product categories.</p>
+        <div class="no-access-actions" style="justify-content:flex-start; margin-top:12px;">
+          <a href="https://worthyproducts.nz/collections/caltex" class="btn btn-blue">Shop Caltex Range</a>
+          <a href="/" class="btn btn-blue-outline">Return to Homepage</a>
+        </div>
+      </div>
+
+      <div class="no-access-panel">
+        <h2>Need help?</h2>
+        <p class="muted">If you think this restriction does not apply to your store, reach out to our customer service team.</p>
+        <div class="contact">
+          <p>Email: <a href="mailto:admin@worthyproducts.nz">admin@worthyproducts.nz</a></p>
+          <p>Call: <a href="tel:+6495804110">09 580 4110</a></p>
+        </div>
+
+        <div class="account-manager">
+          <h3>Your Key Account Manager</h3>
+          <p><strong>Nish Jha</strong></p>
+          <p>Email: <a href="mailto:nish@worthyproducts.nz">nish@worthyproducts.nz</a></p>
+          <p>Phone: <a href="tel:+64221098592">022 109 8592</a></p>
+        </div>
+
+        <div class="divider"></div>
+        <p class="muted">Available Monday to Friday, 8am to 4pm NZT</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Proper "Go Back" function with homepage fallback
+  document.getElementById('goBackBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.location.href = document.referrer;
+    } else {
+      window.location.href = '/';
+    }
+  });
+</script>

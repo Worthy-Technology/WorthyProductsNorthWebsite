@@ -1,0 +1,72 @@
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "image_and_text_AMCBwY": {
+          "type": "image_and_text",
+          "settings": {
+            "heading": "Worthy Products",
+            "description": "<p>Supplying Aotearoa with top-quality snacks and drinks. Trusted by dairies, supermarkets, and stores NZ-wide<\/p>",
+            "collapsible": true,
+            "wider": true,
+            "image": "shopify:\/\/shop_images\/09c3a46a-74ba-4eff-b891-c38c4d3a6210.png",
+            "image_width": 100,
+            "image_placement": "below_description"
+          }
+        },
+        "link_list_yAXYbY": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Customer Service",
+            "menu": "useful-links-copy",
+            "collapsible": true
+          }
+        },
+        "link_list_3H8mTj": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Useful Links",
+            "menu": "footer",
+            "collapsible": true
+          }
+        },
+        "image_and_text_FFDePH": {
+          "type": "image_and_text",
+          "settings": {
+            "heading": "Expert help",
+            "description": "<p>Need any advice before you buy? We're here to help.<\/p><p><a href=\"\/pages\/contact\" title=\"Contact\">Contact Us<\/a><\/p>",
+            "collapsible": true,
+            "wider": false,
+            "image_width": 100,
+            "image_placement": "top"
+          }
+        }
+      },
+      "block_order": [
+        "image_and_text_AMCBwY",
+        "link_list_yAXYbY",
+        "link_list_3H8mTj",
+        "image_and_text_FFDePH"
+      ],
+      "settings": {
+        "bottom_bar_links": "",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "show_country_filter": false,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "color_scheme": "scheme-10",
+        "color_scheme_bottom": "scheme-3",
+        "color_scheme_bottom_light": false,
+        "let_it_snow": false
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

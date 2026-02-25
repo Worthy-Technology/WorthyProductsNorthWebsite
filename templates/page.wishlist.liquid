@@ -1,0 +1,188 @@
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-grid.css' | asset_url | stylesheet_tag }}
+
+{%- if settings.card_enable_quick_add -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+<style>
+  /* --- LAYOUT STYLES --- */
+  .wishlist-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  
+  /* Sidebar */
+  .wishlist-sidebar {
+    width: 100%;
+    max-width: 250px;
+    flex-shrink: 0;
+  }
+  .filter-group {
+    border-bottom: 1px solid #e8e8e1;
+    padding: 1.5rem 0;
+  }
+  .filter-group summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .filter-group summary::after {
+    content: '+';
+    font-size: 1.2rem;
+  }
+  .filter-group[open] summary::after {
+    content: '-';
+  }
+  .filter-list {
+    margin-top: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    color: #444;
+    cursor: pointer;
+  }
+
+  /* Main Content */
+  .wishlist-main {
+    flex-grow: 1;
+    width: calc(100% - 280px);
+  }
+  
+  /* Sort Toolbar */
+  .wishlist-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  .wishlist-sort select {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 750px) {
+    .wishlist-sidebar {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 2rem;
+      border: 1px solid #eee;
+      padding: 1rem;
+    }
+    .wishlist-main { width: 100%; }
+    .filter-group[open] { border-bottom: none; }
+  }
+
+  /* Helper Classes */
+  .hidden { display: none !important; }
+</style>
+
+<div class="page-width">
+  {% if customer %}
+    
+    <header class="section-header text-center" style="margin-bottom: 2rem;">
+      <h1 class="main-page-title page-title h0">{{ page.title }}</h1>
+    </header>
+
+    <div class="wishlist-container">
+      
+      <aside class="wishlist-sidebar" id="wishlist-filters" style="display:none;">
+        <h3 class="h4">Filters</h3>
+        
+        <details class="filter-group" open>
+          <summary>Availability</summary>
+          <div class="filter-list">
+             <label class="filter-item">
+               <input type="checkbox" value="in-stock" class="filter-checkbox" data-type="stock"> 
+               In Stock Only
+             </label>
+          </div>
+        </details>
+
+        <details class="filter-group" open>
+          <summary>Brand</summary>
+          <div class="filter-list" id="filter-vendor-list"></div>
+        </details>
+
+        <details class="filter-group">
+          <summary>Collection</summary>
+          <div class="filter-list" id="filter-collection-list"></div>
+        </details>
+
+        </aside>
+
+      <div class="wishlist-main">
+        
+        <div class="wishlist-toolbar">
+          <div class="wishlist-count" id="wishlist-count-display">Loading...</div>
+          
+          <div style="display:flex; gap: 1rem; align-items: center;">
+             <button id="add-all-to-cart" class="button button--primary button--small" style="display:none;">Add All</button>
+             <button id="clear-all-wishlist" class="button button--secondary button--small" style="display:none;">Clear All</button>
+             
+             <div class="wishlist-sort">
+               <select id="wishlist-sort-select">
+                 <option value="default">Sort by: Date Added</option>
+                 <option value="price-asc">Price: Low to High</option>
+                 <option value="price-desc">Price: High to Low</option>
+                 <option value="alpha-asc">Name: A-Z</option>
+                 <option value="alpha-desc">Name: Z-A</option>
+               </select>
+             </div>
+          </div>
+        </div>
+
+        <div id="wishlist-grid" class="grid grid--2-col product-grid grid--3-col-tablet grid--4-col-desktop">
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wishlist-empty" class="text-center" style="display:none; padding: 3rem 0;">
+      <h2>Your favorites list is empty</h2>
+      <a href="{{ routes.all_products_collection_url }}" class="button button--primary">Continue Shopping</a>
+    </div>
+
+    <script>
+      // Load Data
+      window.wishlistData = [
+        {%- if customer.metafields.custom.favorites.value -%}
+          {%- assign favorite_ids = customer.metafields.custom.favorites.value -%}
+          {%- for product_id in favorite_ids -%}
+             {%- assign product_handle = product_id | split: '/' | last -%}
+             {%- assign fav_product = all_products[product_handle] -%}
+             {%- if fav_product != empty -%}
+               { "handle": "{{ fav_product.handle }}", "id": {{ fav_product.id }} }{% unless forloop.last %},{% endunless %}
+             {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      ];
+    </script>
+  {% else %}
+    <div class="text-center" style="padding: 4rem 0;">
+      <h1>{{ page.title }}</h1>
+      <p>Please log in to view favorites.</p>
+      <a href="{{ routes.account_login_url }}" class="button button--primary">Log In</a>
+    </div>
+  {% endif %}
+</div>

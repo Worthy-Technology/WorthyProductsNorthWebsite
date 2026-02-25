@@ -1,0 +1,145 @@
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* 1. Make sure main unit-price snippet already injected pill */
+  const runMovePill = () => {
+    const holder = document.querySelector("#unit-price-product-page");
+    const pill = document.querySelector(".unit-price-js");
+    if (holder && pill) {
+      holder.innerHTML = "";
+      pill.classList.add("up-product");
+      holder.appendChild(pill);
+    }
+  };
+
+  /* 2. Move on load */
+  setTimeout(runMovePill, 50);
+
+  /* 3. Move on variant change */
+  document.addEventListener("variant:changed", () => {
+    setTimeout(runMovePill, 50);
+    setTimeout(runPerVolumePricing, 80);
+  });
+
+/* 4. EXTRA: Per-Volume & Per-Weight calculation */
+  function runPerVolumePricing() {
+    let pill = document.querySelector("#unit-price-product-page .unit-price-js");
+    if (!pill) {
+      pill = document.querySelector(".product__info-wrapper .unit-price-js");
+    }
+    if (!pill) return;
+    pill.classList.add("up-product");
+
+    // Remove existing rows (to avoid duplicates on variant change)
+    pill.querySelectorAll(".up-extra-unit").forEach(x => x.remove());
+
+       // Extract volume/weight from title
+    const title = document.querySelector("h1")?.textContent.toLowerCase() || "";
+    const main = pill.querySelector(".js-unit-main");
+    if (!main) return;
+
+    const unitEx = parseFloat(main.dataset.ex);
+    if (!unitEx) return;
+
+    let extraHtml = "";
+
+    // --- LIQUIDS (ml / L) ---
+    let ml = null;
+    // \b ensures we match exactly "ml" and not just letters ending in ml
+    const mlMatch = title.match(/(\d+)\s*ml\b/);
+    if (mlMatch) ml = parseInt(mlMatch[1]);
+   
+    const lMatch = title.match(/(\d+(\.\d+)?)\s*l\b/);
+    if (!ml && lMatch) ml = parseFloat(lMatch[1]) * 1000;
+
+    if (ml && ml >= 10) {
+      const perLitre = unitEx / (ml / 1000);
+      const per399 = unitEx / (ml / 399);
+      extraHtml += `<span>≈ $${perLitre.toFixed(2)} per Litre Ex GST</span>
+                   <span>≈ $${per399.toFixed(2)} per 399ml Ex GST</span>`;
+    }
+
+    // --- SOLIDS (g / kg) ---
+    let grams = null;
+    // \b is crucial here so it matches '50g' but ignores the 'g' inside '1kg'
+    const gMatch = title.match(/(\d+)\s*g\b/); 
+    if (gMatch) grams = parseInt(gMatch[1]);
+
+    const kgMatch = title.match(/(\d+(\.\d+)?)\s*kg\b/);
+    if (!grams && kgMatch) grams = parseFloat(kgMatch[1]) * 1000;
+
+    if (grams && grams >= 10) {
+      const perKg = unitEx / (grams / 1000);
+      const per100g = unitEx / (grams / 100);
+      extraHtml += `<span>≈ $${perKg.toFixed(2)} per kg Ex GST</span>
+                    <span>≈ $${per100g.toFixed(2)} per 100g Ex GST</span>`;
+    }
+
+    // Inject the new row if we found either volume or weight
+    if (extraHtml !== "") {
+      const extra = document.createElement("div");
+      extra.className = "up-extra-unit";
+      extra.innerHTML = extraHtml;
+
+      const saveRow = pill.querySelector(".up-save");
+      if (saveRow) saveRow.insertAdjacentElement("afterend", extra);
+         else pill.appendChild(extra);
+    }
+  }
+
+  /* Run initial per-volume calculation */
+  setTimeout(runPerVolumePricing, 120);
+
+});
+</script>
+
+<style>
+/* PRODUCT PAGE UNIT PRICE CLEAN UI */
+.unit-price-js.up-product .unit-price-box {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 6px;
+}
+
+.unit-price-js.up-product .up-row--main {
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.unit-price-js.up-product .up-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.unit-price-js.up-product .js-unit-main {
+  font-size: 17px;
+  font-weight: 700;
+  color: #da1b1b;
+}
+
+.unit-price-js.up-product .up-save {
+  font-size: 13px;
+  color: #2e7d32;
+  margin-top: 3px;
+}
+
+.unit-price-js.up-product .up-switch-row {
+  margin-top: 6px;
+  justify-content: flex-start;
+}
+
+/* Per litre + per 100g / 399ml */
+.unit-price-js.up-product .up-extra-unit {
+  font-size: 12px;
+  color: #6b7280; /* Muted slate grey for secondary info */
+  line-height: 1.4;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #e5e5e5; /* Distinct separation */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+</style>

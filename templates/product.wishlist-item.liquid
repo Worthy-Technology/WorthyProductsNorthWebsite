@@ -1,0 +1,24 @@
+{% layout none %}
+<div class="grid__item"
+     data-id="{{ product.id }}"
+     data-vendor="{{ product.vendor | escape }}"
+     data-price="{{ product.selected_or_first_available_variant.price }}"
+     data-title="{{ product.title | escape }}"
+     data-tags="{{ product.tags | join: ',' | escape }}"
+     data-collections="{% for c in product.collections %}{{ c.title | escape }}||{% endfor %}"
+     data-available="{{ product.available }}">
+
+  {% render 'card-product', 
+    card_product: product, 
+    section_id: 'wishlist-page',
+    show_quick_add: true,
+    quick_add: 'bulk'
+  %}
+
+  {% comment %} 
+     The following hidden inputs guarantee the Javascript can 
+     find the data even if the theme snippet fails to render them.
+  {% endcomment %}
+  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" class="wishlist-forced-id">
+  <input type="hidden" name="quantity" value="0" class="wishlist-forced-qty">
+</div>

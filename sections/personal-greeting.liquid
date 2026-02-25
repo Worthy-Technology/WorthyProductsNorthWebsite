@@ -1,0 +1,263 @@
+<!-- Start: Enhanced Personal Greeting Section – Pratham -->
+
+{% comment %}
+  Enhancements:
+  • Fade-in animation
+  • Dynamic greeting ("Good morning", "Good afternoon", "Good evening")
+  • Optimised performance
+  • Orbit Wholesale visibility preserved
+  • Updated defaults: Worthy Products
+{% endcomment %}
+
+{% assign matched_block = null %}
+
+{% if customer %}
+  {% for block in section.blocks %}
+
+    {%- comment -%} Orbit Wholesale Visibility Start {%- endcomment -%}
+    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
+    {%- if hide_resource == "true" %}{% continue %}{% endif %}
+    {%- comment -%} Orbit Wholesale Visibility End {%- endcomment -%}
+
+    {% if customer.tags contains block.settings.customer_tag %}
+      {% assign matched_block = block %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const hour = new Date().getHours();
+  let text = "Welcome";
+
+  if (hour < 12) {
+    text = "Good morning";
+  } else if (hour < 18) {
+    text = "Good afternoon";
+  } else {
+    text = "Good evening";
+  }
+
+  const targets = document.querySelectorAll(".dr-greeting-dynamic-word");
+  targets.forEach(el => el.textContent = text);
+
+  const bar = document.querySelector(".dr-greeting-bar");
+  if (bar) bar.classList.add("fade-in-active");
+});
+</script>
+
+{% if matched_block %}
+  {% assign logo = matched_block.settings.logo %}
+  {% assign logo_pos = matched_block.settings.logo_position %}
+  {% assign logo_size = matched_block.settings.logo_size %}
+  {% assign desk_msg = matched_block.settings.desktop_message %}
+  {% assign mob_msg = matched_block.settings.mobile_message %}
+
+  <div class="dr-greeting-bar color-{{ section.settings.color_scheme }} isolate gradient section-content text-center px-3 fade-in-start">
+    <p class="dr-greeting-row">
+
+      <span class="dr-greeting-copy--desktop">
+        <span class="dr-greeting-dynamic-word">Welcome</span>
+
+        {% if logo_pos == 'after_welcome' and logo %}
+          <img class="dr-greeting-logo"
+               src="{{ logo | img_url: '120x' }}"
+               alt="{{ matched_block.settings.customer_tag }} Logo"
+               style="width:{% if logo_size == 'small' %}40{% elsif logo_size == 'large' %}100{% else %}80{% endif %}px">
+        {% endif %}
+
+        {{ desk_msg }}
+
+        {% if logo_pos == 'end' and logo %}
+          <img class="dr-greeting-logo"
+               src="{{ logo | img_url: '120x' }}"
+               alt="{{ matched_block.settings.customer_tag }} Logo"
+               style="width:{% if logo_size == 'small' %}40{% elsif logo_size == 'large' %}100{% else %}80{% endif %}px">
+        {% endif %}
+      </span>
+
+      <span class="dr-greeting-copy--mobile">
+        <span class="dr-greeting-dynamic-word">Welcome</span>
+
+        {% if logo_pos == 'after_welcome' and logo %}
+          <img class="dr-greeting-logo"
+               src="{{ logo | img_url: '120x' }}"
+               alt="{{ matched_block.settings.customer_tag }} Logo"
+               style="width:{% if logo_size == 'small' %}40{% elsif logo_size == 'large' %}100{% else %}80{% endif %}px">
+        {% endif %}
+
+        {{ mob_msg }}
+
+        {% if logo_pos == 'end' and logo %}
+          <img class="dr-greeting-logo"
+               src="{{ logo | img_url: '120x' }}"
+               alt="{{ matched_block.settings.customer_tag }} Logo"
+               style="width:{% if logo_size == 'small' %}40{% elsif logo_size == 'large' %}100{% else %}80{% endif %}px">
+        {% endif %}
+      </span>
+
+    </p>
+  </div>
+
+{% elsif section.settings.show_fallback and section.settings.fallback_message %}
+  <div class="dr-greeting-bar color-{{ section.settings.color_scheme }} isolate gradient section-content text-center px-3 fade-in-start">
+    <p class="dr-greeting-row">
+      <span class="dr-greeting-dynamic-word">Welcome</span>
+      {{ section.settings.fallback_message }}
+    </p>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Personal Greeting",
+  "tag": "section",
+  "class": "section section-personal-greeting",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Fallback"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fallback",
+      "label": "Show fallback message if no tag matches",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "fallback_message",
+      "label": "Fallback message",
+      "default": "Welcome to Worthy Products online portal."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "customer_greeting",
+      "name": "Customer Greeting",
+      "settings": [
+        {
+          "type": "text",
+          "id": "customer_tag",
+          "label": "Customer tag",
+          "default": "sample-tag",
+          "info": "Enter customer tag to match (case-sensitive)."
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Customer logo"
+        },
+        {
+          "type": "select",
+          "id": "logo_position",
+          "label": "Logo position",
+          "default": "after_welcome",
+          "options": [
+            { "value": "after_welcome", "label": "After 'Welcome'" },
+            { "value": "end", "label": "At end of message" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "logo_size",
+          "label": "Logo size",
+          "default": "medium",
+          "options": [
+            { "value": "small", "label": "Small (40px)" },
+            { "value": "medium", "label": "Medium (60px)" },
+            { "value": "large", "label": "Large (80px)" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "desktop_message",
+          "label": "Desktop message",
+          "default": "We’re delighted to have you here at the Worthy Products online portal."
+        },
+        {
+          "type": "text",
+          "id": "mobile_message",
+          "label": "Mobile message",
+          "default": "Welcome valued store customers to the Worthy Products online portal."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "Personal Greeting",
+      "blocks": [
+        { "type": "customer_greeting" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.dr-greeting-bar {
+  padding: 12px 10px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .5s ease-out, transform .5s ease-out;
+}
+
+.fade-in-active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.dr-greeting-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(13px, 2.8vw, 15px);
+  line-height: 1.25;
+}
+
+.dr-greeting-logo {
+  height: auto;
+  margin: 0px 3px;
+  vertical-align: middle;
+}
+
+.dr-greeting-copy--mobile {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .dr-greeting-bar { padding: 6px 8px; }
+  .dr-greeting-row { gap: 6px; }
+  .dr-greeting-copy--desktop { display: none; }
+  .dr-greeting-copy--mobile { display: inline; }
+}
+
+@media (max-width: 360px) {
+  .dr-greeting-row {
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .dr-greeting-logo {
+    order: 2;
+    margin-left: 6px;
+  }
+}
+</style>
+
+<!-- End: Enhanced Personal Greeting Section -->

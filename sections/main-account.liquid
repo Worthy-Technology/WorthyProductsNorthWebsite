@@ -1,0 +1,341 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+<div class="customer account section__inner">
+  <div class="flex flex-wrap justify-between items-center row-gap-1">
+    <div>
+      <h1 class="customer__title b-main-title mb-0">
+        {{ 'customer.account.title' | t }}
+      </h1>
+    </div>
+
+    <div class="flex flex-wrap gap-1">
+      <a href="{{ routes.account_addresses_url }}" class="button button--secondary button--small">
+        {{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})
+      </a>
+      <a href="{{ routes.account_logout_url }}" class="button button--secondary button--small" data-no-instant>
+        {{ 'customer.log_out' | t }}
+      </a>
+    </div>
+  </div>
+
+  <div>
+    <div>
+      <h2 class="h4">{{ 'customer.orders.title' | t }}</h2>
+
+      {% paginate customer.orders by 20 %}
+        {%- if customer.orders.size > 0 -%}
+
+          <!-- Order Table -->
+          <div class="customer-table color-scheme-2 gradient">
+            <table role="table" class="order-history">
+              <caption class="visually-hidden">{{ 'customer.orders.title' | t }}</caption>
+              <thead role="rowgroup">
+                <tr role="row">
+                  <th id="ColumnOrder" scope="col">{{ 'customer.orders.order_number' | t }}</th>
+                  <th id="ColumnDate" scope="col">{{ 'customer.orders.date' | t }}</th>
+                  <th id="ColumnPayment" scope="col">{{ 'customer.orders.payment_status' | t }}</th>
+                  <th id="ColumnFulfillment" scope="col">{{ 'customer.orders.fulfillment_status' | t }}</th>
+                  <th id="ColumnTotal" scope="col">{{ 'customer.orders.total' | t }}</th>
+                  <th id="ColumnBuyAgain" scope="col" style="text-align:center; width:150px;">Buy again</th>
+                </tr>
+              </thead>
+
+              <tbody role="rowgroup">
+                {%- for order in customer.orders -%}
+
+                  {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: order %}{%- endcapture -%}
+                  {%- if hide_resource == "true" -%}{% continue %}{%- endif -%}
+
+                  {%- assign items_available = '' -%}
+                  {%- assign items_oos = '' -%}
+                  {%- assign items_all = '' -%}
+
+                  {%- for li in order.line_items -%}
+
+                    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: li %}{%- endcapture -%}
+                    {%- if hide_resource == "true" -%}{% continue %}{%- endif -%}
+
+                    {%- if li.variant and li.variant.id -%}
+
+                      {%- assign numeric_variant_id = li.variant.id | split: '/' | last -%}
+                      {%- assign qty = li.quantity -%}
+                      {%- assign name_json = li.title | json -%}
+
+                      {%- assign treat_oos = false -%}
+    {%- assign inv_qty = li.variant.inventory_quantity | default: 0 -%}
+
+{%- if li.variant.inventory_policy == 'deny' and inv_qty < 1 -%}
+  {%- assign treat_oos = true -%}
+{%- endif -%}
+
+
+                      {%- capture item_all -%}{"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}{%- endcapture -%}
+                      {%- if items_all != '' -%}{%- assign items_all = items_all | append: ',' -%}{%- endif -%}
+                      {%- assign items_all = items_all | append: item_all -%}
+
+                      {%- if treat_oos -%}
+                        {%- capture item_oos -%}{"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}{%- endcapture -%}
+                        {%- if items_oos != '' -%}{%- assign items_oos = items_oos | append: ',' -%}{%- endif -%}
+                        {%- assign items_oos = items_oos | append: item_oos -%}
+                      {%- else -%}
+                        {%- capture item_avail -%}{"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}{%- endcapture -%}
+                        {%- if items_available != '' -%}{%- assign items_available = items_available | append: ',' -%}{%- endif -%}
+                        {%- assign items_available = items_available | append: item_avail -%}
+                      {%- endif -%}
+
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  <!-- Table Row -->
+                  <tr role="row">
+                    <td data-label="{{ 'customer.orders.order_number' | t }}">
+                      <a href="{{ order.customer_url }}">
+                        {{ order.name }}
+                      </a>
+                    </td>
+
+                    <td data-label="{{ 'customer.orders.date' | t }}">
+                      {{ order.created_at | time_tag: format: 'date' }}
+                    </td>
+
+                    <td data-label="{{ 'customer.orders.payment_status' | t }}">
+                      {{ order.financial_status_label }}
+                    </td>
+
+                    <td data-label="{{ 'customer.orders.fulfillment_status' | t }}">
+                      {{ order.fulfillment_status_label }}
+                    </td>
+
+                    <td data-label="{{ 'customer.orders.total' | t }}">
+                      {{ order.total_net_amount | money_with_currency }}
+                    </td>
+
+                    <td data-label="Buy again" style="text-align:center; vertical-align:middle; padding:10px 0;">
+                      <div style="display:inline-flex; justify-content:center; width:100%;">
+                        {% if items_all != '' %}
+                          <button
+                            class="button button--secondary button--small buy-again-btn"
+                            data-order-id="{{ order.id }}">
+                            Buy again
+                          </button>
+                          <script type="application/json" id="order-{{ order.id }}-items">
+                            { "available":[{{ items_available }}], "oos":[{{ items_oos }}], "all":[{{ items_all }}] }
+                          </script>
+                        {% else %}
+                          <span class="text-subdued" style="font-size:12px;">No items available</span>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+
+        {%- else -%}
+          <p>{{ 'customer.orders.none' | t }}</p>
+        {%- endif -%}
+
+        <!-- Pagination -->
+        {%- if paginate.pages > 1 and paginate.parts.size > 0 -%}
+          <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+            <ul role="list">
+
+              {% if paginate.previous %}
+                <li>
+                  <a href="{{ paginate.previous.url }}" aria-label="Previous page">
+                    <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+
+              {% for part in paginate.parts %}
+
+                {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: part %}{%- endcapture -%}
+                {%- if hide_resource == "true" -%}{% continue %}{%- endif -%}
+
+                <li>
+                  {% if part.is_link %}
+                    <a href="{{ part.url }}">{{ part.title }}</a>
+                  {% else %}
+                    <span {% if part.title == paginate.current_page %}aria-current="page"{% endif %}>
+                      {{ part.title }}
+                    </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+
+              {% if paginate.next %}
+                <li>
+                  <a href="{{ paginate.next.url }}" aria-label="Next page">
+                    <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      {% endpaginate %}
+    </div>
+
+    <!-- Account details -->
+    <div>
+      <h2 class="h4">{{ 'customer.account.details' | t }}</h2>
+      <div class="border-radius-panel border color-scheme-2 gradient p-2">
+        <div class="rte">{{ customer.default_address | format_address }}</div>
+        <a href="{{ routes.account_addresses_url }}" class="mt-1">
+          {{ 'customer.account.edit' | t }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Shared Modal -->
+<div id="buy-again-modal" aria-hidden="true" role="dialog" aria-modal="true"
+     style="position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999;">
+  <div class="bam-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.5);"></div>
+
+  <div class="bam-panel"
+       style="position:relative; background:#fff; max-width:560px; width:92%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.2); padding:20px;">
+    <h3 style="margin:0 0 10px 0; font-size:18px;">Some items are not in stock</h3>
+    <p>These products are currently not available</p>
+
+    <ul id="bam-oos-list" style="margin:0 0 16px 18px; padding:0; list-style:disc;"></ul>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button type="button" class="button button--secondary button--small" id="bam-cancel">Cancel</button>
+      <button type="button" class="button button--primary button--small" id="bam-proceed">Proceed to add rest</button>
+    </div>
+
+    <button id="bam-close" aria-label="Close"
+            style="position:absolute; top:10px; right:12px; background:transparent; border:0; font-size:20px; cursor:pointer;">×</button>
+  </div>
+</div>
+
+<script>
+  function bamOpen(oosNames = []) {
+    const modal = document.getElementById('buy-again-modal');
+    const list = document.getElementById('bam-oos-list');
+    list.innerHTML = '';
+    oosNames.forEach(n => {
+      const li = document.createElement('li');
+      li.textContent = n;
+      list.appendChild(li);
+    });
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function bamClose() {
+    document.getElementById('buy-again-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function addItemsBatch(items) {
+    return await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items })
+    });
+  }
+
+  async function addItemsIndividually(items) {
+    const failed = [];
+    for (const it of items) {
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ items: [it] })
+        });
+        if (!res.ok) failed.push(it);
+      } catch (_) { failed.push(it); }
+    }
+    return failed;
+  }
+
+  let bamPending = null;
+
+  document.addEventListener('click', async function(e) {
+
+    if (e.target.id === 'bam-close' || e.target.id === 'bam-cancel' || e.target.classList.contains('bam-overlay')) {
+      bamClose();
+      if (bamPending?.btn) {
+        bamPending.btn.disabled = false;
+        bamPending.btn.textContent = bamPending.original;
+        bamPending = null;
+      }
+      return;
+    }
+
+    if (e.target.id === 'bam-proceed') {
+      if (!bamPending) return;
+      const { avail, btn, original } = bamPending;
+
+      try {
+        try {
+          await addItemsBatch(avail);
+        } catch {
+          const failed = await addItemsIndividually(avail);
+          if (failed.length === avail.length) throw new Error();
+        }
+        bamClose();
+        window.location.href = '/cart';
+      } catch {
+        alert('Sorry, we could not add items to your cart.');
+        btn.disabled = false;
+        btn.textContent = original;
+        bamPending = null;
+      }
+      return;
+    }
+
+    const btn = e.target.closest('.buy-again-btn');
+    if (!btn) return;
+
+    const orderId = btn.dataset.orderId;
+    const jsonEl = document.getElementById(`order-${orderId}-items`);
+    const payload = JSON.parse(jsonEl.textContent.trim());
+
+    const oos = payload.oos || [];
+    const avail = payload.available || [];
+
+    if (oos.length) {
+      bamOpen(oos.map(i => i.name));
+      btn.disabled = true;
+      bamPending = { avail, btn, original: btn.textContent };
+      btn.textContent = 'Ready to add';
+      return;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Adding...';
+
+    try {
+      try {
+        await addItemsBatch(avail);
+      } catch {
+        const failed = await addItemsIndividually(avail);
+        if (failed.length === avail.length) throw new Error();
+      }
+      window.location.href = '/cart';
+    } catch {
+      alert('Sorry, we could not add items to your cart.');
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+
+  }, { passive: true });
+</script>
+
+{% schema %}
+{
+  "name": "Account"
+}
+{% endschema %}

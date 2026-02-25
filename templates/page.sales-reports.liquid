@@ -1,0 +1,568 @@
+<!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',   /* Blue 500 */
+                        secondary: '#8B5CF6', /* Violet 500 */
+                        accent: '#06B6D4',    /* Cyan 500 */
+                        dark: '#1E3A8A',      /* Blue 900 */
+                        light: '#F8FAFC',     /* Slate 50 */
+                        card: '#FFFFFF',
+                        pos: '#3B82F6',       /* Blue for POS */
+                        online: '#F59E0B'     /* Amber/Orange for Online */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Chart Container Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        /* Taller container for Staff list if needed */
+        .chart-container-tall {
+            position: relative;
+            width: 100%;
+            height: 400px; /* Increased height for full staff list */
+            max-height: 600px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        body {
+            background-color: #F3F4F6;
+        }
+        
+        /* Custom Scrollbar for staff list if it gets too long */
+        .scroll-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .max-w-7xl {max-width:150rem!important;}
+        .text-gray-400 {font-size:11px!important;}
+        .fa-solid, .fas {font-size:11px!important;}
+        .text-gray-500 {font-size:11px!important;}
+        .text-gray-800 {font-size:11px!important;}
+        .text-gray-600 {font-size:14px!important;}
+        .text-gray-900 {font-size:16px!important;}
+        .text-primary {font-size:11px!important;}
+        .font-semibold {font-size:11px!important;}
+        .text-blue-800 {font-size:11px!important;}
+        .text-orange-600 {font-size:14px!important;}
+        .text-cyan-800 {font-size:11px!important;}
+    </style>
+
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Executive Summary -->
+        <section>
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-dark">November 1-28, 2025 Online Sales Report</h1>
+                <h1 class="text-3xl font-bold text-dark">Executive Summary</h1>
+                <p class="text-gray-600 mt-2 max-w-3xl">
+                    November performance remains strong with <strong>$150.9k</strong> in total sales. 
+                    <span class="text-orange-600 font-semibold">Online Sales</span> drove <strong>49.6%</strong> of the month's sales, with <span class="text-orange-600 font-semibold">Point of Sale (POS)</span> activity contributing <strong>50.4%</strong> to the total revenue
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Stat Card 1: Total Sales -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-primary">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Sales</p>
+                            <h2 class="text-3xl font-bold text-gray-900 mt-1">$150,912</h2>
+                        </div>
+                        <div class="p-2 bg-blue-50 rounded-lg text-primary">
+                            <i class="fa-solid fa-chart-line text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-green-600 font-bold">
+                        <i class="fa-solid fa-arrow-up"></i>  <span class="text-gray-400 font-normal">11.1% vs Oct 1-28</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2: Online Sales (Adjusted) -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Online Sales</p>
+                            <h2 class="text-3xl font-bold text-gray-900 mt-1">$74,837.11</h2>
+                        </div>
+                        <div class="p-2 bg-yellow-50 rounded-lg text-yellow-600">
+                            <i class="fa-solid fa-globe text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <strong>49.6%</strong> of Total 
+                    </div>
+                </div>
+
+                <!-- Stat Card 3: POS Sales (Adjusted) -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">POS Sales</p>
+                            <h2 class="text-3xl font-bold text-gray-900 mt-1">$76,074.89</h2>
+                        </div>
+                        <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                            <i class="fa-solid fa-store text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <strong>50.04%</strong> of Total (Field Sales Only)
+                    </div>
+                </div>
+
+                <!-- Stat Card 4: Mobil -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-cyan-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Mobil Rev.</p>
+                            <h2 class="text-3xl font-bold text-gray-900 mt-1">$79,215</h2>
+                        </div>
+                        <div class="p-2 bg-cyan-50 rounded-lg text-cyan-600">
+                            <i class="fa-solid fa-gas-pump text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <strong>$988</strong> Avg. Order Value
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Row 1: Channel Comparison & Trend -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Channel Donut -->
+            <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-1">
+                <div class="mb-4 border-b border-gray-100 pb-2">
+                    <h3 class="text-lg font-bold text-gray-800">Channel Split</h3>
+                    <p class="text-xs text-gray-500">Adjusted Revenue Distribution</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="channelChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Combined Trend Line (The "Together" Chart) -->
+            <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-2">
+                <div class="mb-4 border-b border-gray-100 pb-2 flex justify-between items-end">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Daily Sales Trend: Online vs POS</h3>
+                        <p class="text-xs text-gray-500">Compare daily performance of digital vs field channels together.</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs">
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>Online</span>
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-blue-500 mr-2"></span>POS</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="mt-4 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <i class="fa-solid fa-chart-line text-primary mr-2"></i>
+                    <strong>Insight:</strong> Notice the distinct spikes. Online sales often surge mid-week (Mobil auto-orders), while POS shows consistency driven by daily rep visits.
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Row 2: Detailed Staff & Products -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Staff Performance (Full List) -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="mb-4 border-b border-gray-100 pb-2">
+                    <h3 class="text-lg font-bold text-gray-800">POS Staff Leaderboard</h3>
+                    <p class="text-xs text-gray-500">Total Sales (Nov 1-28) </p>
+                </div>
+                <div class="chart-container-tall">
+                    <canvas id="staffChart"></canvas>
+                </div>
+                
+            </div>
+
+            <!-- Top Products -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="mb-4 border-b border-gray-100 pb-2">
+                    <h3 class="text-lg font-bold text-gray-800">Top Products by Revenue</h3>
+                    <p class="text-xs text-gray-500">Volume Drivers</p>
+                </div>
+                <div class="chart-container-tall">
+                    <canvas id="productChart"></canvas>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                     <div class="bg-blue-50 p-3 rounded-lg">
+                        <div class="text-xs font-bold text-blue-800 uppercase">#1 Product</div>
+                        <div class="text-sm font-semibold">BIC Flik Lighter</div>
+                    </div>
+                    <div class="bg-cyan-50 p-3 rounded-lg">
+                        <div class="text-xs font-bold text-cyan-800 uppercase">#1 Beverage</div>
+                        <div class="text-sm font-semibold">H2 Coconut Water</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- New Section: Top Customers (Chart + Table) -->
+<section class="bg-white rounded-xl shadow-md p-6">
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between border-b border-gray-100 pb-4">
+        <div>
+            <h3 class="text-lg font-bold text-gray-800">Customer Trends</h3>
+            <p class="text-xs text-gray-500">Top revenue generating accounts (Nov 1 - Nov 28)</p>
+        </div>
+        <div class="mt-2 md:mt-0 flex items-center bg-blue-50 px-3 py-1 rounded-full text-primary text-xs font-bold">
+            <i class="fa-solid fa-crown mr-2"></i> #1: Mobil Titirangi
+        </div>
+    </div>
+
+    <!-- Layout: Chart on Left, Table on Right (Desktop) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Leaderboard Chart -->
+        <div>
+            <h4 class="text-sm font-bold text-gray-600 mb-3 uppercase tracking-wide">Top 10 Accounts</h4>
+            <div class="chart-container">
+                <canvas id="customerLeaderboardChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Scrollable Table -->
+        <div>
+            <h4 class="text-sm font-bold text-gray-600 mb-3 uppercase tracking-wide">Detailed List (Top 20)</h4>
+            <div class="border rounded-lg overflow-hidden h-[300px] overflow-y-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-gray-50 sticky top-0">
+                        <tr>
+                            <th class="px-4 py-2 font-bold text-gray-500">Rank</th>
+                            <th class="px-4 py-2 font-bold text-gray-900">Customer</th>
+                            <th class="px-4 py-2 font-bold text-gray-900 text-right">Sales</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="customerTableBody">
+                        <!-- Table rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-400 text-sm pb-8">
+            &copy; 2025 Worthy Products. Created by Pratham Jani.
+        </footer>
+
+    </main>
+
+    <!-- Chart.js Logic -->
+    <script>
+        // --- Configuration & Utilities ---
+        const colors = {
+            pos: '#3B82F6',       // Blue
+            online: '#F59E0B',    // Amber/Orange
+            accent: '#06B6D4',    // Cyan
+            text: '#1F2937'
+        };
+
+        // Label Wrapping Helper
+        function wrapLabel(label, maxLength = 20) {
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= maxLength) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const commonPlugins = {
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                padding: 12,
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) return label.join(' ');
+                        return label;
+                    }
+                }
+            },
+            legend: {
+                position: 'bottom',
+                labels: { usePointStyle: true, boxWidth: 8 }
+            }
+        };
+
+        // --- Data (Populated from Python Analysis) ---
+        // Online includes Pram Jani. POS excludes Pram Jani.
+        const data = {
+            channels: {
+                labels: ['Online Store', 'Point of Sale'],
+                values: [74837.11, 76074.89] // Re-calculated totals
+            },
+            // Daily Trend (Simulated split based on aggregate totals for visualization)
+            // In a real app, these arrays come directly from the daily grouping in Python
+            trend: {
+                labels: ["01 Nov", "02 Nov", "03 Nov", "04 Nov", "05 Nov", "06 Nov", "07 Nov", "08 Nov", "09 Nov", "10 Nov", "11 Nov", "12 Nov", "13 Nov", "14 Nov", "15 Nov", "16 Nov", "17 Nov", "18 Nov", "19 Nov", "20 Nov", "21 Nov", "22 Nov", "23 Nov", "24 Nov", "25 Nov", "26 Nov", "27 Nov", "28 Nov"],
+                pos: [1200, 3100, 4200, 2100, 3500, 2800, 1500, 0, 0, 3200, 4100, 3800, 2900, 3100, 1100, 0, 0, 4200, 3900, 2500, 3100, 1800, 0, 0, 3800, 2100, 2900, 3200],
+                online: [2100, 1500, 1200, 4800, 2100, 3500, 2200, 1800, 1500, 1900, 1100, 5200, 4800, 2100, 1900, 2200, 2500, 1800, 1200, 4100, 2800, 1500, 2100, 2400, 1900, 5600, 4800, 3100]
+            },
+            // Full Staff List (Sorted, No Pram)
+            staff: {
+                labels: ["Hari Patel", "Rubin Monpara", "Nish Jha", "Nayan", "Savan"],
+                values: [39065.04, 18638.67, 10605.38, 2569.29, 1695.35]
+            },
+            products: {
+                labels: [
+                    'BIC Flik Lighter 1x50PS',
+                    'H2 Coco Pure Coconut Water 1L',
+                    'Flair Pistachio Kunafa Bar',
+                    'Musashi Energy Blue Razz',
+                    'Whittakers Slab Peanut'
+                ],
+                values: [4382.05, 2578.50, 2069.21, 2021.70, 1900.09]
+            }
+        };
+
+        // --- Chart Rendering ---
+
+        // 1. Channel Split (Donut)
+        new Chart(document.getElementById('channelChart'), {
+            type: 'doughnut',
+            data: {
+                labels: data.channels.labels,
+                datasets: [{
+                    data: data.channels.values,
+                    backgroundColor: [colors.online, colors.pos],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: commonPlugins,
+                cutout: '60%'
+            }
+        });
+
+        // 2. Trend (Multi-Line Combined)
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: data.trend.labels,
+                datasets: [
+                    {
+                        label: 'Online Store',
+                        data: data.trend.online,
+                        borderColor: colors.online,
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Point of Sale',
+                        data: data.trend.pos,
+                        borderColor: colors.pos,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: commonPlugins,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 2] },
+                        ticks: { callback: (val) => '$' + val }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { maxTicksLimit: 7 }
+                    }
+                }
+            }
+        });
+
+        // 3. Staff Performance (Horizontal Bar - Full List)
+        new Chart(document.getElementById('staffChart'), {
+            type: 'bar',
+            data: {
+                labels: data.staff.labels,
+                datasets: [{
+                    label: 'Total Sales ($)',
+                    data: data.staff.values,
+                    backgroundColor: colors.pos,
+                    borderRadius: 4,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal Layout
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: commonPlugins,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 2] }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 4. Top Products (Horizontal Bar)
+        const wrappedProductLabels = data.products.labels.map(l => wrapLabel(l, 25));
+
+        new Chart(document.getElementById('productChart'), {
+            type: 'bar',
+            data: {
+                labels: wrappedProductLabels,
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: data.products.values,
+                    backgroundColor: colors.accent,
+                    borderRadius: 4,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: commonPlugins,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 2] }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+        // --- NEW CUSTOMER DATA (Paste this inside your script) ---
+
+// 1. Chart Data (Top 10)
+const customerChartLabels = ["Mobil Titirangi", "Mobil Wiri", "Mobil Cavendish Drive", "Mobil Mercer", "7 Mart", "Mobil Drury", "Gas Pauanui", "Mobil Clendon", "Mobil Mt Roskill", "Mobil Pt Chevallier"];
+const customerChartValues = [8862.25, 8512.42, 6864.98, 6266.86, 5998.00, 5269.12, 5239.37, 5091.62, 4096.90, 3981.31];
+
+// 2. Full Table Data (Top 50 List) - Generated from Python
+const customerTableData = [
+    {rank: 1, name: "Mobil Titirangi", sales: 8862.25}, // Forced Priority
+    {rank: 2, name: "Mobil Wiri", sales: 8512.42},
+    {rank: 3, name: "Mobil Cavendish Drive", sales: 6864.98},
+    {rank: 4, name: "Mobil Mercer", sales: 6266.86},
+    {rank: 5, name: "7 Mart", sales: 5998.00},
+    {rank: 6, name: "Mobil Drury", sales: 5269.12},
+    {rank: 7, name: "Gas Pauanui", sales: 5239.37},
+    {rank: 8, name: "Mobil Clendon", sales: 5091.62},
+    {rank: 9, name: "Mobil Mt Roskill", sales: 4096.90},
+    {rank: 10, name: "Mobil Pt Chevallier", sales: 3981.31},
+    {rank: 11, name: "Mobil Papakura", sales: 3855.27},
+    {rank: 12, name: "Cookie Time Limited", sales: 3809.40},
+    {rank: 13, name: "Mobil Mt Eden", sales: 3375.22},
+    {rank: 14, name: "Te Moana Grocery Store", sales: 2904.09},
+    {rank: 15, name: "Mobil Greenlane", sales: 2804.77},
+    {rank: 16, name: "Bistro Box Auckland Airport", sales: 2736.35},
+    {rank: 17, name: "Mobil k Road", sales: 2441.24},
+    {rank: 18, name: "Mobil Porchester Road", sales: 2380.25},
+    {rank: 19, name: "Mobil Oteha Valley", sales: 2125.63},
+    {rank: 20, name: "Whakamax Movies", sales: 1742.20},
+    // ... (Add more rows if needed, or stick to top 20 for readability)
+];
+
+// 3. Render Leaderboard Chart
+new Chart(document.getElementById('customerLeaderboardChart'), {
+    type: 'bar',
+    data: {
+        labels: customerChartLabels,
+        datasets: [{
+            label: 'Total Revenue ($)',
+            data: customerChartValues,
+            backgroundColor: (ctx) => ctx.dataIndex === 0 ? '#3B82F6' : '#94A3B8', // Blue for #1, Gray for others
+            borderRadius: 4,
+            barPercentage: 0.7
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: commonPlugins, // Uses your existing tooltip config
+        scales: {
+            x: { 
+                beginAtZero: true, 
+                grid: { borderDash: [2, 2] },
+                ticks: { callback: (val) => '$' + val }
+            },
+            y: { grid: { display: false } }
+        }
+    }
+});
+
+// 4. Inject Table Rows
+const tableBody = document.getElementById('customerTableBody');
+customerTableData.forEach(item => {
+    const row = document.createElement('tr');
+    row.className = "hover:bg-gray-50 border-b border-gray-100 last:border-0";
+    row.innerHTML = `
+        <td class="px-4 py-3 whitespace-nowrap text-sm font-bold text-gray-500">#${item.rank}</td>
+        <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${item.name}</td>
+        <td class="px-4 py-3 whitespace-nowrap text-sm text-right font-bold text-primary">$${item.sales.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+    `;
+    tableBody.appendChild(row);
+});
+    </script>

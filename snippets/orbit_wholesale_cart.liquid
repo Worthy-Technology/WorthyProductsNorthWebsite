@@ -1,0 +1,648 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% if cart.item_count > 0 and customer.email != blank and customer.tags != blank %}
+
+{% assign current_language_code = request.locale.iso_code %}
+
+<script>
+  const checkoutProcessingText = "Processing...";
+  const countryCode = "{{ localization.country.iso_code }}";
+  // This is an integer value but wrapping it in a string makes it a bit safer. Especially
+  // if the field is blank for some reason.
+  const marketIdString = "{{ localization.market.id }}";
+  const marketId = marketIdString ? parseInt(marketIdString) : undefined;
+  var baseUrl = "https://api.wholesale.orbitapps.com";
+  var shopSlug = "{{shop.permanent_domain}}".replace(".myshopify.com", "");
+
+  if (typeof window.currentLanguageCode == "undefined") {
+    window.currentLanguageCode = '{{ current_language_code }}';
+  }
+
+  var discountCodeTemplate =
+    '<div class="saso-use-discount-code-cart-container">' +
+    '<input type="text" class="saso-use-discount-code-cart-code" placeholder="Discount code">' +
+    '<button type="button" class="saso-use-discount-code-cart-apply btn btn--secondary button">' +
+    "Apply" +
+    "</button>" +
+    "</div>";
+
+  window.sawDocCookies={getItem:function(a){return a?decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*"+encodeURIComponent(a).replace(/[\-\.\+\*]/g,"\\$&")+"\\s*\\=\\s*([^;]*).*$)|^.*$"),"$1"))||null:null},setItem:function(a,b,c,d,e,f){if(!a||/^(?:expires|max\-age|path|domain|secure)$/i.test(a))return!1;var g="";if(c)switch(c.constructor){case Number:g=c===1/0?"; expires=Fri, 31 Dec 9999 23:59:59 GMT":"; max-age="+c;break;case String:g="; expires="+c;break;case Date:g="; expires="+c.toUTCString()}return document.cookie=encodeURIComponent(a)+"="+encodeURIComponent(b)+g+(e?"; domain="+e:"")+(d?"; path="+d:"")+(f?"; secure":""),!0},removeItem:function(a,b,c){return!!this.hasItem(a)&&(document.cookie=encodeURIComponent(a)+"=; expires=Thu, 01 Jan 1970 00:00:00 GMT"+(c?"; domain="+c:"")+(b?"; path="+b:""),!0)},hasItem:function(a){return!!a&&new RegExp("(?:^|;\\s*)"+encodeURIComponent(a).replace(/[\-\.\+\*]/g,"\\$&")+"\\s*\\=").test(document.cookie)},keys:function(){for(var a=document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g,"").split(/\s*(?:\=[^;]*)?;\s*/),b=a.length,c=0;c<b;c++)a[c]=decodeURIComponent(a[c]);return a}};
+
+  setTimeout(function() {
+    //wait for GA to load
+    if (typeof ga == "function") {
+      ga(function(tracker) {
+        window.gaclientId = tracker.get('clientId')
+      })
+    }
+  }, 1000)
+
+  /**
+   * Use replaceCheckoutElementCopy to replace the text displayed on a checkout button with some copy.
+   *
+   * In addition to replacing checkout element copy. This class allows you to reset copy to the previous state.
+   *
+   * After running replaceCheckoutElementCopy, use resetCheckoutElementCopy to restore all touched checkout elements
+   * to their previous state.
+   */
+  class CheckoutElementCopyReplacer {
+    constructor() {
+      this._checkoutElementsWithOriginalCopy = []
+    }
+
+    flushCheckoutElementCopy() {
+      this._checkoutElementsWithOriginalCopy = [];
+    }
+
+    resetCheckoutElementCopy() {
+      this._checkoutElementsWithOriginalCopy.forEach(([element, originalCopy]) => {
+        element.innerHTML = originalCopy;
+      })
+      this.flushCheckoutElementCopy()
+    }
+
+    replaceCheckoutElementCopy(element, copy) {
+      this._checkoutElementsWithOriginalCopy.push([element, element.innerHTML]);
+      element.innerHTML = copy;
+    }
+  }
+
+  const checkoutElementCopyReplacer = new CheckoutElementCopyReplacer();
+
+  /* CART QTY POLLER */
+  function startCartPoller() {
+    window.wc_cart_poller = setInterval(function () {
+      quantityChangePoller();
+    }, 1000);
+  }
+
+  function quantityChangePoller() {
+    const oldItemCount = window.saw_cart.item_count;
+    reloadCartOnQtyChange(oldItemCount);
+  }
+
+  function reloadCartOnQtyChange(oldItemCount) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "cart.js?_=" + Date.now());
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    xhr.onload = function () {
+      const cart = JSON.parse(xhr.response);
+      if (oldItemCount !== cart.item_count) {
+        window.location.reload();
+      }
+    };
+    xhr.send();
+  }
+
+  function SAWComplete(res) {
+    setTimeout(function() {
+      var cartNoteAdd = document.querySelector(".cart__note-add");
+      if (cartNoteAdd) {
+        cartNoteAdd.click();
+      }
+    }, 500);
+
+    if (res.warning_note != '') {
+      var checkoutSelectors = [
+        ".purchase-benefits",
+        'input[name="checkout"]',
+        'button[name="checkout"]',
+        '[href$="checkout"]',
+        'input[name="goto_pp"]',
+        'button[name="goto_pp"]',
+        'input[name="goto_gc"]',
+        'button[name="goto_gc"]',
+        ".google-wallet-button-holder",
+        ".amazon-payments-pay-button",
+        ".alt-payment-list-amazon-button-image",
+        ".additional-checkout-button__logo"
+      ];
+
+      checkoutSelectors.forEach(function(selector) {
+        var selectedElements = document.querySelectorAll(selector);
+        Array.prototype.forEach.call(selectedElements, function(el) {
+          el.parentNode.removeChild(el);
+        })
+      });
+
+      return;
+    }
+    return;
+  }
+
+  function handleCartCheckDiscountsResponse(res) {
+    if (res.warning_note.indexOf("Maximum") > -1) {
+      res.warning_note = "";
+    }
+
+    if (res.discount_status && res.discount_status !== "NO_DISCOUNT") {
+      startCartPoller();
+    }
+
+    SAWComplete(res);
+
+    //show discounted total, even if warnings
+    if (res.saw_total_price_format != "") {
+      var originalTotalNodeList = document.querySelectorAll(".saw-cart-original-total");
+      Array.prototype.forEach.call(originalTotalNodeList, function(originalTotal) {
+        originalTotal.style.textDecoration = "line-through";
+        originalTotal.style.opacity = "0.6";
+      })
+
+      var sawCartTotalNodeList = document.querySelectorAll(".saw-cart-total");
+      Array.prototype.forEach.call(sawCartTotalNodeList, function(sawCartTotal) {
+        sawCartTotal.innerHTML = res.saw_total_price_format;
+      });
+
+      var cartTotalNodeList = document.querySelectorAll(".cart__total");
+
+      setTimeout(function() {
+        Array.prototype.forEach.call(cartTotalNodeList, function(el) {
+          el.innerHTML = res.saw_total_price_format;
+        });
+      }, 500);
+
+      setTimeout(function() {
+        Array.prototype.forEach.call(cartTotalNodeList, function(el) {
+          el.innerHTML = res.saw_total_price_format;
+        });
+      }, 1500);
+    }
+
+    if (
+      typeof Currency == "object" &&
+      typeof Currency.moneyFormats == "object" &&
+      typeof mlvedaload == "function"
+    ) {
+      mlvedaload();
+    }
+
+    var sawExtraNote = document.querySelector(".saw-extra-note");
+
+    if (sawExtraNote) {
+      if (typeof res.extra_note == "string") {
+        sawExtraNote.innerHTML = res.extra_note;
+      }
+
+      if (res.warning_note != "") {
+        sawExtraNote.innerHTML = res.warning_note;
+        sawExtraNote.className += " saw-highlight";
+        return;
+      }
+    }
+
+    if (res.price_difference == 0) {
+      window.saw_discount = false;
+      return;
+    } else {
+      window.saw_discount = true;
+    }
+
+    if (
+      typeof res.allow_use_discount_code_cart == "boolean" &&
+      res.allow_use_discount_code_cart
+    ) {
+      var discountCodeContainer = document.querySelector(
+        ".saso-use-discount-code-cart-container"
+      );
+      if (discountCodeContainer) {
+        discountCodeContainer.parentNode.removeChild(discountCodeContainer);
+      }
+
+      var tempDiv = document.createElement("div");
+      tempDiv.innerHTML = discountCodeTemplate;
+      var cartTotalDiv = document.querySelector(".saw-cart-total");
+      cartTotalDiv.parentNode.insertBefore(
+        tempDiv.firstElementChild,
+        cartTotalDiv.nextSibling
+      );
+
+      if (window.sawDocCookies.getItem("saw_discount_code")) {
+        document.querySelector(
+          ".saso-use-discount-code-cart-code"
+        ).value = window.sawDocCookies.getItem("saw_discount_code");
+      }
+
+      //add apply listener
+      document
+        .querySelector(".saso-use-discount-code-cart-apply")
+        .addEventListener("click", function(ev) {
+          window.sawDocCookies.setItem(
+            "saw_discount_code",
+            document
+              .querySelector(".saso-use-discount-code-cart-code")
+              .value.trim(),
+            null,
+            "/"
+          ); //end of session
+          SAWCartCheck();
+        });
+    }
+
+    var checkoutSelectors = [
+      "input[name='checkout']:not(.bold_clone):not(.saw_ignore)",
+      "button[name='checkout']:not(.saw_ignore)",
+      "[href$='checkout']:not(.saw_ignore)",
+      "input[name='goto_pp']",
+      "button[name='goto_pp']",
+      "input[name='goto_gc']",
+      "button[name='goto_gc']",
+      ".google-wallet-button-holder",
+      ".amazon-payments-pay-button"
+    ];
+
+    checkoutSelectors.forEach(function(selector) {
+      var selectedElements = document.querySelectorAll(selector);
+      Array.prototype.forEach.call(selectedElements, function(el) {
+        el.addEventListener("click", function(ev) {
+          var did = document.getElementById(
+            "saw-use-discount-code-instead-check"
+          );
+          if (did && did.checked) {
+            return true;
+          }
+
+          ev.preventDefault();
+          ev.stopPropagation();
+
+          checkoutElementCopyReplacer.replaceCheckoutElementCopy(ev.target, checkoutProcessingText)
+
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "cart.js?_=" + Date.now());
+          xhr.setRequestHeader(
+            "Content-Type",
+            "application/json; charset=utf-8"
+          );
+          xhr.onload = function() {
+            window.saw_cart = JSON.parse(xhr.response);
+            SAWCheckout();
+          };
+          xhr.send();
+        });
+      });
+    });
+  }
+
+  function SAWCartCheck() {
+    var postData = {
+      cart: window.saw_cart,
+      countryCode,
+      customer: window.saw_customer,
+      marketId,
+      shop_slug: shopSlug
+    };
+
+    if (window.sawDocCookies.getItem("saw_discount_code")) {
+      postData.discount_code_cart = window.sawDocCookies.getItem(
+        "saw_discount_code"
+      );
+    }
+
+    var xhr = new XMLHttpRequest();
+    var url = baseUrl + "/api/v1/cart-check-discounts";
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    xhr.onload = function() {
+      handleCartCheckDiscountsResponse(JSON.parse(xhr.response));
+    };
+    xhr.send(JSON.stringify(postData));
+  }
+
+  /** @typedef {string} url A valid URL */
+
+  /**
+  * @callback PollingEventCallback
+  * @param {url} invoiceUrl
+  */
+
+  /**
+  * Generates a new InvoicePoller. To use, simply call the `start` method. Once started the InvoicePoller
+  * will query the given invoiceUrl up to 10 times over 9 seconds. The first check is executed without delay.
+  * Should the invoice be created over the 10 attempts the poller will call the onInvoiceReady callback.
+  * Otherwise, the onGiveUp callback will be executed.
+  */
+  class WCInvoicePoller {
+    /**
+    * @constructor
+    * @param {url} invoiceUrl The invoice URL to poll
+    * @param {PollingEventCallback} onInvoiceReady Called when an invoice is found to exist at the given invoiceUrl
+    * @param {PollingEventCallback} [onGiveUp] Called when the max number of poll attempts is reached
+    * @param {PollingEventCallback} [onPollingStarted] Called immediately before the InvoicePoller executes its first polling request.
+    */
+    constructor(invoiceUrl, onInvoiceReady, onGiveUp, onPollingStarted) {
+      /** @type {number} */
+      this._maxPollAttempts = 10;
+
+      /** @type {number | undefined} */
+      this._interval;
+
+      /** @type {number} */
+      this._pollAttempts = 0;
+
+      /** @type {string} May be "READY" or "STARTED" */
+      this._state = "READY";
+
+      this._invoiceUrl = invoiceUrl;
+
+      this._onInvoiceReady = onInvoiceReady;
+
+      this._onGiveUp = onGiveUp;
+
+      this._onPollingStarted = onPollingStarted;
+    }
+
+    resetState() {
+      clearInterval(this._interval);
+      this._state = "READY";
+      this._interval = undefined;
+    }
+
+    /** @returns {Promise<boolean>} */
+    async checkInvoiceReady() {
+      try {
+        const res = await fetch(this._invoiceUrl, {method: "HEAD"});
+
+        if (res.status < 400) {
+          this.resetState();
+          this._onInvoiceReady(this._invoiceUrl);
+          return true;
+        } else {
+          return false;
+        }
+
+      } catch (error) {
+        console.error(
+          "B2B Wholesale Hub InvoicePoller Could not fetch invoice URL due to network error:",
+          error,
+        );
+
+        return false;
+      }
+    }
+
+    pollCheckInvoiceReady() {
+      if (this._state !== "STARTED") return;
+
+      if (this._pollAttempts >= this._maxPollAttempts) {
+        this.resetState();
+
+        if (typeof this._onGiveUp === "function") {
+          this._onGiveUp(this._invoiceUrl);
+        }
+      } else {
+        this._pollAttempts += 1;
+
+        this.checkInvoiceReady();
+      }
+    }
+
+    /**
+    * Initiates the poller
+    */
+    start() {
+      if (this._state === "STARTED") return;
+
+      if (typeof this._onPollingStarted === "function") {
+        this._onPollingStarted()
+      }
+
+      // first execution, it might be ready to go already
+      this.checkInvoiceReady().then((invoiceDoesExist) => {
+        if (invoiceDoesExist) return;
+        // Using arrow functions is important here. The function passed to setInterval is executed in a different context
+        // Arrow functions use a "lexical" `this` meaning they will maintain the `this` property of the context in which
+        // they were declared. See more about this on MDN: https://developer.mozilla.org/en-US/docs/Web/API/setInterval#the_this_problem
+        const interval = setInterval(() => this.pollCheckInvoiceReady(), 1000);
+
+        this._interval = interval;
+        this._state = "STARTED";
+      });
+    }
+  }
+  function handleCheckoutCartCheckDiscountsResponse(res) {
+    //if no discounts, redirect to checkout, but with params
+    if (typeof res.invoice_url != "string") {
+      res.invoice_url = "/checkout";
+      res.status = "OK";
+    }
+
+    if (res.status == "OK") {
+      var invoice_url_params = [];
+      //Zapiet store pickup
+      if (
+        typeof Zapiet == "object" &&
+        typeof Zapiet.Cart == "object" &&
+        typeof Zapiet.Cart.getUrlParams == "function"
+      ) {
+        const zapietUrlParams = Zapiet.Cart.getUrlParams() || {};
+        Object.keys(zapietUrlParams).map(function(k) {
+          invoice_url_params.push(k + "=" + encodeURIComponent(zapietUrlParams[k]));
+        });
+        if (
+          typeof Zapiet.Widget == "object" &&
+          typeof Zapiet.Widget.checkoutEnabled == "function"
+        ) {
+          if (Zapiet.Widget.checkoutEnabled() == false) {
+            alert("Please complete delivery info");
+            return;
+          }
+        }
+      }
+
+      if (
+        typeof window.currentLanguageCode == "string" &&
+        window.currentLanguageCode.length > 1 &&
+        window.currentLanguageCode.length < 9
+      ) {
+        invoice_url_params.push(
+          "locale=" + encodeURIComponent(window.currentLanguageCode)
+        );
+      }
+
+      if (typeof window.gaclientId == "string") {
+        invoice_url_params.push("clientId=" + window.gaclientId);
+        invoice_url_params.push("_ga=" + window.gaclientId);
+      }
+
+      if (invoice_url_params.length > 0) {
+        res.invoice_url += "?" + invoice_url_params.join("&");
+      }
+
+      // This will be called if the invoice exists and the checkout page can be loaded.
+      const navigationCallback = (url) => {
+        checkoutElementCopyReplacer.resetCheckoutElementCopy()
+        window.location.assign(url);
+      };
+
+      // This will be called if the checkout page can't be loaded after 10 attempts over 9 seconds.
+      const optionalGiveUpCallback = (url) => {
+        setTimeout(() => {
+          checkoutElementCopyReplacer.resetCheckoutElementCopy()
+          window.location.assign(url);
+        }, 800);
+      };
+
+      const poller = new WCInvoicePoller(
+        res.invoice_url,
+        navigationCallback,
+        optionalGiveUpCallback,
+      );
+
+      poller.start();
+    } else {
+      alert(res.status);
+    }
+  }
+
+  function SAWCheckout() {
+    if (window.saw_discount == false) {
+      window.location.href = "/checkout";
+      return;
+    }
+
+    var noteAttributes = [];
+    var attributesList = document.querySelectorAll("[name^='attributes']");
+
+    Array.prototype.forEach.call(attributesList, function(el) {
+      if (el.value == "") return;
+
+      var name = el.name;
+      name = name.replace(/^attributes\[/i, "").replace(/\]$/i, "");
+      var v = {
+        name: name,
+        value: el.value
+      };
+
+      switch (el.tagName.toLowerCase()) {
+        case "input":
+          if (el.type == "checkbox") {
+            if (el.checked) {
+              noteAttributes.push(v);
+            }
+          } else {
+            noteAttributes.push(v);
+          }
+          break;
+        default:
+          noteAttributes.push(v);
+      }
+    });
+
+    for (var i = 0; i < window.saw_cart.items.length; i++) {
+      var item = window.saw_cart.items[i];
+      var el = document.querySelectorAll("[id='updates_" + item.key + "']");
+      if (el.length != 1) {
+        el = document.querySelectorAll(
+          "[id='updates_" + item.variant_id + "']"
+        );
+      }
+      if (el.length == 1) {
+        window.saw_cart.items[i].quantity = el[0].value;
+      }
+    }
+
+    var domNote = document.querySelector("[name='note']");
+    var note = domNote ? domNote.value : "";
+
+    var postData = {
+      cart: window.saw_cart,
+      countryCode,
+      customer: window.saw_customer,
+      marketId,
+      note: note,
+      note_attributes: noteAttributes,
+      shop_slug: shopSlug
+    };
+
+    if (window.sawDocCookies.getItem("saw_discount_code")) {
+      postData.discount_code_cart = window.sawDocCookies.getItem(
+        "saw_discount_code"
+      );
+    }
+
+    var xhr = new XMLHttpRequest();
+    var url = baseUrl + "/api/v1/cart-check-discounts?checkout=draft";
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    xhr.onload = function() {
+      handleCheckoutCartCheckDiscountsResponse(JSON.parse(xhr.response));
+    };
+    xhr.send(JSON.stringify(postData));
+  }
+
+  window.saw_cart = {{cart | json}};
+  window.saw_cart.items = [];
+
+  {% for item in cart.items %}
+    var itemjs = {{item | json}} //includes properties
+    itemjs.variant_title = "{{ item.variant.title | strip_newlines | escape }}";
+    itemjs.compare_at_price =
+      {% if item.variant.compare_at_price == blank %}
+        null
+      {% else %}
+        {{item.variant.compare_at_price}}
+      {% endif %};
+
+    itemjs.sawholesale = {{item.product.metafields.sawholesale | json}};
+
+    delete itemjs.image;
+    delete itemjs.url;
+    window.saw_cart.items.push(itemjs);
+  {% endfor %}
+
+  window.saw_customer = {id: {{customer.id}}, email: "{{customer.email | escape}}" };
+
+  SAWCartCheck();
+
+  var inputElements = document.getElementsByName("updates[]");
+
+  for (var i = 0; i < inputElements.length; i++) {
+    inputElements[i].addEventListener("change", function() {
+      var updateButtons = document.getElementsByName("update");
+      if (updateButtons.length) {
+        updateButtons[0].click();
+      }
+    });
+}
+
+
+</script>
+
+<style>
+.saw-extra-note {
+  font-weight: bold;
+  margin: 10px 0px 10px 0px;
+  background-color: #ffd400;
+  color: #000000;
+}
+.saw-extra-note:empty {
+  display: none;
+}
+.saw-highlight {
+  background-color: #ffd400;
+}
+
+.saw-cart-total {
+  padding: 0px !important;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.sam-add-address-error, a.sam-add-address-error:visited {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff0000;
+}
+
+.saso-use-discount-code-cart-code {
+  display: inline !important;
+  width: 10em !important;
+}
+.saso-use-discount-code-cart-apply {
+  display: inline !important;
+}
+.saw-cart-original-total * {
+    margin: 0;
+}
+</style>
+{% endif %}
