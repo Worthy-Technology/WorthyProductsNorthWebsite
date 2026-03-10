@@ -657,7 +657,10 @@
         "order_due_on_fulfillment_choose_later": "Your account is on Monthly Payment Terms. All invoices raised within a calendar month are due for payment by the 20th of the following month, unless otherwise agreed in writing."
       },
       "order_summary": {
-        "due_on_fulfillment": "Net Terms Applies"
+        "due_on_fulfillment": "Net Terms Applies",
+        "payment_terms_totals": {
+          "due_on_fulfillment_next": "Net Terms Applies"
+        }
       }
     }
   }
