@@ -650,15 +650,5 @@
       "send_on": "YYYY-MM-DD",
       "send_on_label": "Send on (optional)"
     }
-  },
-  "shopify": {
-    "checkout": {
-      "order_summary": {
-        "payment_terms_totals": {
-          "due_on_fulfillment_next": "Your account is on Monthly Payment Terms. All invoices raised within a calendar month are due for payment by the 20th of the following month, unless otherwise agreed in writing."
-        },
-        "due_on_fulfillment": "Your account is on Monthly Payment Terms. All invoices raised within a calendar month are due for payment by the 20th of the following month, unless otherwise agreed in writing."
-      }
-    }
   }
 }
