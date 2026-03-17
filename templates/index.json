@@ -1,1 +1,1583 @@
-{"sections":{"personal_greeting_HbeFHY":{"type":"personal-greeting","blocks":{"customer_greeting_84fcFe":{"type":"customer_greeting","settings":{"customer_tag":"caltex","logo":"shopify:\/\/shop_images\/download.png","logo_position":"after_welcome","logo_size":"medium","desktop_message":"We’re delighted to have you here at the Worthy Products online portal.","mobile_message":"Welcome valued store customers to the Worthy Products online portal."}},"customer_greeting_CnBECN":{"type":"customer_greeting","settings":{"customer_tag":"mobil","logo_position":"after_welcome","logo_size":"medium","desktop_message":"Mobil Customer, We’re delighted to have you here at the Worthy Products online portal.","mobile_message":"Welcome Mobil store customer to the Worthy Products online portal."}}},"block_order":["customer_greeting_84fcFe","customer_greeting_CnBECN"],"name":"Personal Greeting","settings":{"show_fallback":false,"fallback_message":"Welcome to Worthy Products online portal.","color_scheme":"scheme-9"}},"slideshow_hc4nU7":{"type":"slideshow","blocks":{"slide_bMYq4n":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/H2_Coco_Water_-_Worthy_Products_Updated.webp","mobile_image":"shopify:\/\/shop_images\/H2_Coco_Water_-_Worthy_Products_1.webp","image_overlay_opacity":16,"image_link":"shopify:\/\/collections\/h2-coco","horizontal_offset":0.4,"vertical_offset":5.8,"desktop_content_position":"md:justify-start md:items-center","mobile_content_position":"justify-center items-end","content_max_width":"l","desktop_content_alignment":"left","mobile_content_alignment":"center","show_text_box":"mobile","caption":"Now in New Zealand and the pacific","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t5","heading":"Meet the ++ [<em>H2 Coco Water<\/em> | <em>H2 Juice]<\/em>","heading_italic_convert":"accent","heading_size":"h3","heading_size_custom":4,"heading_line_height_custom":1,"heading_tag":"h1","text":"<p>Real <strong>Coconut <\/strong>Water. Real <strong>Refreshment<\/strong>.<\/p>","text_size":"t4","button_text_size":"t5","button_label_1":"Buy","button_link_1":"shopify:\/\/collections\/h2-coco","button_style_1":"primary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":true,"button_1_border_gradient":"linear-gradient(117deg, rgba(100, 179, 255, 1) 3%, rgba(234, 145, 254, 1) 98%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":true,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","color_scheme":"scheme-3"}},"slide_x9GBMc":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Riclan_-_Worthy_Products.png","mobile_image":"shopify:\/\/shop_images\/Riclan_-_Worthy_Products_ef011dd3-e880-44f6-8bc3-1573008cf9a3.png","image_overlay_opacity":16,"image_link":"shopify:\/\/collections\/riclan","horizontal_offset":1,"vertical_offset":-2.2,"desktop_content_position":"md:justify-start md:items-center","mobile_content_position":"justify-center items-center","content_max_width":"s","desktop_content_alignment":"left","mobile_content_alignment":"center","show_text_box":"off","caption":"","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t7","heading":"Riclan <em>Brazil’s <\/em>Favourite Treats","heading_italic_convert":"glow","heading_size":"h3","heading_size_custom":3.6,"heading_line_height_custom":1.2,"heading_tag":"h2","text":"<p>Fruity chews, lollies, and sweets loved worldwide.<\/p>","text_size":"t3","button_text_size":"t5","button_label_1":"Explore","button_link_1":"shopify:\/\/collections\/riclan","button_style_1":"primary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":false,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","color_scheme":"scheme-3"}},"slide_8TVwmi":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Exeter_Meat_-_Worthy_Products.webp","mobile_image":"shopify:\/\/shop_images\/Exeter_Meat_-_Worthy_Products_1.webp","image_overlay_opacity":16,"image_link":"shopify:\/\/collections\/meat-snacks","horizontal_offset":3.2,"vertical_offset":-1.2,"desktop_content_position":"md:justify-start md:items-center","mobile_content_position":"justify-center items-center","content_max_width":"l","desktop_content_alignment":"left","mobile_content_alignment":"center","show_text_box":"mobile","caption":"","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t7","heading":"Worthy Exclusive <em>Corned Beef <\/em>","heading_italic_convert":"glow","heading_size":"h3","heading_size_custom":3.8,"heading_line_height_custom":1,"heading_tag":"h2","text":"<p>Premium Corned Beef & Luncheon Meat<\/p>","text_size":"t4","button_text_size":"t5","button_label_1":"Shop now","button_link_1":"shopify:\/\/collections\/meat-snacks","button_style_1":"secondary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":false,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","color_scheme":"scheme-3"}},"slide_KNgm7F":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Exeter_Meat_-_Worthy_Products_2.png","mobile_image":"shopify:\/\/shop_images\/Exeter_Meat_-_Worthy_Products_2_52430c67-ab7e-4bca-b6ec-37fd9ab0ed2f.png","image_overlay_opacity":16,"image_link":"shopify:\/\/collections\/mother-earth","horizontal_offset":0.4,"vertical_offset":5.8,"desktop_content_position":"md:justify-start md:items-center","mobile_content_position":"justify-center items-center","content_max_width":"l","desktop_content_alignment":"left","mobile_content_alignment":"center","show_text_box":"mobile","caption":"","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t6","heading":"Mother Earth <em>Nut Mix<\/em>","heading_italic_convert":"outline","heading_size":"h3","heading_size_custom":2.4,"heading_line_height_custom":1.2,"heading_tag":"h2","text":"<p>Peanuts, Cranberries, Cashews & Almonds<\/p>","text_size":"t4","button_text_size":"t5","button_label_1":"Stock Up","button_link_1":"shopify:\/\/collections\/mother-earth","button_style_1":"primary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":false,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","color_scheme":"scheme-3"}}},"block_order":["slide_bMYq4n","slide_x9GBMc","slide_8TVwmi","slide_KNgm7F"],"settings":{"visible_for_tag":"","hide_for_tag":"mobil,caltex","slide_animation":"wipe","slider_visual":"dots","pagination_position":"below","autoplay":"autoplay_with_pause","change_slides_speed":7,"image_ratio":"adapt","desktop_section_height":800,"mobile_section_height":380,"full_width":"on","show_text_below":true,"color_scheme":"scheme-1","line_separator":"","accessibility_info":"Slideshow about our brand","top_padding":"pt-s05","bottom_padding":"pb-s05","hide_when_empty":false,"visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"slideshow_VN8Cyn":{"type":"slideshow","blocks":{"slide_WMMqad":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/H2_Coco_Water_-_Worthy_Products_Updated.webp","mobile_image":"shopify:\/\/shop_images\/H2_Coco_Water_-_Worthy_Products_1.webp","image_overlay_opacity":16,"image_link":"shopify:\/\/collections\/h2-coco","horizontal_offset":0.4,"vertical_offset":5.8,"desktop_content_position":"md:justify-start md:items-center","mobile_content_position":"justify-center items-end","content_max_width":"s","desktop_content_alignment":"left","mobile_content_alignment":"center","show_text_box":"mobile","caption":"Now in New Zealand and the pacific","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t5","heading":"Meet the ++ [<em>H2 Coco Water<\/em> | <em>H2 Juice]<\/em>","heading_italic_convert":"accent","heading_size":"custom","heading_size_custom":4,"heading_line_height_custom":1,"heading_tag":"h1","text":"<p>Real <strong>Coconut <\/strong>Water. Real <strong>Refreshment<\/strong>.<\/p>","text_size":"t4","button_text_size":"t5","button_label_1":"Buy","button_link_1":"shopify:\/\/collections\/h2-coco","button_style_1":"primary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":true,"button_1_border_gradient":"linear-gradient(117deg, rgba(100, 179, 255, 1) 3%, rgba(234, 145, 254, 1) 98%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":true,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","color_scheme":"scheme-3"}}},"block_order":["slide_WMMqad"],"settings":{"visible_for_tag":"mobil","hide_for_tag":"","slide_animation":"wipe","slider_visual":"dots","pagination_position":"below","autoplay":"autoplay_with_pause","change_slides_speed":7,"image_ratio":"adapt","desktop_section_height":800,"mobile_section_height":380,"full_width":"on","show_text_below":true,"color_scheme":"scheme-1","line_separator":"","accessibility_info":"Slideshow about our brand","top_padding":"pt-s05","bottom_padding":"pb-0","hide_when_empty":false,"visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"slideshow_wfeKTk":{"type":"slideshow","blocks":{"slide_KTVywW":{"type":"slide","settings":{"image":"shopify:\/\/shop_images\/Warehouse_Image.png","mobile_image":"shopify:\/\/shop_images\/Mobile_Warehouse_Banner.png","image_overlay_opacity":16,"image_link":"shopify:\/\/collections\/all","horizontal_offset":0.4,"vertical_offset":5.8,"desktop_content_position":"md:justify-start md:items-center","mobile_content_position":"justify-center items-end","content_max_width":"s","desktop_content_alignment":"left","mobile_content_alignment":"center","show_text_box":"mobile","caption":"By Worthy For Caltex","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t5","heading":"[Welcome to Worthy Products Online Portal | Empowering Worthy - Caltex Partners Nationwide]","heading_italic_convert":"accent","heading_size":"custom","heading_size_custom":4,"heading_line_height_custom":1,"heading_tag":"h1","text":"<p>Seamlessly order from Worthy Products with real-time stock visibility and tailored pricing designed just for Caltex sites.<\/p>","text_size":"t4","button_text_size":"t5","button_label_1":"Buy","button_link_1":"shopify:\/\/collections\/h2-coco","button_style_1":"primary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":true,"button_1_border_gradient":"linear-gradient(117deg, rgba(100, 179, 255, 1) 3%, rgba(234, 145, 254, 1) 98%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":true,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","color_scheme":"scheme-3"}}},"block_order":["slide_KTVywW"],"settings":{"visible_for_tag":"caltex","hide_for_tag":"","slide_animation":"wipe","slider_visual":"dots","pagination_position":"below","autoplay":"autoplay_with_pause","change_slides_speed":7,"image_ratio":"adapt","desktop_section_height":800,"mobile_section_height":380,"full_width":"on","show_text_below":true,"color_scheme":"scheme-1","line_separator":"","accessibility_info":"Caltex Slider","top_padding":"pt-s05","bottom_padding":"pb-s05","hide_when_empty":false,"visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"icons_with_text_jjRLYL":{"type":"icons-with-text","blocks":{"icon_with_text_DiXBxY":{"type":"icon_with_text","settings":{"icon":"shield_checkmark","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>WELL TRUSTED<\/strong>","text":"Serving over 3000 Stores across New Zealand","card_link":""}},"icon_with_text_R4kbUP":{"type":"icon_with_text","settings":{"icon":"truck","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>SUPER FAST<\/strong>","text":"With Express delivery","card_link":""}},"icon_with_text_CHfJVz":{"type":"icon_with_text","settings":{"icon":"chat_bubbles","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>EXPERT HELP<\/strong>","text":"Mon - Fri 8AM To 4PM","card_link":""}},"icon_with_text_eXN4Rt":{"type":"icon_with_text","settings":{"icon":"price_tags","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>BEST PRICES<\/strong>","text":"Unbeatable value","card_link":""}}},"block_order":["icon_with_text_DiXBxY","icon_with_text_R4kbUP","icon_with_text_CHfJVz","icon_with_text_eXN4Rt"],"settings":{"placement":"beside","content_vertical_alignment":"items-center","column_alignment":"left","vertical_padding":2.4,"icon_size":3.2,"heading_size":"t4","text_size":"t5","mobile_layout":"carousel","columns_mobile":"2","color_scheme":"scheme-4","line_separator":"","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"rich_text_8NPrMc":{"type":"rich-text","blocks":{"heading_qYJFfj":{"type":"heading","settings":{"heading":"From Our Shelves to Yours ++ <em><strong>NZ’s Go-To Distributor. <\/strong><\/em><strong> <\/strong>","heading_italic_convert":"accent","heading_size":"custom","heading_size_custom":3.6,"heading_line_height_custom":1.5,"heading_tag":"h2"}},"buttons_hQg9JW":{"type":"buttons","settings":{"button_text_size":"t2","button_label_1":"Find Products","button_link_1":"shopify:\/\/collections\/all","button_style_1":"primary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","button_label_2":"Explore Collections","button_link_2":"shopify:\/\/collections","button_style_2":"secondary","button_style_2_show_arrow":false,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"}}},"block_order":["heading_qYJFfj","buttons_hQg9JW"],"settings":{"desktop_content_position":"center","content_max_width":"xl","desktop_content_alignment":"center","mobile_content_alignment":"center","section_color_scheme":"scheme-bcbc0ec1-ee83-4aa6-96dc-45038d7e6642","container_color_scheme":"scheme-1","show_content_shadow":false,"line_separator":"","top_padding":"pt-s","bottom_padding":"pb-s15","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"featured_collection_PCNhTz":{"type":"featured-collection","settings":{"collection":"best-sellers","products_to_show":24,"desktop_layout":"carousel","mobile_layout":"carousel","columns_desktop":"5","columns_mobile":"2","full_width":true,"content_max_width":"m","desktop_heading_alignment":"left","mobile_heading_alignment":"left","title":"<em>Bestsellers<\/em>","italic_convert":"accent","heading_size":"h2","text":"<p>All your fast movers, in one place.<\/p>","text_size":"t2","show_view_all_link":false,"view_all_text":"Show me","view_all_text_size":"t5","view_all_card_visibility":"","view_all_card_text":"There's plenty more...","color_scheme":"scheme-2","view_all_color_scheme":"scheme-d69e0ed9-d207-43c6-9e73-0d91ee215dde","line_separator":"","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"heading_tag":"h2"}},"collection_list_8epked":{"type":"collection-list","settings":{"collections":["confectionary","beverages","grocery","health-beauty","stationary","general"],"collection_text_size":"t1","content_alignment":"md:justify-center","card_image_ratio":"square","use_product_image":true,"desktop_layout":"grid","mobile_layout":"carousel","columns_desktop":"6","columns_desktop_scale":true,"columns_mobile":"1","full_width":true,"content_max_width":"xs","desktop_heading_alignment":"left","mobile_heading_alignment":"left","title":"<em>Our range.<\/em> Check out everything on offer.","italic_convert":"accent","heading_size":"h2","text":"","text_size":"t3","show_view_all_link":true,"view_all_link":"shopify:\/\/collections\/all","view_all_text":"View more","view_all_text_size":"t3","view_all_card_visibility":"off","view_all_card_text":"More collections","color_scheme":"scheme-1","view_all_color_scheme":"scheme-1","line_separator":"border-top","top_padding":"pt-s15","bottom_padding":"pb-s15","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"heading_tag":"h2"}},"image_banner_UpXT8f":{"type":"image-banner","blocks":{"caption_gpUMVy":{"type":"caption","settings":{"caption":"SALE IS ON","caption_text_style":"caption-with-letter-spacing","caption_text_size":"t3"}},"spacer_t9bdC6":{"type":"spacer","settings":{"show_line_separator":false,"spacing_top":3.1,"spacing_bottom":1.1,"spacer_visibility":"both","line_color":""}},"heading_yYP9RY":{"type":"heading","settings":{"heading":"<em>END OF YEAR ++MEGA SALE<\/em>","heading_italic_convert":"glow","heading_size":"custom","heading_size_custom":7,"heading_line_height_custom":0.9,"heading_tag":"h2"}},"spacer_KyfKAd":{"type":"spacer","settings":{"show_line_separator":false,"spacing_top":2.9,"spacing_bottom":2.9,"spacer_visibility":"both","line_color":""}},"countdown_WqCmAX":{"type":"countdown","settings":{"end_date":"2025-12-31","end_time":"23:59","end_action":"hide","end_message":"You just missed it!","abbreviate_units":false,"countdown_size":40,"separator":":","countdown_font_weight":"bold","text_alignment":"center","countdown_container":"none","countdown_color":"#f8f9fa","countdown_background_color":"#000000","countdown_background_gradient":"linear-gradient(180deg, rgba(203, 166, 10, 1), rgba(223, 182, 8, 1) 100%)"}},"spacer_tzF9aq":{"type":"spacer","settings":{"show_line_separator":false,"spacing_top":2.4,"spacing_bottom":2.4,"spacer_visibility":"both","line_color":""}},"buttons_Cy8473":{"type":"buttons","settings":{"button_text_size":"t2","button_label_1":"Shop now","button_link_1":"shopify:\/\/collections\/all","button_style_1":"secondary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":true,"button_1_border_gradient":"linear-gradient(136deg, rgba(36, 87, 194, 1) 11%, rgba(255, 255, 255, 1) 58%, rgba(255, 255, 255, 1) 84%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":false,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"}}},"block_order":["caption_gpUMVy","spacer_t9bdC6","heading_yYP9RY","spacer_KyfKAd","countdown_WqCmAX","spacer_tzF9aq","buttons_Cy8473"],"settings":{"image":"shopify:\/\/shop_images\/banner_principal_1.jpg","image_overlay_opacity":0,"image_link":"","fix_image":false,"skew_images":false,"stack_images_on_mobile":true,"image_ratio":"custom","desktop_section_height":500,"mobile_section_height":320,"full_width":true,"full_width_animate":false,"desktop_content_position":"md:justify-center md:items-center","mobile_content_position":"justify-center items-center","content_max_width":"l","desktop_content_alignment":"center","mobile_content_alignment":"center","show_text_box":"off","show_text_below":false,"color_scheme":"scheme-2","container_color_scheme":"scheme-13","line_separator":"","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"scrolling_text_9ymWCM":{"type":"scrolling-text","blocks":{"heading_QgwRbi":{"type":"heading","settings":{"heading":"Try Canada Dry Ginger Ale","heading_italic_convert":"light","heading_size":"h4","heading_size_custom":2.4,"heading_line_height_custom":1.2,"heading_tag":"h2"}},"buttons_dBpWfM":{"type":"buttons","settings":{"button_text_size":"t6","button_label_1":"Order now","button_link_1":"shopify:\/\/products\/canada-dry-ginger-ale-355ml-1x12","button_style_1":"secondary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"}},"heading_tLdCG3":{"type":"heading","settings":{"heading":"Explore the New Arrivals","heading_italic_convert":"light","heading_size":"h4","heading_size_custom":2.4,"heading_line_height_custom":1.2,"heading_tag":"h2"}},"buttons_HHF7wM":{"type":"buttons","settings":{"button_text_size":"t6","button_label_1":"View Now","button_link_1":"shopify:\/\/collections\/new-arrivals","button_style_1":"secondary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"}}},"block_order":["heading_QgwRbi","buttons_dBpWfM","heading_tLdCG3","buttons_HHF7wM"],"settings":{"full_width":true,"spacing":1.8,"gap":5.8,"speed":19,"direction":"normal","pause_on_hover":true,"content_max_width":"m","desktop_heading_alignment":"left","mobile_heading_alignment":"left","title":"","italic_convert":"","heading_size":"h2","text":"","text_size":"t3","view_all_link":"","view_all_text":"","view_all_text_size":"t3","color_scheme":"scheme-4","top_padding":"pt-0","bottom_padding":"pb-0","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"featured_blog_cFnRJH":{"type":"featured-blog","settings":{"blog":"news","posts_to_show":7,"show_image":true,"show_date":false,"show_author":false,"show_reading_estimate":true,"show_first_tag":false,"excerpt_mode":"none","blog_card_featured":"news\/our-top-selling-grocery-favourites-customer-picks-from-worthy-products","featured_excerpt_mode":"short","desktop_layout":"carousel","mobile_layout":"carousel","columns_desktop":"5","full_width":true,"content_max_width":"m","desktop_heading_alignment":"center","mobile_heading_alignment":"left","title":"From the<em> news<\/em>","italic_convert":"accent","heading_size":"h1","text":"<p>Our blog, covering everything essentials.<\/p>","text_size":"t2","show_view_all_link":true,"view_all_text":"Read blog","view_all_text_size":"t2","view_all_card_visibility":"","view_all_card_text":"Keep reading","color_scheme":"","view_all_color_scheme":"","line_separator":"border-top","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"heading_tag":"h2"}},"stats_JYTTVY":{"type":"stats","blocks":{"column_standard_4BXcEh":{"type":"column_standard","settings":{"stat_caption":"Over","stat_number":"2000","title":"products to shop","heading_size":"h4","stat_color":"#f1b726","stat_text_gradient":"linear-gradient(276deg, rgba(255, 228, 49, 1), rgba(249, 149, 32, 1) 59%)","icon":"","icon_container":"none","icon_size":3.4,"icon_color":"","icon_background_color":"#ededed","background_gradient":"","text":"","text_size":"t3","image_ratio":"adapt","image_width":100,"image_position":"below_text","button_text_size":"t3","button_label":"","button_link":"","button_style":"primary","button_style_show_arrow":false,"button_style_show_gradient_border":false,"button_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","card_link":"","card_color_scheme":"scheme-10","color_scheme_bg_fix":true}},"column_standard_Y8eq4t":{"type":"column_standard","settings":{"stat_caption":"With","stat_number":"95%","title":"positive reviews","heading_size":"h4","stat_color":"#e937d6","stat_text_gradient":"linear-gradient(238deg, rgba(249, 119, 255, 1) 8%, rgba(186, 54, 255, 1) 69%)","icon":"","icon_container":"none","icon_size":3.4,"icon_color":"","icon_background_color":"#ededed","background_gradient":"","text":"","text_size":"t3","image_ratio":"adapt","image_width":100,"image_position":"below_text","button_text_size":"t3","button_label":"","button_link":"","button_style":"primary","button_style_show_arrow":false,"button_style_show_gradient_border":false,"button_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","card_link":"","card_color_scheme":"scheme-10","color_scheme_bg_fix":true}},"column_standard_yVfiA3":{"type":"column_standard","settings":{"stat_caption":"Selling in","stat_number":"17","title":"territories","heading_size":"h4","stat_color":"#00ffff","stat_text_gradient":"linear-gradient(106deg, rgba(87, 247, 255, 1) 6%, rgba(33, 249, 239, 1) 68%)","icon":"","icon_container":"none","icon_size":3.4,"icon_color":"","icon_background_color":"#ededed","background_gradient":"","text":"","text_size":"t3","image_ratio":"adapt","image_width":100,"image_position":"below_text","button_text_size":"t3","button_label":"","button_link":"","button_style":"primary","button_style_show_arrow":false,"button_style_show_gradient_border":false,"button_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","card_link":"","card_color_scheme":"scheme-10","color_scheme_bg_fix":true}}},"block_order":["column_standard_4BXcEh","column_standard_Y8eq4t","column_standard_yVfiA3"],"settings":{"stat_animate":true,"stat_caption_style":"caption-with-letter-spacing","stat_style":"text-body","heading_style":"text-body","stat_size":"custom","stat_size_custom":5,"desktop_section_height":250,"mobile_section_height":0,"column_alignment":"center","text_vertical_alignment":"justify-center","spacing_grid":28,"content_padding":2,"columns_desktop":3,"columns_desktop_scale":false,"full_width_section":true,"image_overlay_opacity":0,"content_max_width":"m","desktop_heading_alignment":"center","mobile_heading_alignment":"center","title":"Shop with Confidence","italic_convert":"","heading_size":"h0","text":"","text_size":"t1","view_all_link":"","view_all_text":"","view_all_text_size":"t3","color_scheme":"scheme-10","card_shadow":false,"line_separator":"","top_padding":"pt-s15","bottom_padding":"pb-s05","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"heading_tag":"h2"}},"testimonials_eeVUTL":{"type":"testimonials","blocks":{"column_standard_9k8BGU":{"type":"column_standard","settings":{"image_ratio":"adapt","image_width":100,"rating_stars":5,"title":"<strong>Fast shipping<\/strong>","heading_tag":"h3","text":"<p>Ordered a laptop and it arrived the next day. Super impressed with the speed and the careful packaging.<\/p>","author_name":"Jordan Smith","author_caption":"Seattle, Washington","card_link":"","card_color_scheme":"scheme-3","color_scheme_bg_fix":false}},"column_standard_fpye6t":{"type":"column_standard","settings":{"image_ratio":"adapt","image_width":100,"rating_stars":5,"title":"<strong>Excellent service<\/strong>","heading_tag":"h3","text":"<p>Customer support was helpful; they resolved my issue in minutes. Really appreciated the follow-up email to ensure satisfaction.<\/p>","author_name":"Taylor Christos","author_caption":"Austin, Texas","card_link":"","card_color_scheme":"scheme-3","color_scheme_bg_fix":false}},"column_standard_jUrPVX":{"type":"column_standard","settings":{"image_ratio":"adapt","image_width":100,"rating_stars":5,"title":"<strong>Great selection<\/strong>","heading_tag":"h3","text":"<p>Wide variety of tech products from phones to laptops. Found everything I needed in one place, very convenient.<\/p>","author_name":"Alex Williams","author_caption":"London, England","card_link":"","card_color_scheme":"scheme-3","color_scheme_bg_fix":false}},"column_standard_RLXXGQ":{"type":"column_standard","settings":{"image_ratio":"adapt","image_width":100,"rating_stars":5,"title":"<strong>Top quality<\/strong>","heading_tag":"h3","text":"<p>The smartphone I bought exceeded my expectations. Top-notch quality, sleek design, and it came with a free case!<\/p>","author_name":"Sam Davis","author_caption":"San Francisco, California","card_link":"","card_color_scheme":"scheme-3","color_scheme_bg_fix":false}},"column_standard_wBCitV":{"type":"column_standard","settings":{"image_ratio":"adapt","image_width":100,"rating_stars":5,"title":"<strong>Reliable store<\/strong>","heading_tag":"h3","text":"<p>Have ordered multiple times, always received exactly what was described. Products are genuine and fully functional.<\/p>","author_name":"Casey Brown","author_caption":"Denver, Colorado","card_link":"","card_color_scheme":"scheme-3","color_scheme_bg_fix":false}},"column_standard_Gzb6hm":{"type":"column_standard","settings":{"image_ratio":"adapt","image_width":100,"rating_stars":5,"title":"<strong>User-friendly website<\/strong>","heading_tag":"h3","text":"<p>Easy to navigate and make purchases. A hassle-free shopping experience with clear descriptions and transparent pricing.<\/p>","author_name":"Riley Wilson","author_caption":"Boston, Massachusetts","card_link":"","card_color_scheme":"scheme-3","color_scheme_bg_fix":false}}},"block_order":["column_standard_9k8BGU","column_standard_fpye6t","column_standard_jUrPVX","column_standard_RLXXGQ","column_standard_wBCitV","column_standard_Gzb6hm"],"disabled":true,"settings":{"review_style":"star","rating_size":3,"heading_style":"text-body","card_heading_size":"h5","card_text_size":"t3","author_line":true,"desktop_section_height":330,"mobile_section_height":200,"column_alignment":"left","text_vertical_alignment":"justify-center","content_padding":4,"desktop_layout":"carousel","mobile_layout":"carousel","columns_desktop":"3","columns_desktop_scale":true,"full_width":false,"image_overlay_opacity":0,"content_max_width":"m","desktop_heading_alignment":"center","mobile_heading_alignment":"left","title":"","italic_convert":"","heading_size":"h4","text":"","text_size":"t3","view_all_link":"","view_all_text":"","view_all_text_size":"t3","color_scheme":"scheme-10","star_color":"#f5e121","card_shadow":true,"line_separator":"","top_padding":"pt-s05","bottom_padding":"pb-s15","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"heading_tag":"h2"}},"scrolling_text_XDEjRT":{"type":"scrolling-text","blocks":{"image_WYCGMA":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Bic.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_V33PfL":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/H2_Coco.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_6FbtDp":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Tasti.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_jHtcRp":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Kinder.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_V6tdHN":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Hersheys.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_HjbBPQ":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Musashi_6af512ec-2a25-4c95-bd7d-62dd76d315a0.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_TLxqHH":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Nestle.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_VkN7KT":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Chi_Drinks.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_ynWeLa":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Mars_9aa80a26-7c8d-46e2-bf83-d8c86b577f41.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_4wzGAR":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Pringles.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_P37qqw":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Whittakers.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_DiPeN6":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Ferrarelle.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_BY6dFN":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Riclan_b4b2d2fc-bb2f-4d88-b681-09fa446cade7.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_RFhamp":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Wrigley_s.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_9hGtzk":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Cadbury.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_R9LGTt":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Nurofen.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_dG8fgc":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Zuru.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_VYgjbj":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Rj_s.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_YeQCPb":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Bundaberg_ba4b1dc6-65e7-482c-b0ce-539e0d511b70.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}},"image_wVLLDB":{"type":"image","settings":{"image_1":"shopify:\/\/shop_images\/Jack_Links.png","image_ratio":"adapt","desktop_image_width":100,"mobile_image_width":60,"image_corner_radius":0,"image_1_link":""}}},"block_order":["image_WYCGMA","image_V33PfL","image_6FbtDp","image_jHtcRp","image_V6tdHN","image_HjbBPQ","image_TLxqHH","image_VkN7KT","image_ynWeLa","image_4wzGAR","image_P37qqw","image_DiPeN6","image_BY6dFN","image_RFhamp","image_9hGtzk","image_R9LGTt","image_dG8fgc","image_VYgjbj","image_YeQCPb","image_wVLLDB"],"settings":{"full_width":true,"spacing":3,"gap":2.2,"speed":5,"direction":"normal","pause_on_hover":true,"content_max_width":"m","desktop_heading_alignment":"center","mobile_heading_alignment":"center","title":"Our Top Brands","italic_convert":"","heading_size":"h2","text":"","text_size":"t3","view_all_link":"\/","view_all_text":"","view_all_text_size":"t3","color_scheme":"scheme-1","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"icons_with_text_f3bxbj":{"type":"icons-with-text","blocks":{"icon_with_text_tBDeaJ":{"type":"icon_with_text","settings":{"icon":"shield_checkmark","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>WELL TRUSTED<\/strong>","text":"Serving over 3000 Stores across New Zealand","card_link":""}},"icon_with_text_kQxy8L":{"type":"icon_with_text","settings":{"icon":"truck","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>SUPER FAST<\/strong>","text":"With Express delivery","card_link":""}},"icon_with_text_VUixjq":{"type":"icon_with_text","settings":{"icon":"chat_bubbles","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>EXPERT HELP<\/strong>","text":"Mon - Fri 8AM To 4PM","card_link":""}},"icon_with_text_8QD8Vm":{"type":"icon_with_text","settings":{"icon":"price_tags","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>BEST PRICES<\/strong>","text":"Unbeatable value","card_link":""}}},"block_order":["icon_with_text_tBDeaJ","icon_with_text_kQxy8L","icon_with_text_VUixjq","icon_with_text_8QD8Vm"],"settings":{"placement":"beside","content_vertical_alignment":"items-center","column_alignment":"left","vertical_padding":2.4,"icon_size":3.2,"heading_size":"t4","text_size":"t5","mobile_layout":"carousel","columns_mobile":"2","color_scheme":"scheme-3","line_separator":"","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}}},"order":["personal_greeting_HbeFHY","slideshow_hc4nU7","slideshow_VN8Cyn","slideshow_wfeKTk","icons_with_text_jjRLYL","rich_text_8NPrMc","featured_collection_PCNhTz","collection_list_8epked","image_banner_UpXT8f","scrolling_text_9ymWCM","featured_blog_cFnRJH","stats_JYTTVY","testimonials_eeVUTL","scrolling_text_XDEjRT","icons_with_text_f3bxbj"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "personal_greeting_HbeFHY": {
+      "type": "personal-greeting",
+      "blocks": {
+        "customer_greeting_84fcFe": {
+          "type": "customer_greeting",
+          "settings": {
+            "customer_tag": "caltex",
+            "logo": "shopify://shop_images/download.png",
+            "logo_position": "after_welcome",
+            "logo_size": "medium",
+            "desktop_message": "We’re delighted to have you here at the Worthy Products online portal.",
+            "mobile_message": "Welcome valued store customers to the Worthy Products online portal."
+          }
+        },
+        "customer_greeting_CnBECN": {
+          "type": "customer_greeting",
+          "settings": {
+            "customer_tag": "mobil",
+            "logo_position": "after_welcome",
+            "logo_size": "medium",
+            "desktop_message": "Mobil Customer, We’re delighted to have you here at the Worthy Products online portal.",
+            "mobile_message": "Welcome Mobil store customer to the Worthy Products online portal."
+          }
+        }
+      },
+      "block_order": [
+        "customer_greeting_84fcFe",
+        "customer_greeting_CnBECN"
+      ],
+      "name": "Personal Greeting",
+      "settings": {
+        "show_fallback": false,
+        "fallback_message": "Welcome to Worthy Products online portal.",
+        "color_scheme": "scheme-9"
+      }
+    },
+    "slideshow_hc4nU7": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_bMYq4n": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/H2_Coco_Water_-_Worthy_Products_Updated.webp",
+            "mobile_image": "shopify://shop_images/H2_Coco_Water_-_Worthy_Products_1.webp",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/h2-coco",
+            "horizontal_offset": 0.4,
+            "vertical_offset": 5.8,
+            "desktop_content_position": "md:justify-start md:items-center",
+            "mobile_content_position": "justify-center items-end",
+            "content_max_width": "l",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "mobile",
+            "caption": "Now in New Zealand and the pacific",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t5",
+            "heading": "Meet the ++ [<em>H2 Coco Water</em> | <em>H2 Juice]</em>",
+            "heading_italic_convert": "accent",
+            "heading_size": "h3",
+            "heading_size_custom": 4,
+            "heading_line_height_custom": 1,
+            "heading_tag": "h1",
+            "text": "<p>Real <strong>Coconut </strong>Water. Real <strong>Refreshment</strong>.</p>",
+            "text_size": "t4",
+            "button_text_size": "t5",
+            "button_label_1": "Buy",
+            "button_link_1": "shopify://collections/h2-coco",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": true,
+            "button_1_border_gradient": "linear-gradient(117deg, rgba(100, 179, 255, 1) 3%, rgba(234, 145, 254, 1) 98%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": true,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-3"
+          }
+        },
+        "slide_x9GBMc": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Riclan_-_Worthy_Products.png",
+            "mobile_image": "shopify://shop_images/Riclan_-_Worthy_Products_ef011dd3-e880-44f6-8bc3-1573008cf9a3.png",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/riclan",
+            "horizontal_offset": 1,
+            "vertical_offset": -2.2,
+            "desktop_content_position": "md:justify-start md:items-center",
+            "mobile_content_position": "justify-center items-center",
+            "content_max_width": "s",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "off",
+            "caption": "",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t7",
+            "heading": "Riclan <em>Brazil’s </em>Favourite Treats",
+            "heading_italic_convert": "glow",
+            "heading_size": "h3",
+            "heading_size_custom": 3.6,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2",
+            "text": "<p>Fruity chews, lollies, and sweets loved worldwide.</p>",
+            "text_size": "t3",
+            "button_text_size": "t5",
+            "button_label_1": "Explore",
+            "button_link_1": "shopify://collections/riclan",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-3"
+          }
+        },
+        "slide_8TVwmi": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Exeter_Meat_-_Worthy_Products.webp",
+            "mobile_image": "shopify://shop_images/Exeter_Meat_-_Worthy_Products_1.webp",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/meat-snacks",
+            "horizontal_offset": 3.2,
+            "vertical_offset": -1.2,
+            "desktop_content_position": "md:justify-start md:items-center",
+            "mobile_content_position": "justify-center items-center",
+            "content_max_width": "l",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "mobile",
+            "caption": "",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t7",
+            "heading": "Worthy Exclusive <em>Corned Beef </em>",
+            "heading_italic_convert": "glow",
+            "heading_size": "h3",
+            "heading_size_custom": 3.8,
+            "heading_line_height_custom": 1,
+            "heading_tag": "h2",
+            "text": "<p>Premium Corned Beef & Luncheon Meat</p>",
+            "text_size": "t4",
+            "button_text_size": "t5",
+            "button_label_1": "Shop now",
+            "button_link_1": "shopify://collections/meat-snacks",
+            "button_style_1": "secondary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-3"
+          }
+        },
+        "slide_KNgm7F": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Exeter_Meat_-_Worthy_Products_2.png",
+            "mobile_image": "shopify://shop_images/Exeter_Meat_-_Worthy_Products_2_52430c67-ab7e-4bca-b6ec-37fd9ab0ed2f.png",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/mother-earth",
+            "horizontal_offset": 0.4,
+            "vertical_offset": 5.8,
+            "desktop_content_position": "md:justify-start md:items-center",
+            "mobile_content_position": "justify-center items-center",
+            "content_max_width": "l",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "mobile",
+            "caption": "",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t6",
+            "heading": "Mother Earth <em>Nut Mix</em>",
+            "heading_italic_convert": "outline",
+            "heading_size": "h3",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2",
+            "text": "<p>Peanuts, Cranberries, Cashews & Almonds</p>",
+            "text_size": "t4",
+            "button_text_size": "t5",
+            "button_label_1": "Stock Up",
+            "button_link_1": "shopify://collections/mother-earth",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-3"
+          }
+        }
+      },
+      "block_order": [
+        "slide_bMYq4n",
+        "slide_x9GBMc",
+        "slide_8TVwmi",
+        "slide_KNgm7F"
+      ],
+      "settings": {
+        "visible_for_tag": "",
+        "hide_for_tag": "mobil,caltex",
+        "slide_animation": "wipe",
+        "slider_visual": "dots",
+        "pagination_position": "below",
+        "autoplay": "autoplay_with_pause",
+        "change_slides_speed": 7,
+        "image_ratio": "adapt",
+        "desktop_section_height": 800,
+        "mobile_section_height": 380,
+        "full_width": "on",
+        "show_text_below": true,
+        "color_scheme": "scheme-1",
+        "line_separator": "",
+        "accessibility_info": "Slideshow about our brand",
+        "top_padding": "pt-s05",
+        "bottom_padding": "pb-s05",
+        "hide_when_empty": false,
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "slideshow_VN8Cyn": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_WMMqad": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/H2_Coco_Water_-_Worthy_Products_Updated.webp",
+            "mobile_image": "shopify://shop_images/H2_Coco_Water_-_Worthy_Products_1.webp",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/h2-coco",
+            "horizontal_offset": 0.4,
+            "vertical_offset": 5.8,
+            "desktop_content_position": "md:justify-start md:items-center",
+            "mobile_content_position": "justify-center items-end",
+            "content_max_width": "s",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "mobile",
+            "caption": "Now in New Zealand and the pacific",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t5",
+            "heading": "Meet the ++ [<em>H2 Coco Water</em> | <em>H2 Juice]</em>",
+            "heading_italic_convert": "accent",
+            "heading_size": "custom",
+            "heading_size_custom": 4,
+            "heading_line_height_custom": 1,
+            "heading_tag": "h1",
+            "text": "<p>Real <strong>Coconut </strong>Water. Real <strong>Refreshment</strong>.</p>",
+            "text_size": "t4",
+            "button_text_size": "t5",
+            "button_label_1": "Buy",
+            "button_link_1": "shopify://collections/h2-coco",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": true,
+            "button_1_border_gradient": "linear-gradient(117deg, rgba(100, 179, 255, 1) 3%, rgba(234, 145, 254, 1) 98%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": true,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-3"
+          }
+        }
+      },
+      "block_order": [
+        "slide_WMMqad"
+      ],
+      "settings": {
+        "visible_for_tag": "mobil",
+        "hide_for_tag": "",
+        "slide_animation": "wipe",
+        "slider_visual": "dots",
+        "pagination_position": "below",
+        "autoplay": "autoplay_with_pause",
+        "change_slides_speed": 7,
+        "image_ratio": "adapt",
+        "desktop_section_height": 800,
+        "mobile_section_height": 380,
+        "full_width": "on",
+        "show_text_below": true,
+        "color_scheme": "scheme-1",
+        "line_separator": "",
+        "accessibility_info": "Slideshow about our brand",
+        "top_padding": "pt-s05",
+        "bottom_padding": "pb-0",
+        "hide_when_empty": false,
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "slideshow_wfeKTk": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_KTVywW": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Warehouse_Image.png",
+            "mobile_image": "shopify://shop_images/Mobile_Warehouse_Banner.png",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/all",
+            "horizontal_offset": 0.4,
+            "vertical_offset": 5.8,
+            "desktop_content_position": "md:justify-start md:items-center",
+            "mobile_content_position": "justify-center items-end",
+            "content_max_width": "s",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "mobile",
+            "caption": "By Worthy For Caltex",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t5",
+            "heading": "[Welcome to Worthy Products Online Portal | Empowering Worthy - Caltex Partners Nationwide]",
+            "heading_italic_convert": "accent",
+            "heading_size": "custom",
+            "heading_size_custom": 4,
+            "heading_line_height_custom": 1,
+            "heading_tag": "h1",
+            "text": "<p>Seamlessly order from Worthy Products with real-time stock visibility and tailored pricing designed just for Caltex sites.</p>",
+            "text_size": "t4",
+            "button_text_size": "t5",
+            "button_label_1": "Buy",
+            "button_link_1": "shopify://collections/h2-coco",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": true,
+            "button_1_border_gradient": "linear-gradient(117deg, rgba(100, 179, 255, 1) 3%, rgba(234, 145, 254, 1) 98%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": true,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-3"
+          }
+        }
+      },
+      "block_order": [
+        "slide_KTVywW"
+      ],
+      "settings": {
+        "visible_for_tag": "caltex",
+        "hide_for_tag": "",
+        "slide_animation": "wipe",
+        "slider_visual": "dots",
+        "pagination_position": "below",
+        "autoplay": "autoplay_with_pause",
+        "change_slides_speed": 7,
+        "image_ratio": "adapt",
+        "desktop_section_height": 800,
+        "mobile_section_height": 380,
+        "full_width": "on",
+        "show_text_below": true,
+        "color_scheme": "scheme-1",
+        "line_separator": "",
+        "accessibility_info": "Caltex Slider",
+        "top_padding": "pt-s05",
+        "bottom_padding": "pb-s05",
+        "hide_when_empty": false,
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "icons_with_text_jjRLYL": {
+      "type": "icons-with-text",
+      "blocks": {
+        "icon_with_text_DiXBxY": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "shield_checkmark",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>WELL TRUSTED</strong>",
+            "text": "Serving over 3000 Stores across New Zealand",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_R4kbUP": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "truck",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>SUPER FAST</strong>",
+            "text": "With Express delivery",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_CHfJVz": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "chat_bubbles",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>EXPERT HELP</strong>",
+            "text": "Mon - Fri 8AM To 4PM",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_eXN4Rt": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "price_tags",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>BEST PRICES</strong>",
+            "text": "Unbeatable value",
+            "card_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "icon_with_text_DiXBxY",
+        "icon_with_text_R4kbUP",
+        "icon_with_text_CHfJVz",
+        "icon_with_text_eXN4Rt"
+      ],
+      "settings": {
+        "placement": "beside",
+        "content_vertical_alignment": "items-center",
+        "column_alignment": "left",
+        "vertical_padding": 2.4,
+        "icon_size": 3.2,
+        "heading_size": "t4",
+        "text_size": "t5",
+        "mobile_layout": "carousel",
+        "columns_mobile": "2",
+        "color_scheme": "scheme-4",
+        "line_separator": "",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "rich_text_8NPrMc": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_qYJFfj": {
+          "type": "heading",
+          "settings": {
+            "heading": "From Our Shelves to Yours ++ <em><strong>NZ’s Go-To Distributor. </strong></em><strong> </strong>",
+            "heading_italic_convert": "accent",
+            "heading_size": "custom",
+            "heading_size_custom": 3.6,
+            "heading_line_height_custom": 1.5,
+            "heading_tag": "h2"
+          }
+        },
+        "buttons_hQg9JW": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t2",
+            "button_label_1": "Find Products",
+            "button_link_1": "shopify://collections/all",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "Explore Collections",
+            "button_link_2": "shopify://collections",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        }
+      },
+      "block_order": [
+        "heading_qYJFfj",
+        "buttons_hQg9JW"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_max_width": "xl",
+        "desktop_content_alignment": "center",
+        "mobile_content_alignment": "center",
+        "section_color_scheme": "scheme-bcbc0ec1-ee83-4aa6-96dc-45038d7e6642",
+        "container_color_scheme": "scheme-1",
+        "show_content_shadow": false,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s15",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "featured_collection_PCNhTz": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "best-sellers",
+        "products_to_show": 24,
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "5",
+        "columns_mobile": "2",
+        "full_width": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "<em>Bestsellers</em>",
+        "italic_convert": "accent",
+        "heading_size": "h2",
+        "text": "<p>All your fast movers, in one place.</p>",
+        "text_size": "t2",
+        "show_view_all_link": false,
+        "view_all_text": "Show me",
+        "view_all_text_size": "t5",
+        "view_all_card_visibility": "",
+        "view_all_card_text": "There's plenty more...",
+        "color_scheme": "scheme-2",
+        "view_all_color_scheme": "scheme-d69e0ed9-d207-43c6-9e73-0d91ee215dde",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
+    "collection_list_8epked": {
+      "type": "collection-list",
+      "settings": {
+        "collections": [
+          "confectionary",
+          "beverages",
+          "grocery",
+          "health-beauty",
+          "stationary",
+          "general"
+        ],
+        "collection_text_size": "t1",
+        "content_alignment": "md:justify-center",
+        "card_image_ratio": "square",
+        "use_product_image": true,
+        "desktop_layout": "grid",
+        "mobile_layout": "carousel",
+        "columns_desktop": "6",
+        "columns_desktop_scale": true,
+        "columns_mobile": "1",
+        "full_width": true,
+        "content_max_width": "xs",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "<em>Our range.</em> Check out everything on offer.",
+        "italic_convert": "accent",
+        "heading_size": "h2",
+        "text": "",
+        "text_size": "t3",
+        "show_view_all_link": true,
+        "view_all_link": "shopify://collections/all",
+        "view_all_text": "View more",
+        "view_all_text_size": "t3",
+        "view_all_card_visibility": "off",
+        "view_all_card_text": "More collections",
+        "color_scheme": "scheme-1",
+        "view_all_color_scheme": "scheme-1",
+        "line_separator": "border-top",
+        "top_padding": "pt-s15",
+        "bottom_padding": "pb-s15",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
+    "image_banner_UpXT8f": {
+      "type": "image-banner",
+      "blocks": {
+        "caption_gpUMVy": {
+          "type": "caption",
+          "settings": {
+            "caption": "SALE IS ON",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t3"
+          }
+        },
+        "spacer_t9bdC6": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": false,
+            "spacing_top": 3.1,
+            "spacing_bottom": 1.1,
+            "spacer_visibility": "both",
+            "line_color": ""
+          }
+        },
+        "heading_yYP9RY": {
+          "type": "heading",
+          "settings": {
+            "heading": "<em>END OF YEAR ++MEGA SALE</em>",
+            "heading_italic_convert": "glow",
+            "heading_size": "custom",
+            "heading_size_custom": 7,
+            "heading_line_height_custom": 0.9,
+            "heading_tag": "h2"
+          }
+        },
+        "spacer_KyfKAd": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": false,
+            "spacing_top": 2.9,
+            "spacing_bottom": 2.9,
+            "spacer_visibility": "both",
+            "line_color": ""
+          }
+        },
+        "countdown_WqCmAX": {
+          "type": "countdown",
+          "settings": {
+            "end_date": "2025-12-31",
+            "end_time": "23:59",
+            "end_action": "hide",
+            "end_message": "You just missed it!",
+            "abbreviate_units": false,
+            "countdown_size": 40,
+            "separator": ":",
+            "countdown_font_weight": "bold",
+            "text_alignment": "center",
+            "countdown_container": "none",
+            "countdown_color": "#f8f9fa",
+            "countdown_background_color": "#000000",
+            "countdown_background_gradient": "linear-gradient(180deg, rgba(203, 166, 10, 1), rgba(223, 182, 8, 1) 100%)"
+          }
+        },
+        "spacer_tzF9aq": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": false,
+            "spacing_top": 2.4,
+            "spacing_bottom": 2.4,
+            "spacer_visibility": "both",
+            "line_color": ""
+          }
+        },
+        "buttons_Cy8473": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t2",
+            "button_label_1": "Shop now",
+            "button_link_1": "shopify://collections/all",
+            "button_style_1": "secondary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": true,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(36, 87, 194, 1) 11%, rgba(255, 255, 255, 1) 58%, rgba(255, 255, 255, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        }
+      },
+      "block_order": [
+        "caption_gpUMVy",
+        "spacer_t9bdC6",
+        "heading_yYP9RY",
+        "spacer_KyfKAd",
+        "countdown_WqCmAX",
+        "spacer_tzF9aq",
+        "buttons_Cy8473"
+      ],
+      "disabled": true,
+      "settings": {
+        "image": "shopify://shop_images/banner_principal_1.jpg",
+        "image_overlay_opacity": 0,
+        "image_link": "",
+        "fix_image": false,
+        "skew_images": false,
+        "stack_images_on_mobile": true,
+        "image_ratio": "custom",
+        "desktop_section_height": 500,
+        "mobile_section_height": 320,
+        "full_width": true,
+        "full_width_animate": false,
+        "desktop_content_position": "md:justify-center md:items-center",
+        "mobile_content_position": "justify-center items-center",
+        "content_max_width": "l",
+        "desktop_content_alignment": "center",
+        "mobile_content_alignment": "center",
+        "show_text_box": "off",
+        "show_text_below": false,
+        "color_scheme": "scheme-2",
+        "container_color_scheme": "scheme-13",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "scrolling_text_9ymWCM": {
+      "type": "scrolling-text",
+      "blocks": {
+        "heading_QgwRbi": {
+          "type": "heading",
+          "settings": {
+            "heading": "Try Canada Dry Ginger Ale",
+            "heading_italic_convert": "light",
+            "heading_size": "h4",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "buttons_dBpWfM": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t6",
+            "button_label_1": "Order now",
+            "button_link_1": "shopify://products/canada-dry-ginger-ale-355ml-1x12",
+            "button_style_1": "secondary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        },
+        "heading_tLdCG3": {
+          "type": "heading",
+          "settings": {
+            "heading": "Explore the New Arrivals",
+            "heading_italic_convert": "light",
+            "heading_size": "h4",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "buttons_HHF7wM": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t6",
+            "button_label_1": "View Now",
+            "button_link_1": "shopify://collections/new-arrivals",
+            "button_style_1": "secondary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        }
+      },
+      "block_order": [
+        "heading_QgwRbi",
+        "buttons_dBpWfM",
+        "heading_tLdCG3",
+        "buttons_HHF7wM"
+      ],
+      "settings": {
+        "full_width": true,
+        "spacing": 1.8,
+        "gap": 5.8,
+        "speed": 19,
+        "direction": "normal",
+        "pause_on_hover": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "",
+        "italic_convert": "",
+        "heading_size": "h2",
+        "text": "",
+        "text_size": "t3",
+        "view_all_link": "",
+        "view_all_text": "",
+        "view_all_text_size": "t3",
+        "color_scheme": "scheme-4",
+        "top_padding": "pt-0",
+        "bottom_padding": "pb-0",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "featured_blog_cFnRJH": {
+      "type": "featured-blog",
+      "settings": {
+        "blog": "news",
+        "posts_to_show": 7,
+        "show_image": true,
+        "show_date": false,
+        "show_author": false,
+        "show_reading_estimate": true,
+        "show_first_tag": false,
+        "excerpt_mode": "none",
+        "blog_card_featured": "news/our-top-selling-grocery-favourites-customer-picks-from-worthy-products",
+        "featured_excerpt_mode": "short",
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "5",
+        "full_width": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "center",
+        "mobile_heading_alignment": "left",
+        "title": "From the<em> news</em>",
+        "italic_convert": "accent",
+        "heading_size": "h1",
+        "text": "<p>Our blog, covering everything essentials.</p>",
+        "text_size": "t2",
+        "show_view_all_link": true,
+        "view_all_text": "Read blog",
+        "view_all_text_size": "t2",
+        "view_all_card_visibility": "",
+        "view_all_card_text": "Keep reading",
+        "color_scheme": "",
+        "view_all_color_scheme": "",
+        "line_separator": "border-top",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
+    "stats_JYTTVY": {
+      "type": "stats",
+      "blocks": {
+        "column_standard_4BXcEh": {
+          "type": "column_standard",
+          "settings": {
+            "stat_caption": "Over",
+            "stat_number": "2000",
+            "title": "products to shop",
+            "heading_size": "h4",
+            "stat_color": "#f1b726",
+            "stat_text_gradient": "linear-gradient(276deg, rgba(255, 228, 49, 1), rgba(249, 149, 32, 1) 59%)",
+            "icon": "",
+            "icon_container": "none",
+            "icon_size": 3.4,
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "text": "",
+            "text_size": "t3",
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "image_position": "below_text",
+            "button_text_size": "t3",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "primary",
+            "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "card_link": "",
+            "card_color_scheme": "scheme-10",
+            "color_scheme_bg_fix": true
+          }
+        },
+        "column_standard_Y8eq4t": {
+          "type": "column_standard",
+          "settings": {
+            "stat_caption": "With",
+            "stat_number": "95%",
+            "title": "positive reviews",
+            "heading_size": "h4",
+            "stat_color": "#e937d6",
+            "stat_text_gradient": "linear-gradient(238deg, rgba(249, 119, 255, 1) 8%, rgba(186, 54, 255, 1) 69%)",
+            "icon": "",
+            "icon_container": "none",
+            "icon_size": 3.4,
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "text": "",
+            "text_size": "t3",
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "image_position": "below_text",
+            "button_text_size": "t3",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "primary",
+            "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "card_link": "",
+            "card_color_scheme": "scheme-10",
+            "color_scheme_bg_fix": true
+          }
+        },
+        "column_standard_yVfiA3": {
+          "type": "column_standard",
+          "settings": {
+            "stat_caption": "Selling in",
+            "stat_number": "17",
+            "title": "territories",
+            "heading_size": "h4",
+            "stat_color": "#00ffff",
+            "stat_text_gradient": "linear-gradient(106deg, rgba(87, 247, 255, 1) 6%, rgba(33, 249, 239, 1) 68%)",
+            "icon": "",
+            "icon_container": "none",
+            "icon_size": 3.4,
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "text": "",
+            "text_size": "t3",
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "image_position": "below_text",
+            "button_text_size": "t3",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "primary",
+            "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "card_link": "",
+            "card_color_scheme": "scheme-10",
+            "color_scheme_bg_fix": true
+          }
+        }
+      },
+      "block_order": [
+        "column_standard_4BXcEh",
+        "column_standard_Y8eq4t",
+        "column_standard_yVfiA3"
+      ],
+      "settings": {
+        "stat_animate": true,
+        "stat_caption_style": "caption-with-letter-spacing",
+        "stat_style": "text-body",
+        "heading_style": "text-body",
+        "stat_size": "custom",
+        "stat_size_custom": 5,
+        "desktop_section_height": 250,
+        "mobile_section_height": 0,
+        "column_alignment": "center",
+        "text_vertical_alignment": "justify-center",
+        "spacing_grid": 28,
+        "content_padding": 2,
+        "columns_desktop": 3,
+        "columns_desktop_scale": false,
+        "full_width_section": true,
+        "image_overlay_opacity": 0,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "center",
+        "mobile_heading_alignment": "center",
+        "title": "Shop with Confidence",
+        "italic_convert": "",
+        "heading_size": "h0",
+        "text": "",
+        "text_size": "t1",
+        "view_all_link": "",
+        "view_all_text": "",
+        "view_all_text_size": "t3",
+        "color_scheme": "scheme-10",
+        "card_shadow": false,
+        "line_separator": "",
+        "top_padding": "pt-s15",
+        "bottom_padding": "pb-s05",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
+    "testimonials_eeVUTL": {
+      "type": "testimonials",
+      "blocks": {
+        "column_standard_9k8BGU": {
+          "type": "column_standard",
+          "settings": {
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "rating_stars": 5,
+            "title": "<strong>Fast shipping</strong>",
+            "heading_tag": "h3",
+            "text": "<p>Ordered a laptop and it arrived the next day. Super impressed with the speed and the careful packaging.</p>",
+            "author_name": "Jordan Smith",
+            "author_caption": "Seattle, Washington",
+            "card_link": "",
+            "card_color_scheme": "scheme-3",
+            "color_scheme_bg_fix": false
+          }
+        },
+        "column_standard_fpye6t": {
+          "type": "column_standard",
+          "settings": {
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "rating_stars": 5,
+            "title": "<strong>Excellent service</strong>",
+            "heading_tag": "h3",
+            "text": "<p>Customer support was helpful; they resolved my issue in minutes. Really appreciated the follow-up email to ensure satisfaction.</p>",
+            "author_name": "Taylor Christos",
+            "author_caption": "Austin, Texas",
+            "card_link": "",
+            "card_color_scheme": "scheme-3",
+            "color_scheme_bg_fix": false
+          }
+        },
+        "column_standard_jUrPVX": {
+          "type": "column_standard",
+          "settings": {
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "rating_stars": 5,
+            "title": "<strong>Great selection</strong>",
+            "heading_tag": "h3",
+            "text": "<p>Wide variety of tech products from phones to laptops. Found everything I needed in one place, very convenient.</p>",
+            "author_name": "Alex Williams",
+            "author_caption": "London, England",
+            "card_link": "",
+            "card_color_scheme": "scheme-3",
+            "color_scheme_bg_fix": false
+          }
+        },
+        "column_standard_RLXXGQ": {
+          "type": "column_standard",
+          "settings": {
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "rating_stars": 5,
+            "title": "<strong>Top quality</strong>",
+            "heading_tag": "h3",
+            "text": "<p>The smartphone I bought exceeded my expectations. Top-notch quality, sleek design, and it came with a free case!</p>",
+            "author_name": "Sam Davis",
+            "author_caption": "San Francisco, California",
+            "card_link": "",
+            "card_color_scheme": "scheme-3",
+            "color_scheme_bg_fix": false
+          }
+        },
+        "column_standard_wBCitV": {
+          "type": "column_standard",
+          "settings": {
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "rating_stars": 5,
+            "title": "<strong>Reliable store</strong>",
+            "heading_tag": "h3",
+            "text": "<p>Have ordered multiple times, always received exactly what was described. Products are genuine and fully functional.</p>",
+            "author_name": "Casey Brown",
+            "author_caption": "Denver, Colorado",
+            "card_link": "",
+            "card_color_scheme": "scheme-3",
+            "color_scheme_bg_fix": false
+          }
+        },
+        "column_standard_Gzb6hm": {
+          "type": "column_standard",
+          "settings": {
+            "image_ratio": "adapt",
+            "image_width": 100,
+            "rating_stars": 5,
+            "title": "<strong>User-friendly website</strong>",
+            "heading_tag": "h3",
+            "text": "<p>Easy to navigate and make purchases. A hassle-free shopping experience with clear descriptions and transparent pricing.</p>",
+            "author_name": "Riley Wilson",
+            "author_caption": "Boston, Massachusetts",
+            "card_link": "",
+            "card_color_scheme": "scheme-3",
+            "color_scheme_bg_fix": false
+          }
+        }
+      },
+      "block_order": [
+        "column_standard_9k8BGU",
+        "column_standard_fpye6t",
+        "column_standard_jUrPVX",
+        "column_standard_RLXXGQ",
+        "column_standard_wBCitV",
+        "column_standard_Gzb6hm"
+      ],
+      "disabled": true,
+      "settings": {
+        "review_style": "star",
+        "rating_size": 3,
+        "heading_style": "text-body",
+        "card_heading_size": "h5",
+        "card_text_size": "t3",
+        "author_line": true,
+        "desktop_section_height": 330,
+        "mobile_section_height": 200,
+        "column_alignment": "left",
+        "text_vertical_alignment": "justify-center",
+        "content_padding": 4,
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "3",
+        "columns_desktop_scale": true,
+        "full_width": false,
+        "image_overlay_opacity": 0,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "center",
+        "mobile_heading_alignment": "left",
+        "title": "",
+        "italic_convert": "",
+        "heading_size": "h4",
+        "text": "",
+        "text_size": "t3",
+        "view_all_link": "",
+        "view_all_text": "",
+        "view_all_text_size": "t3",
+        "color_scheme": "scheme-10",
+        "star_color": "#f5e121",
+        "card_shadow": true,
+        "line_separator": "",
+        "top_padding": "pt-s05",
+        "bottom_padding": "pb-s15",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
+    "scrolling_text_XDEjRT": {
+      "type": "scrolling-text",
+      "blocks": {
+        "image_WYCGMA": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Bic.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_V33PfL": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/H2_Coco.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_6FbtDp": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Tasti.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_jHtcRp": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Kinder.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_V6tdHN": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Hersheys.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_HjbBPQ": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Musashi_6af512ec-2a25-4c95-bd7d-62dd76d315a0.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_TLxqHH": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Nestle.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_VkN7KT": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Chi_Drinks.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_ynWeLa": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Mars_9aa80a26-7c8d-46e2-bf83-d8c86b577f41.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_4wzGAR": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Pringles.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_P37qqw": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Whittakers.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_DiPeN6": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Ferrarelle.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_BY6dFN": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Riclan_b4b2d2fc-bb2f-4d88-b681-09fa446cade7.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_RFhamp": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Wrigley_s.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_9hGtzk": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Cadbury.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_R9LGTt": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Nurofen.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_dG8fgc": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Zuru.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_VYgjbj": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Rj_s.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_YeQCPb": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Bundaberg_ba4b1dc6-65e7-482c-b0ce-539e0d511b70.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        },
+        "image_wVLLDB": {
+          "type": "image",
+          "settings": {
+            "image_1": "shopify://shop_images/Jack_Links.png",
+            "image_ratio": "adapt",
+            "desktop_image_width": 100,
+            "mobile_image_width": 60,
+            "image_corner_radius": 0,
+            "image_1_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_WYCGMA",
+        "image_V33PfL",
+        "image_6FbtDp",
+        "image_jHtcRp",
+        "image_V6tdHN",
+        "image_HjbBPQ",
+        "image_TLxqHH",
+        "image_VkN7KT",
+        "image_ynWeLa",
+        "image_4wzGAR",
+        "image_P37qqw",
+        "image_DiPeN6",
+        "image_BY6dFN",
+        "image_RFhamp",
+        "image_9hGtzk",
+        "image_R9LGTt",
+        "image_dG8fgc",
+        "image_VYgjbj",
+        "image_YeQCPb",
+        "image_wVLLDB"
+      ],
+      "settings": {
+        "full_width": true,
+        "spacing": 3,
+        "gap": 2.2,
+        "speed": 5,
+        "direction": "normal",
+        "pause_on_hover": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "center",
+        "mobile_heading_alignment": "center",
+        "title": "Our Top Brands",
+        "italic_convert": "",
+        "heading_size": "h2",
+        "text": "",
+        "text_size": "t3",
+        "view_all_link": "/",
+        "view_all_text": "",
+        "view_all_text_size": "t3",
+        "color_scheme": "scheme-1",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "icons_with_text_f3bxbj": {
+      "type": "icons-with-text",
+      "blocks": {
+        "icon_with_text_tBDeaJ": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "shield_checkmark",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>WELL TRUSTED</strong>",
+            "text": "Serving over 3000 Stores across New Zealand",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_kQxy8L": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "truck",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>SUPER FAST</strong>",
+            "text": "With Express delivery",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_VUixjq": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "chat_bubbles",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>EXPERT HELP</strong>",
+            "text": "Mon - Fri 8AM To 4PM",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_8QD8Vm": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "price_tags",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>BEST PRICES</strong>",
+            "text": "Unbeatable value",
+            "card_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "icon_with_text_tBDeaJ",
+        "icon_with_text_kQxy8L",
+        "icon_with_text_VUixjq",
+        "icon_with_text_8QD8Vm"
+      ],
+      "settings": {
+        "placement": "beside",
+        "content_vertical_alignment": "items-center",
+        "column_alignment": "left",
+        "vertical_padding": 2.4,
+        "icon_size": 3.2,
+        "heading_size": "t4",
+        "text_size": "t5",
+        "mobile_layout": "carousel",
+        "columns_mobile": "2",
+        "color_scheme": "scheme-3",
+        "line_separator": "",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    }
+  },
+  "order": [
+    "personal_greeting_HbeFHY",
+    "slideshow_hc4nU7",
+    "slideshow_VN8Cyn",
+    "slideshow_wfeKTk",
+    "icons_with_text_jjRLYL",
+    "rich_text_8NPrMc",
+    "featured_collection_PCNhTz",
+    "collection_list_8epked",
+    "image_banner_UpXT8f",
+    "scrolling_text_9ymWCM",
+    "featured_blog_cFnRJH",
+    "stats_JYTTVY",
+    "testimonials_eeVUTL",
+    "scrolling_text_XDEjRT",
+    "icons_with_text_f3bxbj"
+  ]
+}
