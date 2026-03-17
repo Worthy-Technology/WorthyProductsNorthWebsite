@@ -122,7 +122,7 @@
             "icon": "card",
             "image_width": 20,
             "row_heading_tag": "h3",
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
+            "row_content": "<p>We offer a few easy ways to pay depending on your account type:</p><ul><li><strong>Standard Orders:</strong> We securely accept all major debit and credit cards at checkout.</li><li><strong>Corporate & Credit Customers:</strong> Approved account holders can pay via direct debit on the 20th of the month following the invoice.</li></ul>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
@@ -142,7 +142,7 @@
             "icon": "return",
             "image_width": 20,
             "row_heading_tag": "h3",
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
+            "row_content": "<p>If you happen to receive goods that are damaged, expired, or short-dated, please let us know within 24 to 48 hours of delivery so we can help make it right! We will always try to collect the items using our own vans on a future route. However, if a van pickup isn't possible, return shipping costs will need to be covered by the customer</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
@@ -174,6 +174,46 @@
             "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
+        "collapsible_row_rYUhfT": {
+          "type": "collapsible_row",
+          "settings": {
+            "row_open": false,
+            "heading": "Can I pick up my order?",
+            "icon": "car",
+            "image_width": 20,
+            "row_heading_tag": "h3",
+            "row_content": "<p>Yes, you're welcome to pick up your order from 28 Frost Road, Mt Roskill, Auckland 1041. We're open Monday to Friday, 8:00 AM to 4:00 PM. Call us on 09 580 4110 to check if your order is ready.</p>",
+            "page": "",
+            "content_embed": "",
+            "button_text_size": "t3",
+            "button_label_1": "",
+            "button_link_1": "/",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        },
+        "collapsible_row_NFLADr": {
+          "type": "collapsible_row",
+          "settings": {
+            "row_open": false,
+            "heading": "Can I place a bulk order for my business?",
+            "icon": "storefront",
+            "image_width": 20,
+            "row_heading_tag": "h3",
+            "row_content": "<p>Yes, we accept bulk orders for businesses. Download and fill out the Customer Application and Direct Debit Authority Form and we can set up your account. <br/>Download <a href=\"/pages/wholesale-inquiries\" target=\"_blank\" title=\"Wholesale Inquiries\">forms here </a></p>",
+            "page": "",
+            "content_embed": "",
+            "button_text_size": "t3",
+            "button_label_1": "",
+            "button_link_1": "/",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        },
         "heading_BjrQWD": {
           "type": "heading",
           "settings": {
@@ -189,11 +229,11 @@
           "type": "collapsible_row",
           "settings": {
             "row_open": false,
-            "heading": "How do I set up my new device?",
+            "heading": "How do I set up my new account?",
             "icon": "key",
             "image_width": 20,
             "row_heading_tag": "h3",
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
+            "row_content": "<p>You can Download our Credit Application form and direct debit form or call you sales rep to get one and send the filled form to accounts@worthyproducts.nz or admon@worthyproducts.nz to get it set up</p><p>Download <a href=\"/pages/wholesale-inquiries\" target=\"_blank\" title=\"Wholesale Inquiries\">forms here </a></p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
@@ -299,6 +339,8 @@
         "collapsible_row_UPgR8m",
         "collapsible_row_y93qxH",
         "collapsible_row_i3Pjqc",
+        "collapsible_row_rYUhfT",
+        "collapsible_row_NFLADr",
         "heading_BjrQWD",
         "collapsible_row_hk9DHw",
         "collapsible_row_3zyzVG",
