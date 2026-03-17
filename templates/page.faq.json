@@ -46,6 +46,7 @@
         "text_ztDFB9"
       ],
       "settings": {
+        "image": "shopify://shop_images/cdd20-81PkOTYkN2Y-unsplash.jpg",
         "image_overlay_opacity": 40,
         "image_link": "",
         "fix_image": false,
@@ -455,6 +456,7 @@
         "buttons_iac9TH"
       ],
       "settings": {
+        "image": "shopify://shop_images/sweet-treats-candy-knolling-flatlay.jpg",
         "image_overlay_opacity": 0,
         "image_link": "",
         "fix_image": false,
