@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "breadcrumbs": {
@@ -6,7 +15,8 @@
       "settings": {
         "spacing": 0,
         "color_scheme": "scheme-2",
-        "line_separator": ""
+        "line_separator": "",
+        "visibility": ""
       }
     },
     "image_banner_jp6nVT": {
@@ -26,7 +36,7 @@
         "text_ztDFB9": {
           "type": "text",
           "settings": {
-            "text": "<p>Got a question? We've got the answer.<\/p>",
+            "text": "<p>Got a question? We've got the answer.</p>",
             "text_size": "t0"
           }
         }
@@ -58,7 +68,13 @@
         "line_separator": "",
         "top_padding": "pt-s",
         "bottom_padding": "pb-s",
-        "hide_when_empty": false
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "main": {
@@ -74,7 +90,7 @@
         "italic_convert": "",
         "heading_size": "h1",
         "custom_page_text": false,
-        "text": "<p>Add a brief introduction to the FAQ page.<\/p>",
+        "text": "<p>Add a brief introduction to the FAQ page.</p>",
         "text_size": "t2",
         "show_view_all_link": true,
         "view_all_link": "",
@@ -105,14 +121,17 @@
             "heading": "What payment methods do you accept?",
             "icon": "card",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "collapsible_row_y93qxH": {
@@ -122,14 +141,17 @@
             "heading": "What is your return policy?",
             "icon": "return",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "collapsible_row_i3Pjqc": {
@@ -139,14 +161,17 @@
             "heading": "Can I change or cancel my order?",
             "icon": "question_mark",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>We understand that plans change! If you need to modify or cancel your order, please reach out to our team as soon as possible at admin@worthyproducts.nz or call us on 09 580 4110. We work hard to process and ship orders quickly, so if your order has already been dispatched from our warehouse, we unfortunately won't be able to make any changes or cancel it.<br/><br/></p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "heading_BjrQWD": {
@@ -167,14 +192,17 @@
             "heading": "How do I set up my new device?",
             "icon": "key",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "collapsible_row_3zyzVG": {
@@ -184,14 +212,17 @@
             "heading": "Do you offer warranties on your products?",
             "icon": "storefront",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "heading_WEpLJf": {
@@ -212,14 +243,17 @@
             "heading": "Do you ship internationally?",
             "icon": "airplane",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "collapsible_row_wzzmgF": {
@@ -229,14 +263,17 @@
             "heading": "How can I track my order?",
             "icon": "truck",
             "image_width": 20,
-            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.<\/p>",
+            "row_heading_tag": "h3",
+            "row_content": "<p>Add your text here to answer the question. Where possible, it's best to keep text roughly the same length across all the answers.</p>",
             "page": "",
             "content_embed": "",
             "button_text_size": "t3",
             "button_label_1": "",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
-            "button_style_1_show_arrow": false
+            "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         },
         "spacer_zGqL4c": {
@@ -252,7 +289,7 @@
         "text_PCJRbe": {
           "type": "text",
           "settings": {
-            "text": "<p><em>Still can't see it? <\/em><a href=\"\/\" title=\"Contact\"><em>Get in touch.<\/em><\/a><\/p>",
+            "text": "<p><em>Still can't see it? </em><a href=\"/\" title=\"Contact\"><em>Get in touch.</em></a></p>",
             "text_size": "t4"
           }
         }
@@ -286,13 +323,15 @@
         "title": "Search",
         "italic_convert": "",
         "heading_size": "h2",
-        "text": "<p>Can't see it? Try searching.<\/p>",
+        "text": "<p>Can't see it? Try searching.</p>",
         "text_size": "t3",
         "button_label": "",
         "button_link": "",
         "button_style": "link",
         "button_text_size": "t5",
         "button_style_show_arrow": true,
+        "button_style_show_gradient_border": false,
+        "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
         "section_color_scheme": "",
         "color_scheme": "",
         "show_content_shadow": true,
@@ -300,8 +339,14 @@
         "top_padding": "pt-s",
         "bottom_padding": "pb-s",
         "heading_tag": "h2",
+        "render_schema": false,
+        "visibility": "",
         "hide_when_empty": false,
-        "render_schema": false
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "spacer_jCKFkK": {
@@ -309,12 +354,17 @@
       "settings": {
         "full_width": false,
         "show_line_separator": true,
-        "visibility": "",
         "line_width": 100,
         "spacing_top": 0,
         "spacing_bottom": 0,
         "color_scheme": "",
-        "line_color": ""
+        "line_color": "",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "image_banner_w6Hndw": {
@@ -334,7 +384,7 @@
         "text_texUmh": {
           "type": "text",
           "settings": {
-            "text": "<p>Want to know more about us? Hear our story.<\/p>",
+            "text": "<p>Want to know more about us? Hear our story.</p>",
             "text_size": "t3"
           }
         },
@@ -343,13 +393,17 @@
           "settings": {
             "button_text_size": "t3",
             "button_label_1": "About us",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "primary",
             "button_style_1_show_arrow": false,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
             "button_label_2": "",
             "button_link_2": "",
             "button_style_2": "secondary",
-            "button_style_2_show_arrow": false
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         }
       },
@@ -381,7 +435,13 @@
         "line_separator": "",
         "top_padding": "pt-s",
         "bottom_padding": "pb-s",
-        "hide_when_empty": false
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "ribbon_banner_CzhgQT": {
@@ -403,13 +463,17 @@
           "settings": {
             "button_text_size": "t2",
             "button_label_1": "Get in touch",
-            "button_link_1": "\/",
+            "button_link_1": "/",
             "button_style_1": "secondary",
             "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
             "button_label_2": "",
             "button_link_2": "",
             "button_style_2": "secondary",
-            "button_style_2_show_arrow": false
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
           }
         }
       },
@@ -424,13 +488,18 @@
         "vertical_padding": 10,
         "horizontal_padding": 3.5,
         "spacing_grid": 8.8,
-        "visibility": "both",
         "image_overlay_opacity": 0,
         "color_scheme": "scheme-4",
         "line_separator": "",
         "top_padding": "pt-s",
         "bottom_padding": "pb-s",
-        "hide_when_empty": false
+        "visibility": "both",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     }
   },
