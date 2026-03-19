@@ -383,6 +383,12 @@
 
       {%- if shop.customer_accounts_enabled and section.settings.enable_accounts or section.settings.enable_accounts_mobile -%}
         <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header__icon header__icon--account link focus-inset{% if section.settings.enable_accounts and section.settings.enable_accounts_mobile == false %} small-hide{% elsif section.settings.enable_accounts == false and section.settings.enable_accounts_mobile %} visible-xs{% endif %}">
+        
+        {% comment %} Enable below code once ready for new b2b login - Pratham {% endcomment %}  
+        {% comment %}
+        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}/pages/b2b-login{%- endif -%}" class="header__icon header__icon--account link focus-inset 
+        {% endcomment %}
+
           <account-icon>
             {%- if customer and customer.has_avatar? -%}
               {{ customer | avatar }}
