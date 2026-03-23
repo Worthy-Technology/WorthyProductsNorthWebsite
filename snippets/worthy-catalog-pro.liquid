@@ -1,15 +1,18 @@
 {{ 'dflip.min.css' | asset_url | stylesheet_tag }}
-{{ 'dflip-icons.css' | asset_url | stylesheet_tag }} <style>
+{{ 'dflip-icons.css' | asset_url | stylesheet_tag }}
+
+<style>
   #worthy-pdf-container {
     width: 100%;
-    height: 800px; /* High height for 1000 pages to look good */
+    height: 800px;
     background: #222;
+    margin: 20px 0;
   }
 </style>
 
 <div id="worthy-pdf-container">
   <div class="_df_book" 
-       source="https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Worthy_Products_CATALOGUE_2026-compressed_1.pdf?v=1774305501" 
+       source="/s/files/1/0530/2176/9881/files/Worthy_Products_CATALOGUE_2026-compressed_1.pdf" 
        id="worthy_catalogue">
   </div>
 </div>
@@ -20,11 +23,14 @@
 <script>
   // Advanced config for 1000 pages
   var dFlipOptions = {
+    // CHANGE: Use .worker.js (not .min.js) for the worker to ensure stability
     pdfjsSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js",
-    pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js",
-    pageMode: 2, // Double page
+    pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js",
+    pageMode: 2, 
     height: 800,
     duration: 800,
-    overwritePDFOutline: false // Keeps your PDF's internal bookmarks
+    overwritePDFOutline: false,
+    enableThumbnail: true, // Crucial for 1000 page navigation
+    moreControls: "download,pageMode,thumbnails,fullscreen" // Gives users full control
   };
 </script>
