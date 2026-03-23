@@ -18,39 +18,22 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ 'dflip.min.js' | asset_url }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/dflip@2.0.0/js/dflip.min.js"></script>
 
 <script>
   var dFlipOptions = {
-    // 1. Core PDF Engine
     pdfjsSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js",
     pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js",
     
-    // 2. Performance for 1000 Pages
-    webgl: false,              // Disables heavy 3D math
-    autoEnableOutline: false,  // Speeds up initial load
-    enableThumbnail: true,     
-    duration: 500,
+    // FORCED STABILITY FOR 1000 PAGES
+    webgl: false,               // Prevents the "Loading WebGL" hang
+    overwritePDFOutline: true,  // Uses your PDF's built-in chapters
+    enableThumbnail: true,      // Must-have for 1000 pages
+    hideZoom: false,
+    scrollWheel: true,
     
-    // 3. The "Magic" Settings for Shopify Plus
-    disableFontFace: true,     // Prevents font-loading delays
-    cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/cmaps/',
-    cMapPacked: true,
-    
-    // 4. Force 2D Fallback if WebGL fails
-    allControls: "altPrev,pageNumber,altNext,play,outline,thumbnail,zoomIn,zoomOut,fullScreen,download"
+    // LIGHTWEIGHT MODE
+    isMobile: true,             // Forces a simpler render engine even on desktop
+    pageMode: 1                 // Single page view is faster for huge files
   };
-
-  // Manual Trigger if the auto-init fails
-  $(document).ready(function() {
-    if ($("#worthy_catalogue").length > 0) {
-       console.log("Worthy Catalog: Starting manual init...");
-       // If it stays white, this forces the render
-       setTimeout(function() {
-         if($(".df-container").length == 0) {
-            $("#worthy_catalogue").flipBook();
-         }
-       }, 1000);
-    }
-  });
 </script>
