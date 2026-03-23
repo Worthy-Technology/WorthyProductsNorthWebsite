@@ -20,22 +20,37 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ 'dflip.min.js' | asset_url }}"></script>
 
-<<script>
+<script>
   var dFlipOptions = {
+    // 1. Core PDF Engine
     pdfjsSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js",
-    pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js",
+    pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js",
     
-    // CHANGE 1: Force 2D mode for better stability with 1000 pages
-    webgl: false, 
+    // 2. Performance for 1000 Pages
+    webgl: false,              // Disables heavy 3D math
+    autoEnableOutline: false,  // Speeds up initial load
+    enableThumbnail: true,     
+    duration: 500,
     
-    // CHANGE 2: Optimization for large files
-    rangeChunkSize: 524288, // Loads in 512KB chunks
-    disableFontFace: true,  // Speeds up text rendering
+    // 3. The "Magic" Settings for Shopify Plus
+    disableFontFace: true,     // Prevents font-loading delays
+    cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/cmaps/',
+    cMapPacked: true,
     
-    pageMode: 2, 
-    height: 800,
-    duration: 800,
-    enableThumbnail: true,
-    moreControls: "download,pageMode,thumbnails,fullscreen"
+    // 4. Force 2D Fallback if WebGL fails
+    allControls: "altPrev,pageNumber,altNext,play,outline,thumbnail,zoomIn,zoomOut,fullScreen,download"
   };
+
+  // Manual Trigger if the auto-init fails
+  $(document).ready(function() {
+    if ($("#worthy_catalogue").length > 0) {
+       console.log("Worthy Catalog: Starting manual init...");
+       // If it stays white, this forces the render
+       setTimeout(function() {
+         if($(".df-container").length == 0) {
+            $("#worthy_catalogue").flipBook();
+         }
+       }, 1000);
+    }
+  });
 </script>
