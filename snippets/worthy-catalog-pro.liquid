@@ -20,17 +20,22 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ 'dflip.min.js' | asset_url }}"></script>
 
-<script>
-  // Advanced config for 1000 pages
+<<script>
   var dFlipOptions = {
-    // CHANGE: Use .worker.js (not .min.js) for the worker to ensure stability
     pdfjsSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js",
     pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js",
+    
+    // CHANGE 1: Force 2D mode for better stability with 1000 pages
+    webgl: false, 
+    
+    // CHANGE 2: Optimization for large files
+    rangeChunkSize: 524288, // Loads in 512KB chunks
+    disableFontFace: true,  // Speeds up text rendering
+    
     pageMode: 2, 
     height: 800,
     duration: 800,
-    overwritePDFOutline: false,
-    enableThumbnail: true, // Crucial for 1000 page navigation
-    moreControls: "download,pageMode,thumbnails,fullscreen" // Gives users full control
+    enableThumbnail: true,
+    moreControls: "download,pageMode,thumbnails,fullscreen"
   };
 </script>
