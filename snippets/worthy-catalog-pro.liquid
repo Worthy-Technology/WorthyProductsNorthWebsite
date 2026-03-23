@@ -1,0 +1,30 @@
+{{ 'dflip.min.css' | asset_url | stylesheet_tag }}
+{{ 'dflip-icons.css' | asset_url | stylesheet_tag }} <style>
+  #worthy-pdf-container {
+    width: 100%;
+    height: 800px; /* High height for 1000 pages to look good */
+    background: #222;
+  }
+</style>
+
+<div id="worthy-pdf-container">
+  <div class="_df_book" 
+       source="https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Worthy_Products_CATALOGUE_2026-compressed_1.pdf?v=1774305501" 
+       id="worthy_catalogue">
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ 'dflip.min.js' | asset_url }}"></script>
+
+<script>
+  // Advanced config for 1000 pages
+  var dFlipOptions = {
+    pdfjsSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js",
+    pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js",
+    pageMode: 2, // Double page
+    height: 800,
+    duration: 800,
+    overwritePDFOutline: false // Keeps your PDF's internal bookmarks
+  };
+</script>
