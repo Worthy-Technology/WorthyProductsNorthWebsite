@@ -9,38 +9,199 @@
  */
 {
   "sections": {
-    "sell_with_us": {
-      "type": "sell-with-us",
+    "rich_text_j66BXX": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_RDyxmx": {
+          "type": "heading",
+          "settings": {
+            "heading": "Sell with us",
+            "heading_italic_convert": "",
+            "heading_size": "h3",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "text_mE3PPQ": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Worthy Products is one of New Zealand's most trusted wholesale distributors, connecting leading consumer brands with thousands of retail, convenience, grocery, and foodservice outlets across the country. With a nationwide distribution network, purpose-built warehousing, and a team that understands the New Zealand retail landscape inside and out, we give your brand the reach, visibility, and operational support it needs to grow with confidence.</p><p>We specialise in bringing both local New Zealand brands and international products to market,  handling everything from logistics and inventory management to in-store ranging and retailer relationships. Our scale means your products move faster, land on more shelves, and get in front of more Kiwi consumers than any boutique distributor can offer.</p><p>Partnering with Worthy Products means partnering with a business that is fully compliant with all New Zealand Food Safety Authority regulations, Fair Trading Act requirements, and import and labelling standards. Every brand we represent is backed by our compliance infrastructure, so you can focus on your product while we handle the complexity of the NZ market.</p><p>If you're ready to scale your brand across New Zealand's FMCG, grocery, convenience, or specialty retail channels. We want to hear from you. Fill out the form below and our brand partnerships team will be in touch as soon as able.</p>",
+            "text_size": "t3"
+          }
+        }
+      },
+      "block_order": [
+        "heading_RDyxmx",
+        "text_mE3PPQ"
+      ],
+      "name": "Rich text",
       "settings": {
-        "heading": "Sell with us",
-        "intro_1": "Are you looking to expand the reach of your product range and your brand into new regions and territories?",
-        "intro_2": "Partner with us to put your brand in front of the customers of 2000+ retail outlets across New Zealand.",
-        "intro_3": "We are first in class when it comes to growing both local and international brands.",
-        "intro_4": "You can put your trust in us as we hold all required NZ certifications. Our operational and safety practices are continually at the forefront of New Zealand regulations. These can all be presented on upon request.",
-        "intro_5": "We take pride in the brands we work with and how we represent them. Get in touch and we can help you expand within the NZ FMCG market.",
-        "label_fullname": "Full Name",
-        "placeholder_firstname": "Enter your first name",
-        "placeholder_lastname": "Enter your surname",
-        "label_company": "Company",
-        "placeholder_company": "Enter your company name",
-        "label_category": "Category",
-        "placeholder_category": "What type of industry do you operate in...",
-        "label_phone": "Phone",
-        "placeholder_phone": "Enter your phone number",
-        "label_email": "Email",
-        "placeholder_email": "Enter your email address",
-        "label_comments": "Comments",
-        "placeholder_comments": "Tell us more about your business and product range...",
-        "button_label": "Submit",
-        "success_message": "Thanks for reaching out! We’ll be in touch shortly.",
-        "color_primary": "#2256c2",
-        "color_hover": "#417cdd",
-        "color_focus": "#508df6",
-        "max_width": 1200
+        "desktop_content_position": "left",
+        "content_max_width": "xl",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "center",
+        "section_color_scheme": "",
+        "container_color_scheme": "",
+        "show_content_shadow": true,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "contact_form_edACHb": {
+      "type": "contact-form",
+      "blocks": {
+        "heading_dK8Aww": {
+          "type": "heading",
+          "settings": {
+            "visibility": "always",
+            "heading": "Get in touch",
+            "heading_italic_convert": "",
+            "heading_size": "h2",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "custom_text_qczyGB": {
+          "type": "custom_text",
+          "settings": {
+            "title": "First name",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "custom_text_e3fdyL": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Last name",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "name_QXAhYA": {
+          "type": "name",
+          "settings": {
+            "title": "Company Name",
+            "tip": "Feel free to type in your trading name aswell",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "custom_text_MwXpe4": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Category",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": false
+          }
+        },
+        "phone_UXRVFF": {
+          "type": "phone",
+          "settings": {
+            "title": "Phone",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": false
+          }
+        },
+        "email_NFANXP": {
+          "type": "email",
+          "settings": {
+            "title": "Email",
+            "tip": "",
+            "half_width_on_desktop": false
+          }
+        },
+        "textarea_9JizH4": {
+          "type": "textarea",
+          "settings": {
+            "title": "Message",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "text_PTyQfH": {
+          "type": "text",
+          "settings": {
+            "visibility": "always",
+            "text": "<p>We'll aim to get back to you within 24 hours.</p>",
+            "text_size": "t6"
+          }
+        }
+      },
+      "block_order": [
+        "heading_dK8Aww",
+        "custom_text_qczyGB",
+        "custom_text_e3fdyL",
+        "name_QXAhYA",
+        "custom_text_MwXpe4",
+        "phone_UXRVFF",
+        "email_NFANXP",
+        "textarea_9JizH4",
+        "text_PTyQfH"
+      ],
+      "name": "Contact form",
+      "settings": {
+        "preview_success": false,
+        "show_standard_success_message": true,
+        "submit_button_text": "",
+        "image": "shopify://shop_images/Company_Growth_2_-_frame_at_0m8s.jpg",
+        "image_overlay_opacity": 20,
+        "desktop_section_height": 500,
+        "mobile_section_height": 400,
+        "desktop_media_width": 50,
+        "layout": "media_first",
+        "content_layout": "no-overlap",
+        "show_header_beside": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "desktop_content_position": "md:justify-start md:items-end",
+        "mobile_content_position": "justify-center items-center",
+        "title": "Partner with Worthy Products",
+        "italic_convert": "",
+        "heading_size": "h4",
+        "text": "<p>New Zealand's Premier FMCG Wholesale Distributor</p>",
+        "text_size": "t4",
+        "button_text_size": "t5",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary",
+        "button_style_show_arrow": false,
+        "button_style_show_gradient_border": false,
+        "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "image_overlay_color_scheme": "",
+        "show_content_shadow": true,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h3"
       }
     }
   },
   "order": [
-    "sell_with_us"
+    "rich_text_j66BXX",
+    "contact_form_edACHb"
   ]
 }
