@@ -854,6 +854,7 @@
     },
     "featured_blog_cFnRJH": {
       "type": "featured-blog",
+      "disabled": true,
       "settings": {
         "blog": "news",
         "posts_to_show": 7,
