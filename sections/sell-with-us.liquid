@@ -70,23 +70,15 @@
     gap: 0.875rem;
   }
 
-  /* Inputs — inherit theme font; only override structural + focus behavior */
-  #swu-{{ section.id }} .swu-form input,
-  #swu-{{ section.id }} .swu-form textarea {
-    width: 100%;
-    font: inherit;
-    background: transparent;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  /* Inputs — focus override only; all other styles come from field__input */
+  #swu-{{ section.id }} .field__input:focus,
+  #swu-{{ section.id }} .field__input:focus-visible {
+    border-color: var(--swu-focus) !important;
+    box-shadow: 0 0 0 3px var(--swu-focus-ring) !important;
     outline: none;
   }
 
-  #swu-{{ section.id }} .swu-form input:focus,
-  #swu-{{ section.id }} .swu-form textarea:focus {
-    border-color: var(--swu-focus) !important;
-    box-shadow: 0 0 0 3px var(--swu-focus-ring) !important;
-  }
-
-  #swu-{{ section.id }} .swu-form textarea {
+  #swu-{{ section.id }} textarea.field__input {
     resize: vertical;
     min-height: 130px;
   }
@@ -152,98 +144,111 @@
 
       <div class="swu-form">
 
-        {%- comment %} Full Name {%- endcomment %}
-        <div class="swu-field">
-          <label for="swu-first-{{ section.id }}">
-            {{- s.label_fullname | default: 'Full Name' -}}
-          </label>
-          <div class="swu-name-row">
+        {%- comment %} Full Name — two fields side by side {%- endcomment %}
+        <div class="swu-name-row">
+          <div class="field">
             <input
+              class="field__input"
               type="text"
               id="swu-first-{{ section.id }}"
               name="contact[First Name]"
-              placeholder="{{ s.placeholder_firstname | default: 'Enter your first name' }}"
+              placeholder="{{ s.placeholder_firstname | default: 'First name' }}"
               autocomplete="given-name"
               required
             >
+            <label class="field__label" for="swu-first-{{ section.id }}">
+              {{- s.placeholder_firstname | default: 'First name' -}}
+            </label>
+          </div>
+          <div class="field">
             <input
+              class="field__input"
               type="text"
+              id="swu-last-{{ section.id }}"
               name="contact[Last Name]"
-              placeholder="{{ s.placeholder_lastname | default: 'Enter your surname' }}"
+              placeholder="{{ s.placeholder_lastname | default: 'Last name' }}"
               autocomplete="family-name"
               required
             >
+            <label class="field__label" for="swu-last-{{ section.id }}">
+              {{- s.placeholder_lastname | default: 'Last name' -}}
+            </label>
           </div>
         </div>
 
         {%- comment %} Company {%- endcomment %}
-        <div class="swu-field">
-          <label for="swu-company-{{ section.id }}">
-            {{- s.label_company | default: 'Company' -}}
-          </label>
+        <div class="field">
           <input
+            class="field__input"
             type="text"
             id="swu-company-{{ section.id }}"
             name="contact[Company]"
-            placeholder="{{ s.placeholder_company | default: 'Enter your company name' }}"
+            placeholder="{{ s.placeholder_company | default: 'Company' }}"
             autocomplete="organization"
             required
           >
+          <label class="field__label" for="swu-company-{{ section.id }}">
+            {{- s.label_company | default: 'Company' -}}
+          </label>
         </div>
 
         {%- comment %} Category {%- endcomment %}
-        <div class="swu-field">
-          <label for="swu-category-{{ section.id }}">
-            {{- s.label_category | default: 'Category' -}}
-          </label>
+        <div class="field">
           <input
+            class="field__input"
             type="text"
             id="swu-category-{{ section.id }}"
             name="contact[Category]"
-            placeholder="{{ s.placeholder_category | default: 'What type of industry do you operate in...' }}"
+            placeholder="{{ s.placeholder_category | default: 'Category' }}"
           >
+          <label class="field__label" for="swu-category-{{ section.id }}">
+            {{- s.label_category | default: 'Category' -}}
+          </label>
         </div>
 
         {%- comment %} Phone {%- endcomment %}
-        <div class="swu-field">
-          <label for="swu-phone-{{ section.id }}">
-            {{- s.label_phone | default: 'Phone' -}}
-          </label>
+        <div class="field">
           <input
+            class="field__input"
             type="tel"
             id="swu-phone-{{ section.id }}"
             name="contact[Phone]"
-            placeholder="{{ s.placeholder_phone | default: 'Enter your phone number' }}"
+            placeholder="{{ s.placeholder_phone | default: 'Phone' }}"
             autocomplete="tel"
           >
+          <label class="field__label" for="swu-phone-{{ section.id }}">
+            {{- s.label_phone | default: 'Phone' -}}
+          </label>
         </div>
 
         {%- comment %} Email {%- endcomment %}
-        <div class="swu-field">
-          <label for="swu-email-{{ section.id }}">
-            {{- s.label_email | default: 'Email' -}}
-          </label>
+        <div class="field">
           <input
+            class="field__input"
             type="email"
             id="swu-email-{{ section.id }}"
             name="contact[email]"
-            placeholder="{{ s.placeholder_email | default: 'Enter your email address' }}"
+            placeholder="{{ s.placeholder_email | default: 'Email' }}"
             autocomplete="email"
             required
           >
+          <label class="field__label" for="swu-email-{{ section.id }}">
+            {{- s.label_email | default: 'Email' -}}
+          </label>
         </div>
 
-        {%- comment %} Comments {%- endcomment %}
-        <div class="swu-field">
-          <label for="swu-comments-{{ section.id }}">
-            {{- s.label_comments | default: 'Comments' -}}
-          </label>
+        {%- comment %} Comments / Message {%- endcomment %}
+        <div class="field">
           <textarea
+            class="field__input"
             id="swu-comments-{{ section.id }}"
             name="contact[body]"
-            placeholder="{{ s.placeholder_comments | default: 'Tell us more about your business and product range...' }}"
+            placeholder="{{ s.placeholder_comments | default: 'Message' }}"
             required
           ></textarea>
+          <label class="field__label" for="swu-comments-{{ section.id }}">
+            {{- s.label_comments | default: 'Message' -}}
+          </label>
         </div>
 
         <button type="submit" class="button button--primary swu-submit">
