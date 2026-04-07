@@ -1,0 +1,507 @@
+{% comment %}
+  Section: sell-with-us.liquid
+  Place in: sections/sell-with-us.liquid
+{% endcomment %}
+
+{%- liquid
+  assign s           = section.settings
+  assign color_pri   = s.color_primary  | default: '#2256c2'
+  assign color_hover = s.color_hover    | default: '#417cdd'
+  assign color_focus = s.color_focus    | default: '#508df6'
+  assign max_w       = s.max_width      | default: 780
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700&display=swap');
+
+  #swu-{{ section.id }} {
+    --swu-primary:    {{ color_pri }};
+    --swu-hover:      {{ color_hover }};
+    --swu-focus:      {{ color_focus }};
+    --swu-focus-ring: {{ color_focus }}26;
+    --swu-max-width:  {{ max_w }}px;
+  }
+
+  #swu-{{ section.id }} .swu-wrapper {
+    font-family: 'DM Sans', sans-serif;
+    color: #1a1a1a;
+    max-width: var(--swu-max-width);
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  #swu-{{ section.id }} h1.swu-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+
+  #swu-{{ section.id }} .swu-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+
+  #swu-{{ section.id }} .swu-intro p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #3d3d3d;
+  }
+
+  #swu-{{ section.id }} .swu-divider {
+    width: 48px;
+    height: 3px;
+    background: var(--swu-primary);
+    border-radius: 2px;
+    margin-bottom: 40px;
+  }
+
+  #swu-{{ section.id }} .swu-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  #swu-{{ section.id }} .swu-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  #swu-{{ section.id }} .swu-field label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  #swu-{{ section.id }} .swu-name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  #swu-{{ section.id }} .swu-form input,
+  #swu-{{ section.id }} .swu-form textarea {
+    width: 100%;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #111;
+    background: #fff;
+    border: 1.5px solid #d8d8d8;
+    border-radius: 6px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+    appearance: none;
+  }
+
+  #swu-{{ section.id }} .swu-form input::placeholder,
+  #swu-{{ section.id }} .swu-form textarea::placeholder {
+    color: #aaa;
+  }
+
+  #swu-{{ section.id }} .swu-form input:focus,
+  #swu-{{ section.id }} .swu-form textarea:focus {
+    border-color: var(--swu-focus);
+    box-shadow: 0 0 0 3px var(--swu-focus-ring);
+  }
+
+  #swu-{{ section.id }} .swu-form textarea {
+    resize: vertical;
+    min-height: 130px;
+  }
+
+  #swu-{{ section.id }} .swu-submit {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 13px 36px;
+    background: var(--swu-primary);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    align-self: flex-start;
+  }
+
+  #swu-{{ section.id }} .swu-submit:hover {
+    background: var(--swu-hover);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--swu-primary) 40%, transparent);
+    transform: translateY(-1px);
+  }
+
+  #swu-{{ section.id }} .swu-submit:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  #swu-{{ section.id }} .swu-success {
+    display: none;
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: #eef3fd;
+    border-left: 4px solid var(--swu-primary);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #1a3a7a;
+    line-height: 1.6;
+  }
+
+  #swu-{{ section.id }} .swu-success.is-visible {
+    display: block;
+  }
+
+  @media (max-width: 520px) {
+    #swu-{{ section.id }} .swu-name-row { grid-template-columns: 1fr; }
+    #swu-{{ section.id }} h1.swu-heading { font-size: 1.6rem; }
+  }
+</style>
+
+<div id="swu-{{ section.id }}">
+  <div class="swu-wrapper">
+
+    {%- if s.heading != blank -%}
+      <h1 class="swu-heading">{{ s.heading }}</h1>
+    {%- endif -%}
+
+    <div class="swu-intro">
+      {%- if s.intro_1 != blank -%}<p>{{ s.intro_1 }}</p>{%- endif -%}
+      {%- if s.intro_2 != blank -%}<p>{{ s.intro_2 }}</p>{%- endif -%}
+      {%- if s.intro_3 != blank -%}<p>{{ s.intro_3 }}</p>{%- endif -%}
+      {%- if s.intro_4 != blank -%}<p>{{ s.intro_4 }}</p>{%- endif -%}
+      {%- if s.intro_5 != blank -%}<p>{{ s.intro_5 }}</p>{%- endif -%}
+    </div>
+
+    <div class="swu-divider"></div>
+
+    {%- form 'contact', id: 'swu-form' -%}
+      <input type="hidden" name="contact[tags]" value="sell-with-us">
+
+      <div class="swu-form">
+
+        {%- comment %} Full Name {%- endcomment %}
+        <div class="swu-field">
+          <label for="swu-first-{{ section.id }}">
+            {{- s.label_fullname | default: 'Full Name' -}}
+          </label>
+          <div class="swu-name-row">
+            <input
+              type="text"
+              id="swu-first-{{ section.id }}"
+              name="contact[First Name]"
+              placeholder="{{ s.placeholder_firstname | default: 'Enter your first name' }}"
+              autocomplete="given-name"
+              required
+            >
+            <input
+              type="text"
+              name="contact[Last Name]"
+              placeholder="{{ s.placeholder_lastname | default: 'Enter your surname' }}"
+              autocomplete="family-name"
+              required
+            >
+          </div>
+        </div>
+
+        {%- comment %} Company {%- endcomment %}
+        <div class="swu-field">
+          <label for="swu-company-{{ section.id }}">
+            {{- s.label_company | default: 'Company' -}}
+          </label>
+          <input
+            type="text"
+            id="swu-company-{{ section.id }}"
+            name="contact[Company]"
+            placeholder="{{ s.placeholder_company | default: 'Enter your company name' }}"
+            autocomplete="organization"
+            required
+          >
+        </div>
+
+        {%- comment %} Category {%- endcomment %}
+        <div class="swu-field">
+          <label for="swu-category-{{ section.id }}">
+            {{- s.label_category | default: 'Category' -}}
+          </label>
+          <input
+            type="text"
+            id="swu-category-{{ section.id }}"
+            name="contact[Category]"
+            placeholder="{{ s.placeholder_category | default: 'What type of industry do you operate in...' }}"
+          >
+        </div>
+
+        {%- comment %} Phone {%- endcomment %}
+        <div class="swu-field">
+          <label for="swu-phone-{{ section.id }}">
+            {{- s.label_phone | default: 'Phone' -}}
+          </label>
+          <input
+            type="tel"
+            id="swu-phone-{{ section.id }}"
+            name="contact[Phone]"
+            placeholder="{{ s.placeholder_phone | default: 'Enter your phone number' }}"
+            autocomplete="tel"
+          >
+        </div>
+
+        {%- comment %} Email {%- endcomment %}
+        <div class="swu-field">
+          <label for="swu-email-{{ section.id }}">
+            {{- s.label_email | default: 'Email' -}}
+          </label>
+          <input
+            type="email"
+            id="swu-email-{{ section.id }}"
+            name="contact[email]"
+            placeholder="{{ s.placeholder_email | default: 'Enter your email address' }}"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        {%- comment %} Comments {%- endcomment %}
+        <div class="swu-field">
+          <label for="swu-comments-{{ section.id }}">
+            {{- s.label_comments | default: 'Comments' -}}
+          </label>
+          <textarea
+            id="swu-comments-{{ section.id }}"
+            name="contact[body]"
+            placeholder="{{ s.placeholder_comments | default: 'Tell us more about your business and product range...' }}"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="swu-submit">
+          {{- s.button_label | default: 'Submit' -}}
+        </button>
+
+      </div>
+    {%- endform -%}
+
+    <div class="swu-success" id="swu-success-{{ section.id }}">
+      ✓ {{ s.success_message | default: "Thanks for reaching out! We'll be in touch shortly." }}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    var search = window.location.search;
+    if (
+      search.indexOf('contact%5Bposted_successfully%5D=true') !== -1 ||
+      search.indexOf('contact[posted_successfully]=true') !== -1
+    ) {
+      var form    = document.getElementById('swu-form');
+      var success = document.getElementById('swu-success-{{ section.id }}');
+      if (form)    form.style.display = 'none';
+      if (success) success.classList.add('is-visible');
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sell with us",
+  "tag": "section",
+  "class": "section-sell-with-us",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Page content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sell with us"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_1",
+      "label": "Intro paragraph 1",
+      "default": "Are you looking to expand the reach of your product range and your brand into new regions and territories?"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_2",
+      "label": "Intro paragraph 2",
+      "default": "Partner with us to put your brand in front of the customers of 2000+ retail outlets across New Zealand."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_3",
+      "label": "Intro paragraph 3",
+      "default": "We are first in class when it comes to growing both local and international brands."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_4",
+      "label": "Intro paragraph 4",
+      "default": "You can put your trust in us as we hold all required NZ certifications. Our operational and safety practices are continually at the forefront of New Zealand regulations. These can all be presented on upon request."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_5",
+      "label": "Intro paragraph 5",
+      "default": "We take pride in the brands we work with and how we represent them. Get in touch and we can help you expand within the NZ FMCG market."
+    },
+
+    {
+      "type": "header",
+      "content": "Form labels"
+    },
+    {
+      "type": "text",
+      "id": "label_fullname",
+      "label": "Full Name label",
+      "default": "Full Name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_firstname",
+      "label": "First name placeholder",
+      "default": "Enter your first name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_lastname",
+      "label": "Surname placeholder",
+      "default": "Enter your surname"
+    },
+    {
+      "type": "text",
+      "id": "label_company",
+      "label": "Company label",
+      "default": "Company"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_company",
+      "label": "Company placeholder",
+      "default": "Enter your company name"
+    },
+    {
+      "type": "text",
+      "id": "label_category",
+      "label": "Category label",
+      "default": "Category"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_category",
+      "label": "Category placeholder",
+      "default": "What type of industry do you operate in..."
+    },
+    {
+      "type": "text",
+      "id": "label_phone",
+      "label": "Phone label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_phone",
+      "label": "Phone placeholder",
+      "default": "Enter your phone number"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Email placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "label_comments",
+      "label": "Comments label",
+      "default": "Comments"
+    },
+    {
+      "type": "textarea",
+      "id": "placeholder_comments",
+      "label": "Comments placeholder",
+      "default": "Tell us more about your business and product range..."
+    },
+
+    {
+      "type": "header",
+      "content": "Button & feedback"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Submit button text",
+      "default": "Submit"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message (after submission)",
+      "default": "Thanks for reaching out! We'll be in touch shortly."
+    },
+
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "color_primary",
+      "label": "Primary colour (button, divider, border)",
+      "default": "#2256c2"
+    },
+    {
+      "type": "color",
+      "id": "color_hover",
+      "label": "Hover colour",
+      "default": "#417cdd"
+    },
+    {
+      "type": "color",
+      "id": "color_focus",
+      "label": "Focus ring colour",
+      "default": "#508df6"
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width (px)",
+      "min": 480,
+      "max": 1200,
+      "step": 20,
+      "default": 780
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Sell with us"
+    }
+  ]
+}
+{% endschema %}
