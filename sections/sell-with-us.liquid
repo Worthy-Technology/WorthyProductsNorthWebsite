@@ -12,7 +12,7 @@
 -%}
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700&display=swap');
+  /* ── Only structural styles here — fonts, sizes & colors inherit from Ignite theme ── */
 
   #swu-{{ section.id }} {
     --swu-primary:    {{ color_pri }};
@@ -22,94 +22,68 @@
     --swu-max-width:  {{ max_w }}px;
   }
 
+  /* Layout wrapper — no font/color overrides */
   #swu-{{ section.id }} .swu-wrapper {
-    font-family: 'DM Sans', sans-serif;
-    color: #1a1a1a;
     max-width: var(--swu-max-width);
     margin: 0 auto;
-    padding: 56px 24px 80px;
   }
 
+  /* Heading — let theme handle font-family, size & weight */
   #swu-{{ section.id }} h1.swu-heading {
-    font-family: 'Syne', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 24px;
-    letter-spacing: -0.5px;
+    margin-bottom: 1.5rem;
   }
 
+  /* Intro paragraphs */
   #swu-{{ section.id }} .swu-intro {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin-bottom: 40px;
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
 
-  #swu-{{ section.id }} .swu-intro p {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #3d3d3d;
-  }
-
+  /* Accent divider */
   #swu-{{ section.id }} .swu-divider {
-    width: 48px;
+    width: 3rem;
     height: 3px;
     background: var(--swu-primary);
     border-radius: 2px;
-    margin-bottom: 40px;
+    margin-bottom: 2rem;
   }
 
+  /* Form stack */
   #swu-{{ section.id }} .swu-form {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 1.25rem;
   }
 
   #swu-{{ section.id }} .swu-field {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 0.4rem;
   }
 
-  #swu-{{ section.id }} .swu-field label {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #444;
-  }
-
+  /* Two-column name row */
   #swu-{{ section.id }} .swu-name-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 0.875rem;
   }
 
+  /* Inputs — inherit theme font; only override structural + focus behavior */
   #swu-{{ section.id }} .swu-form input,
   #swu-{{ section.id }} .swu-form textarea {
     width: 100%;
-    padding: 11px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    color: #111;
-    background: #fff;
-    border: 1.5px solid #d8d8d8;
-    border-radius: 6px;
+    font: inherit;
+    background: transparent;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     outline: none;
-    appearance: none;
-  }
-
-  #swu-{{ section.id }} .swu-form input::placeholder,
-  #swu-{{ section.id }} .swu-form textarea::placeholder {
-    color: #aaa;
   }
 
   #swu-{{ section.id }} .swu-form input:focus,
   #swu-{{ section.id }} .swu-form textarea:focus {
-    border-color: var(--swu-focus);
-    box-shadow: 0 0 0 3px var(--swu-focus-ring);
+    border-color: var(--swu-focus) !important;
+    box-shadow: 0 0 0 3px var(--swu-focus-ring) !important;
   }
 
   #swu-{{ section.id }} .swu-form textarea {
@@ -117,26 +91,18 @@
     min-height: 130px;
   }
 
+  /* Submit button — use theme's button base, override only color */
   #swu-{{ section.id }} .swu-submit {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 13px 36px;
-    background: var(--swu-primary);
-    color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    background: var(--swu-primary) !important;
+    border-color: var(--swu-primary) !important;
+    color: #fff !important;
     transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-    align-self: flex-start;
   }
 
   #swu-{{ section.id }} .swu-submit:hover {
-    background: var(--swu-hover);
-    box-shadow: 0 4px 14px color-mix(in srgb, var(--swu-primary) 40%, transparent);
+    background: var(--swu-hover) !important;
+    border-color: var(--swu-hover) !important;
+    box-shadow: 0 4px 14px rgba(34, 86, 194, 0.3);
     transform: translateY(-1px);
   }
 
@@ -145,16 +111,14 @@
     box-shadow: none;
   }
 
+  /* Success message */
   #swu-{{ section.id }} .swu-success {
     display: none;
-    margin-top: 20px;
-    padding: 16px 20px;
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
     background: #eef3fd;
     border-left: 4px solid var(--swu-primary);
     border-radius: 6px;
-    font-size: 0.9rem;
-    color: #1a3a7a;
-    line-height: 1.6;
   }
 
   #swu-{{ section.id }} .swu-success.is-visible {
@@ -163,7 +127,6 @@
 
   @media (max-width: 520px) {
     #swu-{{ section.id }} .swu-name-row { grid-template-columns: 1fr; }
-    #swu-{{ section.id }} h1.swu-heading { font-size: 1.6rem; }
   }
 </style>
 
@@ -283,7 +246,7 @@
           ></textarea>
         </div>
 
-        <button type="submit" class="swu-submit">
+        <button type="submit" class="button button--primary swu-submit">
           {{- s.button_label | default: 'Submit' -}}
         </button>
 
