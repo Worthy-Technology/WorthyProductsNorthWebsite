@@ -176,7 +176,7 @@
   data-product-id="{{ product.id }}"
   data-update-url="true"
   data-url="{{ product.url }}"
-  data-product-title="{{ product.title | escape }}"
+  data-product-title="{{ product.title | replace: ' 1x', ' X' | replace: ' 1X', ' X' | escape }}"
 >
   {{ 'section-main-product.css' | asset_url | stylesheet_tag: preload: true }}
   {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
@@ -242,7 +242,7 @@
         {%- endif -%}
 
         <h1 class="b-main-title {{ section.settings.page_title_size }} text-balance m-0" data-product-title-id="{{ product.id }}">
-          {{ product.title | escape }}
+          {{ product.title | replace: ' 1x', ' X' | replace: ' 1X', ' X' | escape }}
         </h1>
 {% comment %} Start Vendor Product Code Metafield {% endcomment %}
 {% if product.metafields.custom.vendor_product_code.value != blank %}
