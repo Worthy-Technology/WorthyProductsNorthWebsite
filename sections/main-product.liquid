@@ -244,7 +244,7 @@
         <h1 class="b-main-title {{ section.settings.page_title_size }} text-balance m-0" data-product-title-id="{{ product.id }}">
           {{ product.title | escape }}
         </h1>
-          {% comment %} Start Vendor Product Code Metafield {% endcomment %}      
+{% comment %} Start Vendor Product Code Metafield {% endcomment %}
 {% if product.metafields.custom.vendor_product_code.value != blank %}
   <div class="product-vendor-code" style="font-size: 0.8em; color: #666; margin-top: 5px;">
     <span> Vendor Code: {{ product.metafields.custom.vendor_product_code.value }}</span>
