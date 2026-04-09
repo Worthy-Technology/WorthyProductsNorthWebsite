@@ -1,4 +1,3 @@
-{% assign cleaned_title = product.title | replace: '1x', 'X' | replace: '1X', 'X' | escape %}
 {%- comment -%} Wholesale_Hub_Product_Visibility_Resource_Page Start {%- endcomment -%}
 {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility" %}{%- endcapture -%}
 {%- if hide_resource == "true" -%}
@@ -177,7 +176,8 @@
   data-product-id="{{ product.id }}"
   data-update-url="true"
   data-url="{{ product.url }}"
-  data-product-title="{{ cleaned_title }}">
+  data-product-title="{{ product.title | escape }}"
+>
   {{ 'section-main-product.css' | asset_url | stylesheet_tag: preload: true }}
   {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
@@ -242,7 +242,7 @@
         {%- endif -%}
 
         <h1 class="b-main-title {{ section.settings.page_title_size }} text-balance m-0" data-product-title-id="{{ product.id }}">
-          {{ cleaned_title }}
+          {{ product.title | escape }}
         </h1>
 
         {%- if section.settings.page_title_review_stars and product.metafields.reviews.rating.value != blank -%}
