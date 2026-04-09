@@ -373,6 +373,14 @@
             <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
             <div class="product-vendor mb-1 caption-with-letter-spacing light {{ settings.card_vendor_text_size }}">{{ card_product.vendor }}</div>
           {%- endif -%}
+          
+          {% comment %} Start SKU Code {% endcomment %}
+          {% if card_product.selected_or_first_available_variant.sku != blank %}
+            <div class="product-card__sku" style="font-size: 0.8em; color: #666; margin-top: 5px;">
+              <span>SKU: {{ card_product.selected_or_first_available_variant.sku }}</span>
+            </div>
+          {% endif %}
+          {% comment %} End SKU Code {% endcomment %}
 
           {% comment %} Start Vendor Product Code Metafield {% endcomment %}
           {% if card_product.metafields.custom.vendor_product_code != blank %}
