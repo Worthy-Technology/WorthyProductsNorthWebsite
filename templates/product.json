@@ -39,7 +39,7 @@
         "custom_liquid_xEEWRV": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "{% comment %} Start Vendor Product Code Metafield {% endcomment %}\n{% if product.metafields.custom.vendor_product_code.value != blank %}\n  <div class=\"product-vendor-code\" style=\"font-size: 0.8em; color: #666; margin-top: 5px;\">\n    <span style=\"color:black;\"> <b>Vendor Code:</b> {{ product.metafields.custom.vendor_product_code.value }}</span>\n  </div>\n{% endif %}\n{% comment %} End Vendor Product Code Metafield {% endcomment %}",
+            "custom_liquid": "{% comment %} Start Vendor Product Code Metafield {% endcomment %}\n{% if product.metafields.custom.vendor_product_code.value != blank %}\n  <div class=\"product-vendor-code\" style=\"font-size: 0.8em; color: #666; margin-top: 5px;\">\n    <span style=\"color:black;\"> <b>Supplier Vendor Code:</b> {{ product.metafields.custom.vendor_product_code.value }}</span>\n  </div>\n{% endif %}\n{% comment %} End Vendor Product Code Metafield {% endcomment %}",
             "stock_visibility": "either"
           }
         },
