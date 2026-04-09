@@ -1,1 +1,653 @@
-{"sections":{"breadcrumbs":{"type":"breadcrumbs","settings":{"spacing":0,"color_scheme":"scheme-2","line_separator":"border-bottom","visibility":""}},"main":{"type":"main-product","blocks":{"title_3bMpkb":{"type":"title","settings":{"heading_tag":"h1","heading_size":"h4","visibility":""}},"price":{"type":"price","settings":{"show_tax_info":true,"price_color":"#fd2424","text_size":"h5-size"}},"inventory_6gBtL8":{"type":"inventory","settings":{"show_inventory_quantity":true,"show_as_badge":true,"text_style":"body","text_size":"t6"}},"variant_picker":{"type":"variant_picker","settings":{"picker_type":"box","show_availability":true,"box_size":"auto","pill_text_size":"t4","pill_text_weight":"500","pill_text_transform":"none","prefix":"","variant_label_text_size":"t4","variant_label_text_weight":"bold","variant_label_text_transform":"","swatch_enabled":true,"swatch_size":1.6,"swatch_box":true,"size_chart_options":"Size","popup_style":"side","size_chart_icon":"question_mark","size_chart_label":"","size_chart_page":"","stock_visibility":"either"}},"swish_formerly_wishlist_king_wishlist_button_block_hdbMde":{"type":"shopify:\/\/apps\/swish-formerly-wishlist-king\/blocks\/wishlist-button-block\/194f5011-a43c-4b22-b12e-eaf20dc4506a","disabled":true,"settings":{"button_style":"plain_text","button_alignment":"left","button_content_alignment":"left","button_margin_top":0,"button_margin_bottom":0,"button_max_width":0,"button_padding_horizontal":15,"button_full_width":true,"button_show_text":true,"button_show_icon":true,"icon_size":18,"icon_stroke_width":1,"icon_offset_vertical":0}},"buy_buttons":{"type":"buy_buttons","settings":{"button_text_transform":"uppercase","button_text_font_weight":"bold","icon":"cart","icon_position":"left","show_dynamic_checkout":false,"show_gift_card_recipient":true,"show_quantity":true,"show_price":false,"show_pickup_availability":true}},"spacer_UYdQbz":{"type":"spacer","settings":{"show_line_separator":true,"full_width":true,"line_separator_style":"solid","spacing_top":2.4,"spacing_bottom":2.4,"spacer_visibility":"both","stock_visibility":"in_stock","show_in_quickbuy":true,"line_color":""}},"richtext_bCYURe":{"type":"richtext","settings":{"text":"<p>Want <strong>next day<\/strong> delivery? Be quick!<\/p>","text_size":"t3","stock_visibility":"in_stock","show_in_quickbuy":true}},"countdown_NmYkfw":{"type":"countdown","settings":{"end_date":"","end_time":"","end_action":"hide","end_message":"You just missed it!","abbreviate_units":true,"countdown_size":22,"separator":"","countdown_font_weight":"normal","text_alignment":"center","countdown_container":"rounded","countdown_color":"#121212","countdown_background_color":"#f5f5f5","countdown_background_gradient":"","stock_visibility":"in_stock"}},"panel_8URXGi":{"type":"panel","name":"--- PANEL (BACK IN STOCK) ---","settings":{"padding":2.8,"panel_icon":"","panel_heading":"","heading_style":"text-body","heading_text_size":"t4","heading_text_weight":"bold","below_media":false,"visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"stock_visibility":"out_of_stock","show_in_quickbuy":true,"color_scheme":"scheme-5"}},"enquiry_back_in_stock_mCfrfB":{"type":"enquiry_back_in_stock","settings":{"icon":"","text":"<h4>Sorry, it's out of stock.<\/h4><p>But we can let you know when it's back in.<\/p>","text_size":"t3","text_padding":0.2,"show_in_quickbuy":true,"color_scheme":"scheme-5","image_overlay_opacity":6,"card_shadow":false}},"panel_CUQjtB":{"type":"panel","name":"--- PANEL (BELOW MEDIA) ---","settings":{"padding":0,"panel_icon":"","panel_heading":"","heading_style":"text-body","heading_text_size":"t4","heading_text_weight":"bold","below_media":true,"visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"stock_visibility":"either","show_in_quickbuy":true,"color_scheme":""}},"description":{"type":"description","disabled":true,"settings":{"text_size":"t4","max_height":0,"show_in_quickbuy":true}},"panel_bWz9dJ":{"type":"panel","name":"--- PANEL (SHOP SAFELY) ---","settings":{"padding":2.4,"panel_icon":"shield_checkmark","panel_heading":"Shop safely","heading_style":"text-body","heading_text_size":"t2","heading_text_weight":"bold","below_media":false,"visibility":"hidden-xs","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"stock_visibility":"either","show_in_quickbuy":false,"color_scheme":"scheme-6c86e387-3661-4d62-9c57-9700f90cd21c"}},"share":{"type":"share","settings":{"share_caption":"","share_caption_text_style":"uppercase","share_caption_size":"t5"}},"text_hReqDJ":{"type":"text","settings":{"text":"Secure your shopping experience with various safe and trusted payment methods.","text_style":"body","text_size":"t3"}},"payment_icons_rt8Ubr":{"type":"payment_icons","settings":{"stock_visibility":"either"}},"spacer_HcRH4E":{"type":"spacer","settings":{"show_line_separator":true,"full_width":true,"line_separator_style":"solid","spacing_top":2.4,"spacing_bottom":2,"spacer_visibility":"both","stock_visibility":"either","show_in_quickbuy":true,"line_color":"rgba(0,0,0,0)"}},"popup_dVfe96":{"type":"popup","settings":{"popup_style":"side","side_popup_max_width":500,"icon":"information_circle","icon_position":"left","text":"Shop safely with us","button_style":"link","button_text_font_weight":"font-normal","button_text_size":"t4","show_inline":false,"content":"<h3>Shopping Safely<\/h3><p>At our Shopify store, we prioritize your safety and security. Here's how we ensure a secure shopping experience:<\/p><p><strong>1. Secure Transactions:<\/strong> We use advanced encryption to protect your personal and payment information, ensuring it is safely transmitted and safeguarded.<\/p><p><strong>2. Trusted Payment Gateways:<\/strong> Our store integrates with trusted payment gateways, ensuring your transactions are processed securely and efficiently.<\/p><p><strong>3. Data Privacy:<\/strong> Your privacy is our top priority. We follow strict data protection policies to keep your personal information confidential and secure.<\/p><p><strong>4. Secure Platform:<\/strong> Shopify provides robust security features and continuous monitoring against vulnerabilities, ensuring a safe shopping environment.<\/p><p><strong>5. Verified Merchants:<\/strong> We are a verified merchant on Shopify, committed to providing authentic and high-quality products.<\/p><p><strong>6. Transparent Policies:<\/strong> Our clear return, refund, and shipping policies provide peace of mind, knowing we stand behind our products.<\/p><p><strong>7. Customer Support:<\/strong> Our dedicated customer support team is ready to assist with any concerns or questions you may have.<\/p><p>Shop confidently at our Shopify store, where your safety and satisfaction are our top priorities.<\/p>","page":""}}},"block_order":["title_3bMpkb","price","inventory_6gBtL8","variant_picker","swish_formerly_wishlist_king_wishlist_button_block_hdbMde","buy_buttons","spacer_UYdQbz","richtext_bCYURe","countdown_NmYkfw","panel_8URXGi","enquiry_back_in_stock_mCfrfB","panel_CUQjtB","description","panel_bWz9dJ","share","text_hReqDJ","payment_icons_rt8Ubr","spacer_HcRH4E","popup_dVfe96"],"custom_css":[],"settings":{"gallery_layout":"slider","sticky_panel":"","info_fullwidth_mob":true,"scroll_to_active_variant":true,"page_title_enabled":false,"page_title_vendor":true,"page_title_price":true,"page_title_review_stars":false,"page_title_size":"h2","page_title_visibility":"","scroll_to_active_variant_on_change":true,"highlight_active_media":true,"slider_controls":"always","slider_controls_mobile":true,"slider_full_width_mobile":true,"enable_sticky_info":true,"media_size":"large","main_image_ratio":"landscape","media_fit":false,"product_media_radius":16,"product_media_scale":100,"enable_video_looping":false,"show_media_shadow":true,"image_zoom":"lightbox","image_zoom_level":"4","thumbnail_layout":"desktop","thumbnail_radius":8,"thumbnail_scale":100,"thumbnail_image_ratio":"landscape","thumbnail_cover":false,"section_color_scheme":"scheme-1","media_color_scheme":"scheme-1e9c1e91-7716-4983-9c2e-dbf5f44e7811","thumbnail_color_scheme":"scheme-1e9c1e91-7716-4983-9c2e-dbf5f44e7811","info_color_scheme":"scheme-2","cta_color_scheme":"scheme-10","star_color":"#f5e121","card_shadow":true,"image_replace_background":false,"top_padding":"pt-0","bottom_padding":"pb-s"}},"related-products":{"type":"related-products","settings":{"products_to_show":4,"desktop_layout":"carousel","mobile_layout":"carousel","columns_desktop":"4","columns_mobile":"2","full_width":false,"content_max_width":"m","desktop_heading_alignment":"left","mobile_heading_alignment":"left","title":"You may also like","italic_convert":"","heading_size":"h2","text":"","text_size":"t3","color_scheme":"scheme-1","line_separator":"border-top","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"recently_viewed_WRF76n":{"type":"recently-viewed","settings":{"products_to_show":8,"desktop_layout":"carousel","mobile_layout":"carousel","columns_desktop":"4","columns_mobile":"2","full_width":true,"content_max_width":"m","desktop_heading_alignment":"left","mobile_heading_alignment":"left","title":"Recently viewed","italic_convert":"","heading_size":"h2","text":"","text_size":"t3","color_scheme":"","line_separator":"","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"","show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true,"heading_tag":"h2"}},"ribbon_banner_kAqDx9":{"type":"ribbon-banner","blocks":{"heading_86zr4g":{"type":"heading","settings":{"heading":"Questions about this product?++ Don't be a stranger.","heading_italic_convert":"","heading_size":"custom","heading_size_custom":2.4,"heading_line_height_custom":1.7,"heading_tag":"h2"}},"buttons_FCB4dg":{"type":"buttons","settings":{"button_text_size":"t2","button_label_1":"Get in touch","button_link_1":"shopify:\/\/pages\/contact","button_style_1":"secondary","button_style_1_show_arrow":true,"button_style_1_show_gradient_border":false,"button_1_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)","button_label_2":"","button_link_2":"","button_style_2":"secondary","button_style_2_show_arrow":false,"button_style_2_show_gradient_border":false,"button_2_border_gradient":"linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"}}},"block_order":["heading_86zr4g","buttons_FCB4dg"],"settings":{"full_width":true,"closable":false,"content_alignment":"justify-center","vertical_padding":10,"horizontal_padding":3.5,"spacing_grid":8.8,"image_overlay_opacity":0,"color_scheme":"scheme-4","line_separator":"","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"both","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"alert_DtAfgB":{"type":"alert","blocks":{"text_J3aeGA":{"type":"text","settings":{"text":"<p><strong>Selling fast!<\/strong><\/p><p>Get yours while you can.<\/p>","text_size":"t3"}}},"block_order":["text_J3aeGA"],"settings":{"show_delay":4,"auto_close":0,"show_close":true,"mode":"enabled","desktop_content_position":"md:justify-start md:items-end","mobile_content_position":"justify-start items-end","content_max_width":"xs","desktop_content_alignment":"left","mobile_content_alignment":"left","content_padding":1.8,"icon":"speedometer","icon_container":"none","icon_size":5,"icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_cover":true,"image_position_desktop":"left","image_position_mobile":"left","image_size_desktop":150,"image_size_mobile":150,"image_overlay_opacity":0,"color_scheme":"","close_color":"","visibility":"both","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"ribbon_banner_EBBMYR":{"type":"ribbon-banner","blocks":{"heading_JN7mXN":{"type":"heading","settings":{"heading":"Exclusive discounts, just for you. <a href=\"\/account\/login\" title=\"\/account\/login\"><em>Sign up now.<\/em><\/a>","heading_italic_convert":"accent","heading_size":"h4","heading_size_custom":2.4,"heading_line_height_custom":1.2,"heading_tag":"h2"}}},"block_order":["heading_JN7mXN"],"settings":{"full_width":true,"closable":false,"content_alignment":"justify-center","vertical_padding":4,"horizontal_padding":3.5,"spacing_grid":3,"image_overlay_opacity":0,"color_scheme":"scheme-10","line_separator":"","top_padding":"pt-s","bottom_padding":"pb-s","visibility":"both","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}},"icons_with_text_XRiz3T":{"type":"icons-with-text","blocks":{"icon_with_text_JmKbrH":{"type":"icon_with_text","settings":{"icon":"shield_checkmark","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>WELL TRUSTED<\/strong>","text":"Over 100k customers","card_link":""}},"icon_with_text_febyLe":{"type":"icon_with_text","settings":{"icon":"truck","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>SUPER FAST<\/strong>","text":"With Express delivery","card_link":""}},"icon_with_text_6nfrwH":{"type":"icon_with_text","settings":{"icon":"chat_bubbles","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>EXPERT HELP<\/strong>","text":"Seven days a week","card_link":""}},"icon_with_text_RzUk3g":{"type":"icon_with_text","settings":{"icon":"price_tags","icon_container":"none","icon_color":"","icon_background_color":"#ededed","background_gradient":"","image_width":40,"title":"<strong>BEST PRICES<\/strong>","text":"Unbeatable value","card_link":""}}},"block_order":["icon_with_text_JmKbrH","icon_with_text_febyLe","icon_with_text_6nfrwH","icon_with_text_RzUk3g"],"disabled":true,"settings":{"placement":"beside","content_vertical_alignment":"items-start","column_alignment":"left","vertical_padding":2,"icon_size":2.8,"heading_size":"t6","text_size":"t6","mobile_layout":"carousel","columns_mobile":"2","color_scheme":"scheme-3","line_separator":"border-bottom","visibility":"","hide_when_empty":false,"show_at_specific_time_of_day":false,"show_time_morning":true,"show_time_afternoon":true,"show_time_evening":true,"show_time_night":true}}},"order":["breadcrumbs","main","related-products","recently_viewed_WRF76n","ribbon_banner_kAqDx9","alert_DtAfgB","ribbon_banner_EBBMYR","icons_with_text_XRiz3T"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+        "spacing": 0,
+        "color_scheme": "scheme-2",
+        "line_separator": "border-bottom",
+        "visibility": ""
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title_3bMpkb": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h1",
+            "heading_size": "h4",
+            "visibility": ""
+          }
+        },
+        "sku_9Yeiy8": {
+          "type": "sku",
+          "settings": {
+            "text_style": "body",
+            "text_size": "t3"
+          }
+        },
+        "custom_liquid_xEEWRV": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% comment %} Start Vendor Product Code Metafield {% endcomment %}\n{% if product.metafields.custom.vendor_product_code.value != blank %}\n  <div class=\"product-vendor-code\" style=\"font-size: 0.8em; color: #666; margin-top: 5px;\">\n    <span> Vendor Code: {{ product.metafields.custom.vendor_product_code.value }}</span>\n  </div>\n{% endif %}\n{% comment %} End Vendor Product Code Metafield {% endcomment %}",
+            "stock_visibility": "either"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_tax_info": true,
+            "price_color": "#fd2424",
+            "text_size": "h5-size"
+          }
+        },
+        "inventory_6gBtL8": {
+          "type": "inventory",
+          "settings": {
+            "show_inventory_quantity": true,
+            "show_as_badge": true,
+            "text_style": "body",
+            "text_size": "t6"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "box",
+            "show_availability": true,
+            "box_size": "auto",
+            "pill_text_size": "t4",
+            "pill_text_weight": "500",
+            "pill_text_transform": "none",
+            "prefix": "",
+            "variant_label_text_size": "t4",
+            "variant_label_text_weight": "bold",
+            "variant_label_text_transform": "",
+            "swatch_enabled": true,
+            "swatch_size": 1.6,
+            "swatch_box": true,
+            "size_chart_options": "Size",
+            "popup_style": "side",
+            "size_chart_icon": "question_mark",
+            "size_chart_label": "",
+            "size_chart_page": "",
+            "stock_visibility": "either"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "button_text_transform": "uppercase",
+            "button_text_font_weight": "bold",
+            "icon": "cart",
+            "icon_position": "left",
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true,
+            "show_quantity": true,
+            "show_price": false,
+            "show_pickup_availability": true
+          }
+        },
+        "spacer_UYdQbz": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": true,
+            "full_width": true,
+            "line_separator_style": "solid",
+            "spacing_top": 2.4,
+            "spacing_bottom": 2.4,
+            "spacer_visibility": "both",
+            "stock_visibility": "in_stock",
+            "show_in_quickbuy": true,
+            "line_color": ""
+          }
+        },
+        "richtext_bCYURe": {
+          "type": "richtext",
+          "settings": {
+            "text": "<p>Want <strong>next day</strong> delivery? Be quick!</p>",
+            "text_size": "t3",
+            "stock_visibility": "in_stock",
+            "show_in_quickbuy": true
+          }
+        },
+        "countdown_NmYkfw": {
+          "type": "countdown",
+          "settings": {
+            "end_date": "",
+            "end_time": "",
+            "end_action": "hide",
+            "end_message": "You just missed it!",
+            "abbreviate_units": true,
+            "countdown_size": 22,
+            "separator": "",
+            "countdown_font_weight": "normal",
+            "text_alignment": "center",
+            "countdown_container": "rounded",
+            "countdown_color": "#121212",
+            "countdown_background_color": "#f5f5f5",
+            "countdown_background_gradient": "",
+            "stock_visibility": "in_stock"
+          }
+        },
+        "panel_8URXGi": {
+          "type": "panel",
+          "name": "--- PANEL (BACK IN STOCK) ---",
+          "settings": {
+            "padding": 2.8,
+            "panel_icon": "",
+            "panel_heading": "",
+            "heading_style": "text-body",
+            "heading_text_size": "t4",
+            "heading_text_weight": "bold",
+            "below_media": false,
+            "visibility": "",
+            "show_at_specific_time_of_day": false,
+            "show_time_morning": true,
+            "show_time_afternoon": true,
+            "show_time_evening": true,
+            "show_time_night": true,
+            "stock_visibility": "out_of_stock",
+            "show_in_quickbuy": true,
+            "color_scheme": "scheme-5"
+          }
+        },
+        "enquiry_back_in_stock_mCfrfB": {
+          "type": "enquiry_back_in_stock",
+          "settings": {
+            "icon": "",
+            "text": "<h4>Sorry, it's out of stock.</h4><p>But we can let you know when it's back in.</p>",
+            "text_size": "t3",
+            "text_padding": 0.2,
+            "show_in_quickbuy": true,
+            "color_scheme": "scheme-5",
+            "image_overlay_opacity": 6,
+            "card_shadow": false
+          }
+        },
+        "panel_CUQjtB": {
+          "type": "panel",
+          "name": "--- PANEL (BELOW MEDIA) ---",
+          "settings": {
+            "padding": 0,
+            "panel_icon": "",
+            "panel_heading": "",
+            "heading_style": "text-body",
+            "heading_text_size": "t4",
+            "heading_text_weight": "bold",
+            "below_media": true,
+            "visibility": "",
+            "show_at_specific_time_of_day": false,
+            "show_time_morning": true,
+            "show_time_afternoon": true,
+            "show_time_evening": true,
+            "show_time_night": true,
+            "stock_visibility": "either",
+            "show_in_quickbuy": true,
+            "color_scheme": ""
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "text_size": "t4",
+            "max_height": 0,
+            "show_in_quickbuy": true
+          }
+        },
+        "panel_bWz9dJ": {
+          "type": "panel",
+          "name": "--- PANEL (SHOP SAFELY) ---",
+          "settings": {
+            "padding": 2.4,
+            "panel_icon": "shield_checkmark",
+            "panel_heading": "Shop safely",
+            "heading_style": "text-body",
+            "heading_text_size": "t2",
+            "heading_text_weight": "bold",
+            "below_media": false,
+            "visibility": "hidden-xs",
+            "show_at_specific_time_of_day": false,
+            "show_time_morning": true,
+            "show_time_afternoon": true,
+            "show_time_evening": true,
+            "show_time_night": true,
+            "stock_visibility": "either",
+            "show_in_quickbuy": false,
+            "color_scheme": "scheme-6c86e387-3661-4d62-9c57-9700f90cd21c"
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_caption": "",
+            "share_caption_text_style": "uppercase",
+            "share_caption_size": "t5"
+          }
+        },
+        "text_hReqDJ": {
+          "type": "text",
+          "settings": {
+            "text": "Secure your shopping experience with various safe and trusted payment methods.",
+            "text_style": "body",
+            "text_size": "t3"
+          }
+        },
+        "payment_icons_rt8Ubr": {
+          "type": "payment_icons",
+          "settings": {
+            "stock_visibility": "either"
+          }
+        },
+        "spacer_HcRH4E": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": true,
+            "full_width": true,
+            "line_separator_style": "solid",
+            "spacing_top": 2.4,
+            "spacing_bottom": 2,
+            "spacer_visibility": "both",
+            "stock_visibility": "either",
+            "show_in_quickbuy": true,
+            "line_color": "rgba(0,0,0,0)"
+          }
+        },
+        "popup_dVfe96": {
+          "type": "popup",
+          "settings": {
+            "popup_style": "side",
+            "side_popup_max_width": 500,
+            "icon": "information_circle",
+            "icon_position": "left",
+            "text": "Shop safely with us",
+            "button_style": "link",
+            "button_text_font_weight": "font-normal",
+            "button_text_size": "t4",
+            "show_inline": false,
+            "content": "<h3>Shopping Safely</h3><p>At our Shopify store, we prioritize your safety and security. Here's how we ensure a secure shopping experience:</p><p><strong>1. Secure Transactions:</strong> We use advanced encryption to protect your personal and payment information, ensuring it is safely transmitted and safeguarded.</p><p><strong>2. Trusted Payment Gateways:</strong> Our store integrates with trusted payment gateways, ensuring your transactions are processed securely and efficiently.</p><p><strong>3. Data Privacy:</strong> Your privacy is our top priority. We follow strict data protection policies to keep your personal information confidential and secure.</p><p><strong>4. Secure Platform:</strong> Shopify provides robust security features and continuous monitoring against vulnerabilities, ensuring a safe shopping environment.</p><p><strong>5. Verified Merchants:</strong> We are a verified merchant on Shopify, committed to providing authentic and high-quality products.</p><p><strong>6. Transparent Policies:</strong> Our clear return, refund, and shipping policies provide peace of mind, knowing we stand behind our products.</p><p><strong>7. Customer Support:</strong> Our dedicated customer support team is ready to assist with any concerns or questions you may have.</p><p>Shop confidently at our Shopify store, where your safety and satisfaction are our top priorities.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "title_3bMpkb",
+        "sku_9Yeiy8",
+        "custom_liquid_xEEWRV",
+        "price",
+        "inventory_6gBtL8",
+        "variant_picker",
+        "buy_buttons",
+        "spacer_UYdQbz",
+        "richtext_bCYURe",
+        "countdown_NmYkfw",
+        "panel_8URXGi",
+        "enquiry_back_in_stock_mCfrfB",
+        "panel_CUQjtB",
+        "description",
+        "panel_bWz9dJ",
+        "share",
+        "text_hReqDJ",
+        "payment_icons_rt8Ubr",
+        "spacer_HcRH4E",
+        "popup_dVfe96"
+      ],
+      "custom_css": [],
+      "settings": {
+        "gallery_layout": "slider",
+        "sticky_panel": "",
+        "info_fullwidth_mob": true,
+        "scroll_to_active_variant": true,
+        "page_title_enabled": false,
+        "page_title_vendor": true,
+        "page_title_price": true,
+        "page_title_review_stars": false,
+        "page_title_size": "h2",
+        "page_title_visibility": "",
+        "scroll_to_active_variant_on_change": true,
+        "highlight_active_media": true,
+        "slider_controls": "always",
+        "slider_controls_mobile": true,
+        "slider_full_width_mobile": true,
+        "enable_sticky_info": true,
+        "media_size": "large",
+        "main_image_ratio": "landscape",
+        "media_fit": false,
+        "product_media_radius": 16,
+        "product_media_scale": 100,
+        "enable_video_looping": false,
+        "show_media_shadow": true,
+        "image_zoom": "lightbox",
+        "image_zoom_level": "4",
+        "thumbnail_layout": "desktop",
+        "thumbnail_radius": 8,
+        "thumbnail_scale": 100,
+        "thumbnail_image_ratio": "landscape",
+        "thumbnail_cover": false,
+        "section_color_scheme": "scheme-1",
+        "media_color_scheme": "scheme-1e9c1e91-7716-4983-9c2e-dbf5f44e7811",
+        "thumbnail_color_scheme": "scheme-1e9c1e91-7716-4983-9c2e-dbf5f44e7811",
+        "info_color_scheme": "scheme-2",
+        "cta_color_scheme": "scheme-10",
+        "star_color": "#f5e121",
+        "card_shadow": true,
+        "image_replace_background": false,
+        "top_padding": "pt-0",
+        "bottom_padding": "pb-s"
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "products_to_show": 4,
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "2",
+        "full_width": false,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "You may also like",
+        "italic_convert": "",
+        "heading_size": "h2",
+        "text": "",
+        "text_size": "t3",
+        "color_scheme": "scheme-1",
+        "line_separator": "border-top",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "recently_viewed_WRF76n": {
+      "type": "recently-viewed",
+      "settings": {
+        "products_to_show": 8,
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "2",
+        "full_width": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "Recently viewed",
+        "italic_convert": "",
+        "heading_size": "h2",
+        "text": "",
+        "text_size": "t3",
+        "color_scheme": "",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
+    "ribbon_banner_kAqDx9": {
+      "type": "ribbon-banner",
+      "blocks": {
+        "heading_86zr4g": {
+          "type": "heading",
+          "settings": {
+            "heading": "Questions about this product?++ Don't be a stranger.",
+            "heading_italic_convert": "",
+            "heading_size": "custom",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.7,
+            "heading_tag": "h2"
+          }
+        },
+        "buttons_FCB4dg": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t2",
+            "button_label_1": "Get in touch",
+            "button_link_1": "shopify://pages/contact",
+            "button_style_1": "secondary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        }
+      },
+      "block_order": [
+        "heading_86zr4g",
+        "buttons_FCB4dg"
+      ],
+      "settings": {
+        "full_width": true,
+        "closable": false,
+        "content_alignment": "justify-center",
+        "vertical_padding": 10,
+        "horizontal_padding": 3.5,
+        "spacing_grid": 8.8,
+        "image_overlay_opacity": 0,
+        "color_scheme": "scheme-4",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "both",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "alert_DtAfgB": {
+      "type": "alert",
+      "blocks": {
+        "text_J3aeGA": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Selling fast!</strong></p><p>Get yours while you can.</p>",
+            "text_size": "t3"
+          }
+        }
+      },
+      "block_order": [
+        "text_J3aeGA"
+      ],
+      "settings": {
+        "show_delay": 4,
+        "auto_close": 0,
+        "show_close": true,
+        "mode": "enabled",
+        "desktop_content_position": "md:justify-start md:items-end",
+        "mobile_content_position": "justify-start items-end",
+        "content_max_width": "xs",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "content_padding": 1.8,
+        "icon": "speedometer",
+        "icon_container": "none",
+        "icon_size": 5,
+        "icon_color": "",
+        "icon_background_color": "#ededed",
+        "background_gradient": "",
+        "image_cover": true,
+        "image_position_desktop": "left",
+        "image_position_mobile": "left",
+        "image_size_desktop": 150,
+        "image_size_mobile": 150,
+        "image_overlay_opacity": 0,
+        "color_scheme": "",
+        "close_color": "",
+        "visibility": "both",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "ribbon_banner_EBBMYR": {
+      "type": "ribbon-banner",
+      "blocks": {
+        "heading_JN7mXN": {
+          "type": "heading",
+          "settings": {
+            "heading": "Exclusive discounts, just for you. <a href=\"/account/login\" title=\"/account/login\"><em>Sign up now.</em></a>",
+            "heading_italic_convert": "accent",
+            "heading_size": "h4",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        }
+      },
+      "block_order": [
+        "heading_JN7mXN"
+      ],
+      "settings": {
+        "full_width": true,
+        "closable": false,
+        "content_alignment": "justify-center",
+        "vertical_padding": 4,
+        "horizontal_padding": 3.5,
+        "spacing_grid": 3,
+        "image_overlay_opacity": 0,
+        "color_scheme": "scheme-10",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "both",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "icons_with_text_XRiz3T": {
+      "type": "icons-with-text",
+      "blocks": {
+        "icon_with_text_JmKbrH": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "shield_checkmark",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>WELL TRUSTED</strong>",
+            "text": "Over 100k customers",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_febyLe": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "truck",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>SUPER FAST</strong>",
+            "text": "With Express delivery",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_6nfrwH": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "chat_bubbles",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>EXPERT HELP</strong>",
+            "text": "Seven days a week",
+            "card_link": ""
+          }
+        },
+        "icon_with_text_RzUk3g": {
+          "type": "icon_with_text",
+          "settings": {
+            "icon": "price_tags",
+            "icon_container": "none",
+            "icon_color": "",
+            "icon_background_color": "#ededed",
+            "background_gradient": "",
+            "image_width": 40,
+            "title": "<strong>BEST PRICES</strong>",
+            "text": "Unbeatable value",
+            "card_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "icon_with_text_JmKbrH",
+        "icon_with_text_febyLe",
+        "icon_with_text_6nfrwH",
+        "icon_with_text_RzUk3g"
+      ],
+      "disabled": true,
+      "settings": {
+        "placement": "beside",
+        "content_vertical_alignment": "items-start",
+        "column_alignment": "left",
+        "vertical_padding": 2,
+        "icon_size": 2.8,
+        "heading_size": "t6",
+        "text_size": "t6",
+        "mobile_layout": "carousel",
+        "columns_mobile": "2",
+        "color_scheme": "scheme-3",
+        "line_separator": "border-bottom",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "main",
+    "related-products",
+    "recently_viewed_WRF76n",
+    "ribbon_banner_kAqDx9",
+    "alert_DtAfgB",
+    "ribbon_banner_EBBMYR",
+    "icons_with_text_XRiz3T"
+  ]
+}
