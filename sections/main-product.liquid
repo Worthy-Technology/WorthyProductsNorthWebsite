@@ -309,7 +309,13 @@
         {%- endif -%}
       </div>
     {%- endif -%}
-
+{% comment %} Start Vendor Product Code Metafield {% endcomment %}
+          {% if card_product.metafields.custom.vendor_product_code != blank %}
+            <div class="product-card__vendor-code" style="font-size: 0.8em; color: #666; margin-top: 5px;">
+              <span> Vendor Code: {{ card_product.metafields.custom.vendor_product_code.value }}</span>
+            </div>
+          {% endif %}
+          {% comment %} End Vendor Product Code Metafield {% endcomment %}
     {%- capture panels_below_media -%}
       {%- assign is_in_panel_below_media = false -%}
       {%- for block in section.blocks -%}
