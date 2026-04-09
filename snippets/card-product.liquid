@@ -28,6 +28,7 @@
 {% endcomment %}
 
 {%- liquid
+  
   assign quick_add_popup = settings.quick_add_popup
   assign qb_button_type = settings.quick_add
   assign quick_add_icon_over_image = settings.quick_add_icon_over_image
@@ -45,7 +46,7 @@
     assign quick_add_out_of_stock = 'disabled'
   endif
 -%}
-
+{%- assign cleaned_card_title = card_product.title | replace: '1x', 'X' | replace: '1X', 'X' | escape -%}
 {%- if card_product.quantity_price_breaks_configured? -%}
 <link rel="stylesheet" href="{{ 'component-volume-pricing.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
