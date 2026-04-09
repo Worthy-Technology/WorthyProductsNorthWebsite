@@ -207,6 +207,7 @@
   </div>
 
 {%- elsif block.type == 'title' -%}
+  {%- assign cleaned_title = product.title | replace: '1x', 'X' | replace: '1X', 'X' | escape -%}
   <div class="product__title {{ block.settings.visibility }}" {{ block.shopify_attributes }}>
     {%- if is_featured -%}
       {%- if product == blank -%}
@@ -216,17 +217,17 @@
       {%- else -%}
       <a href="{{ product.url }}" class="product__title link un-underlined-link">
         <{{ block.settings.heading_tag }} class="{{ block.settings.heading_size }} {{ block.settings.heading_style }}" data-product-title-id="{{ product.id }}">
-        {{ product.title | escape }}
+        {{ cleaned_title }}
         </{{ block.settings.heading_tag }}>
       </a>
       {%- endif -%}
     {%- else -%}
       <{{ block.settings.heading_tag }} class="b-main-title {{ block.settings.heading_size }} {{ block.settings.heading_style }} quick-add-hidden" data-product-title-id="{{ product.id }}">
-        {{ product.title | escape }}
+        {{ cleaned_title }}
       </{{ block.settings.heading_tag }}>
       <a href="{{ product.url }}" class="product__title">
         <h2 class="h3">
-          {{ product.title | escape }}
+          {{ cleaned_title }}
         </h2>
       </a>
     {%- endif -%}
