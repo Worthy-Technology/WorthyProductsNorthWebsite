@@ -255,12 +255,14 @@
                               </div>
                             {%- endif -%}
                             {% comment %} Start Unit Price Display Rendered- Pratham  {% endcomment %}
-                            {% render 'unit-price-cart-page',
-                                WCItem_FinalLinePrice: WCItem_FinalLinePrice,
-                                WCItem_OriginalLinePrice: WCItem_OriginalLinePrice,
-                                item: item
-                              %}
-                            {% comment %} END Unit Price Display Rendered- Pratham  {% endcomment %}
+                              {% unless customer.tags contains 'caltex' %}
+                                {% render 'unit-price-cart-page',
+                                    WCItem_FinalLinePrice: WCItem_FinalLinePrice,
+                                    WCItem_OriginalLinePrice: WCItem_OriginalLinePrice,
+                                    item: item
+                                  %}
+                              {% endunless %}
+                              {% comment %} END Unit Price Display Rendered- Pratham  {% endcomment %}
                             {%- if settings.badge_preorder_show_cart and item.product.template_suffix contains 'preorder' -%}
                               <span class="badge badge--preorder badge--bottom-left badge--{{ settings.badge_shape }} mb-1">
                                 {{- 'products.product.preorder' | t -}}
