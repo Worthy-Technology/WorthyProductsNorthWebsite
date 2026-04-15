@@ -626,8 +626,10 @@
   </infinite-scroll>
 {% endpaginate %}
 {% comment %} Unit Price Code Snippet Rendered- Pratham {% endcomment %}
-{% render 'unit-price-product-grid' %}
-{% render 'unit-price-product-page' %}
+ {% unless customer.tags contains 'caltex' %}
+  {% render 'unit-price-product-grid' %}
+  {% render 'unit-price-product-page' %}
+ {% endunless %}
 {% schema %}
 {
   "name": "Search results",
