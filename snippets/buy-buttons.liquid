@@ -196,4 +196,13 @@
 
     <lazy-script data-watch-element="variant-selects,pickup-availability" src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></lazy-script>
   {%- endif -%}
+  <script>
+  document.addEventListener('variant:change', function(e) {
+    var bulk = document.querySelector('#quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}');
+    if (!bulk || !e.detail || !e.detail.variant) return;
+    bulk.id = 'quick-add-bulk-' + e.detail.variant.id + '-{{ section.id }}';
+    bulk.dataset.index = e.detail.variant.id;
+    bulk.dataset.min = e.detail.variant.quantity_rule ? e.detail.variant.quantity_rule.min : 1;
+  });
+</script>
 </div>
