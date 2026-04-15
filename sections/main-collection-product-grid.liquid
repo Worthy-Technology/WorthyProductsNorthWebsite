@@ -732,7 +732,9 @@ document.addEventListener("DOMContentLoaded", function() {
 {% endcomment %}
 {% comment %} End Loader and Redirect to correct Products - Pratham {% endcomment %}
 
+{% unless customer.tags contains 'caltex' %}
 {% render 'unit-price-product-grid' %}
+{% endunless %}
 {% schema %}
 {
   "name": "Product grid",
