@@ -141,7 +141,9 @@
   </product-recommendations>
 </div>
 {% comment %} Unit Price Code Snippet Rendered- Pratham {% endcomment %}
+ {% unless customer.tags contains 'caltex' %}
 {% render 'unit-price-product-grid' %}
+ {% endunless %}
 {% schema %}
 {
   "name": "Related products",
