@@ -201,13 +201,19 @@
 
     <lazy-script data-watch-element="variant-selects,pickup-availability" src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></lazy-script>
   {%- endif -%}
-  <script>
+<script>
   document.addEventListener('variant:change', function(e) {
-    var bulk = document.querySelector('#quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}');
-    if (!bulk || !e.detail || !e.detail.variant) return;
-    bulk.id = 'quick-add-bulk-' + e.detail.variant.id + '-{{ section.id }}';
-    bulk.dataset.index = e.detail.variant.id;
+    if (!e.detail || !e.detail.variant) return;
+    var bulk = document.querySelector('.collection-quick-add-bulk quick-add-bulk');
+    if (!bulk) return;
+    var variantId = e.detail.variant.id;
+    bulk.id = 'quick-add-bulk-' + variantId + '-{{ section.id }}';
+    bulk.dataset.index = variantId;
+    bulk.dataset.id = variantId;
     bulk.dataset.min = e.detail.variant.quantity_rule ? e.detail.variant.quantity_rule.min : 1;
+    // Update data-index on the actual input too
+    var input = bulk.querySelector('quantity-input input');
+    if (input) input.dataset.index = variantId;
   });
 </script>
 </div>
