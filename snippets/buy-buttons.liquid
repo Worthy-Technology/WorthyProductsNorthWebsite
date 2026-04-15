@@ -91,20 +91,26 @@
     endif
   -%}
 <div class="collection-quick-add-bulk" data-id="{{ section.id }}">
-  <quick-add-bulk
-    data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
-    id="quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
-    class="quick-add-bulk"
-    data-id="{{ product.selected_or_first_available_variant.id }}"
-    data-index="{{ product.selected_or_first_available_variant.id }}"
-    data-section-id="{{ section.id }}"
-  >
-    {%- render 'quantity-input',
-      variant: product.selected_or_first_available_variant,
-      min: 0,
-      max: max
-    -%}
-  </quick-add-bulk>
+  <div class="product-page-qty-wrapper">
+    <quick-add-bulk
+      data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+      id="quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
+      class="quick-add-bulk"
+      data-id="{{ product.selected_or_first_available_variant.id }}"
+      data-index="{{ product.selected_or_first_available_variant.id }}"
+      data-section-id="{{ section.id }}"
+    >
+      {%- render 'quantity-input',
+        variant: product.selected_or_first_available_variant,
+        min: 0,
+        max: max
+      -%}
+    </quick-add-bulk>
+    <p class="product-page-qty-hint">
+      {% render 'icon', icon: 'cart', size: 14 %}
+      Set your quantity — items are added to your cart automatically
+    </p>
+  </div>
 </div>
 {%- else -%}
   <div class="grow">
