@@ -81,89 +81,68 @@
               assign quantity_rule_soldout = true
             endif
           -%}
-          <div class="flex gap-1 w-full">
-            {%- if block.settings.show_quantity -%}
-              <div class="pb-1">
-                <quantity-input class="quantity button--secondary quantity--squidge{% if settings.buttons_radius > 19 %} quantity--squidge-rounded{% endif %} h-full" data-url="{{ product.url }}" data-section="{{ section.id }}">
-                  <input
-                    class="quantity__input"
-                    type="number"
-                    name="quantity"
-                    id="Quantity-{{ section.id }}-inline"
-                    data-cart-quantity="{{ cart_qty }}"
-                    data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
-                    min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
-                    {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
-                      data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
-                      max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
-                    {% endif %}
-                    step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
-                    value="{{ product.selected_or_first_available_variant.quantity_rule.min | default: 1 }}"
-                    form="{{ product_form_id }}"
-                    aria-label="{{ 'products.product.quantity.input_label' | t: product: product | escape }}"
-                    data-target="quantity-input-{{ product.selected_or_first_available_variant.id }}"
-                  />
-                  <label class="visually-hidden" for="Quantity-{{ section.id }}-inline">
-                    {{ 'products.product.quantity.label' | t }}
-                  </label>
-                  <button class="quantity__button quantity__button-increase tap-target--small no-js-hidden" name="plus" type="button" data-target="increment-{{ product.selected_or_first_available_variant.id }}">
-                    <span class="visually-hidden">
-                      {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
-                    </span>
-                    {% render 'icon-caret' %}
-                  </button>
-                  <button class="quantity__button quantity__button-decrease tap-target--small no-js-hidden" name="minus" type="button" data-target="decrement-{{ product.selected_or_first_available_variant.id }}">
-                    <span class="visually-hidden">
-                      {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
-                    </span>
-                    {% render 'icon-caret' %}
-                  </button>
-                </quantity-input>
-              </div>
-            {%- endif -%}
-
-            <div class="grow">
-              <button
-                id="ProductSubmitButton-{{ section_id }}"
-                type="submit"
-                name="add"
-                {% if product.template_suffix contains 'preorder' %}
-                  data-is-preorder="true"
-                {% endif %}
-                class="product-form__submit button button--full-width
-                  {% if block.settings.button_text_font_weight == 'bold' %} font-bold{% endif %}
-                  {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}
-                  {% if block.settings.icon != blank %} button-with-icon{% endif %}
-                  {% if block.settings.icon != blank and block.settings.icon_position == 'right' %} button--full-width-icon-right{% endif %}"
-                  {% if product.selected_or_first_available_variant.available == false
-                    or quantity_rule_soldout
-                    or product.selected_or_first_available_variant == nil
-                  %}
-                  disabled
-                {% endif %}
-              >
-                {%- if block.settings.icon != blank and block.settings.icon_position == 'left' -%}
-                  {%- render 'icon', icon: block.settings.icon, class: 'relative' -%}
-                {%- endif -%}
-                <span>
-                  {%- if product.selected_or_first_available_variant == nil -%}
-                    {{ 'products.product.unavailable' | t }}
-                  {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
-                    {{ 'products.product.sold_out' | t }}{% if show_price %} - {{ money_price }}{% endif %}
-                  {%- elsif product.template_suffix contains 'preorder' -%}
-                    {{ 'products.product.preorder' | t }}{% if show_price %} - {{ money_price }}{% endif %}
-                  {%- else -%}
-                    {{ 'products.product.add_to_cart' | t }}{% if show_price %} - {{ money_price }}{% endif %}
-                  {%- endif -%}
-                </span>
-                {%- if block.settings.icon != blank and block.settings.icon_position == 'right' -%}
-                  {%- render 'icon', icon: block.settings.icon, class: 'relative' -%}
-                {%- endif -%}
-
-                {%- render 'loading-spinner' -%}
-              </button>
-            </div>
-          </div>
+          {%- if block.settings.show_quantity -%}
+  {%- liquid
+    assign max = false
+    if product.selected_or_first_available_variant.inventory_management != blank and product.selected_or_first_available_variant.inventory_policy != 'continue' and product.selected_or_first_available_variant.inventory_quantity > 0
+      assign max = product.selected_or_first_available_variant.inventory_quantity
+    endif
+  -%}
+  <quick-add-bulk
+    data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+    id="quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
+    class="quick-add-bulk"
+    data-index="{{ product.selected_or_first_available_variant.id }}"
+    data-section-id="{{ section.id }}"
+  >
+    {%- render 'quantity-input',
+      variant: product.selected_or_first_available_variant,
+      min: 0,
+      max: max
+    -%}
+  </quick-add-bulk>
+{%- else -%}
+  <div class="grow">
+    <button
+      id="ProductSubmitButton-{{ section_id }}"
+      type="submit"
+      name="add"
+      {% if product.template_suffix contains 'preorder' %}
+        data-is-preorder="true"
+      {% endif %}
+      class="product-form__submit button button--full-width
+        {% if block.settings.button_text_font_weight == 'bold' %} font-bold{% endif %}
+        {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}
+        {% if block.settings.icon != blank %} button-with-icon{% endif %}
+        {% if block.settings.icon != blank and block.settings.icon_position == 'right' %} button--full-width-icon-right{% endif %}"
+        {% if product.selected_or_first_available_variant.available == false
+          or quantity_rule_soldout
+          or product.selected_or_first_available_variant == nil
+        %}
+        disabled
+      {% endif %}
+    >
+      {%- if block.settings.icon != blank and block.settings.icon_position == 'left' -%}
+        {%- render 'icon', icon: block.settings.icon, class: 'relative' -%}
+      {%- endif -%}
+      <span>
+        {%- if product.selected_or_first_available_variant == nil -%}
+          {{ 'products.product.unavailable' | t }}
+        {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+          {{ 'products.product.sold_out' | t }}{% if show_price %} - {{ money_price }}{% endif %}
+        {%- elsif product.template_suffix contains 'preorder' -%}
+          {{ 'products.product.preorder' | t }}{% if show_price %} - {{ money_price }}{% endif %}
+        {%- else -%}
+          {{ 'products.product.add_to_cart' | t }}{% if show_price %} - {{ money_price }}{% endif %}
+        {%- endif -%}
+      </span>
+      {%- if block.settings.icon != blank and block.settings.icon_position == 'right' -%}
+        {%- render 'icon', icon: block.settings.icon, class: 'relative' -%}
+      {%- endif -%}
+      {%- render 'loading-spinner' -%}
+    </button>
+  </div>
+{%- endif -%}
           {%- if show_dynamic_checkout -%}
             {{ form | payment_button }}
           {%- endif -%}
