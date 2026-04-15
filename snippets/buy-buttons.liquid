@@ -90,10 +90,12 @@
       assign max = product.selected_or_first_available_variant.inventory_quantity
     endif
   -%}
+<div class="collection-quick-add-bulk" data-id="{{ section.id }}">
   <quick-add-bulk
     data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
     id="quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
     class="quick-add-bulk"
+    data-id="{{ product.selected_or_first_available_variant.id }}"
     data-index="{{ product.selected_or_first_available_variant.id }}"
     data-section-id="{{ section.id }}"
   >
@@ -103,6 +105,7 @@
       max: max
     -%}
   </quick-add-bulk>
+</div>
 {%- else -%}
   <div class="grow">
     <button
