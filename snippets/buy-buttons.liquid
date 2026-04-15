@@ -14,6 +14,8 @@
 
 <div {{ block.shopify_attributes }}>
   {%- if product != blank -%}
+    <lazy-script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></lazy-script>
+<lazy-script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></lazy-script>
     {%- liquid
       assign gift_card_recipient_feature_active = false
       if block.settings.show_gift_card_recipient and product.gift_card?
