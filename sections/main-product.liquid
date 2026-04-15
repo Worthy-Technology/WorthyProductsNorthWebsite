@@ -977,8 +977,10 @@
 {%- endif -%}
 {%- comment -%} Wholesale_Hub_Product_Visibility_Resource_Page End {%- endcomment -%}
  {% comment %} Unit Price Code Snippet Rendered- Pratham {% endcomment %}
+{% unless customer.tags contains 'caltex' %}
 {% render 'unit-price-product-grid' %}
 {% render 'unit-price-product-page' %}
+{% endunless %}
 {% schema %}
 {
   "name": "Product information",
