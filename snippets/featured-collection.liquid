@@ -422,5 +422,7 @@
   </div>
 {%- endif -%}
 {% comment %} Unit Price Code Snippet Rendered- Pratham {% endcomment %}
+ {% unless customer.tags contains 'caltex' %}
 {% render 'unit-price-product-grid' %}
 {% render 'unit-price-product-page' %}
+{% endunless %}
