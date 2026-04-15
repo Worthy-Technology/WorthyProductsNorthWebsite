@@ -207,21 +207,20 @@
   {%- endif -%}
 {% style %}
   .product-page-qty-wrapper {
-    border: 1px solid rgba(var(--color-foreground), 0.12);
-    border-radius: 8px;
-    padding: 1.4rem 1.6rem 1.4rem;
+    border: 1px solid rgba(var(--color-foreground), 0.15);
+    border-radius: 10px;
+    padding: 1.6rem;
     background: rgba(var(--color-foreground), 0.02);
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
-    gap: 1rem;
-    width: auto;
-    max-width: 22rem;
+    gap: 1.2rem;
+    width: 100%;
   }
 
   .product-page-qty-label {
     font-size: 1.1rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: rgba(var(--color-foreground), 0.45);
     margin: 0;
@@ -229,28 +228,30 @@
 
   .product-page-qty-wrapper .quick-add-bulk {
     display: flex;
-    align-items: center;
+    width: 100%;
   }
 
   .product-page-qty-wrapper quantity-input.quantity {
     display: flex;
-    align-items: center;
-    height: 4.8rem;
+    align-items: stretch;
+    height: 5.6rem;
     width: 100%;
-    border: 1px solid rgba(var(--color-foreground), 0.2);
-    border-radius: 6px;
+    border: 1.5px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 8px;
     overflow: hidden;
     outline: none !important;
     box-shadow: none !important;
+    background: rgb(var(--color-background));
   }
 
   .product-page-qty-wrapper quantity-input.quantity:focus-within {
-    border-color: rgba(var(--color-foreground), 0.5);
+    border-color: rgba(var(--color-foreground), 0.6);
+    box-shadow: 0 0 0 3px rgba(var(--color-foreground), 0.06) !important;
   }
 
   .product-page-qty-wrapper .quantity__input {
-    font-size: 1.8rem;
-    font-weight: 600;
+    font-size: 2rem;
+    font-weight: 700;
     text-align: center;
     flex: 1;
     height: 100%;
@@ -260,6 +261,7 @@
     background: transparent;
     padding: 0;
     -moz-appearance: textfield;
+    color: rgb(var(--color-foreground));
   }
 
   .product-page-qty-wrapper .quantity__input::-webkit-outer-spin-button,
@@ -272,34 +274,77 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3.6rem;
+    width: 5.6rem;
     height: 100%;
     flex-shrink: 0;
     background: rgba(var(--color-foreground), 0.04);
     border: none;
     cursor: pointer;
     padding: 0;
+    transition: background 0.15s ease;
+  }
+
+  .product-page-qty-wrapper .quantity__button:hover {
+    background: rgba(var(--color-foreground), 0.09);
+  }
+
+  .product-page-qty-wrapper .quantity__button:active {
+    background: rgba(var(--color-foreground), 0.14);
   }
 
   .product-page-qty-wrapper .quantity__button:first-child {
-    border-right: 1px solid rgba(var(--color-foreground), 0.1);
+    border-right: 1.5px solid rgba(var(--color-foreground), 0.1);
   }
 
   .product-page-qty-wrapper .quantity__button:last-of-type {
-    border-left: 1px solid rgba(var(--color-foreground), 0.1);
+    border-left: 1.5px solid rgba(var(--color-foreground), 0.1);
   }
 
   .product-page-qty-wrapper .quantity__button svg {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.6rem;
+    height: 1.6rem;
     pointer-events: none;
   }
 
   .product-page-qty-hint {
     margin: 0;
-    font-size: 1.3rem;
-    color: rgba(var(--color-foreground), 0.65);
+    font-size: 1.4rem;
+    color: rgb(var(--color-foreground));
     line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .product-page-qty-hint svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-page-qty-wrapper {
+      padding: 1.4rem;
+      gap: 1rem;
+    }
+
+    .product-page-qty-wrapper quantity-input.quantity {
+      height: 5.2rem;
+    }
+
+    .product-page-qty-wrapper .quantity__button {
+      width: 5.2rem;
+    }
+
+    .product-page-qty-wrapper .quantity__input {
+      font-size: 1.8rem;
+    }
+
+    .product-page-qty-hint {
+      font-size: 1.35rem;
+    }
   }
 {% endstyle %}
 <script>
