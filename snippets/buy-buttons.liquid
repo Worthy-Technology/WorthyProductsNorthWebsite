@@ -92,6 +92,7 @@
   -%}
 <div class="collection-quick-add-bulk" data-id="{{ section.id }}">
   <div class="product-page-qty-wrapper">
+    <p class="product-page-qty-label">Quantity</p>
     <quick-add-bulk
       data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
       id="quick-add-bulk-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
@@ -106,10 +107,7 @@
         max: max
       -%}
     </quick-add-bulk>
-    <p class="product-page-qty-hint">
-      {% render 'icon', icon: 'cart', size: 14 %}
-      Set your quantity — items are added to your cart automatically
-    </p>
+    <p class="product-page-qty-hint">Adjust the quantity and it will be added to your cart automatically.</p>
   </div>
 </div>
 {%- else -%}
@@ -209,43 +207,98 @@
   {%- endif -%}
 {% style %}
   .product-page-qty-wrapper {
-    border: 2px solid rgba(var(--color-foreground), 0.12);
+    border: 1px solid rgba(var(--color-foreground), 0.12);
     border-radius: 8px;
-    padding: 1.4rem 1.6rem 1.2rem;
+    padding: 1.4rem 1.6rem 1.4rem;
     background: rgba(var(--color-foreground), 0.02);
     display: inline-flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1rem;
     width: auto;
+    max-width: 22rem;
   }
 
   .product-page-qty-label {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(var(--color-foreground), 0.45);
-    margin: 0 0 0.2rem;
+    margin: 0;
   }
 
   .product-page-qty-wrapper .quick-add-bulk {
     display: flex;
+    align-items: center;
   }
 
-  .product-page-qty-wrapper .quantity {
-    height: 5rem;
-    min-width: 15rem;
+  .product-page-qty-wrapper quantity-input.quantity {
+    display: flex;
+    align-items: center;
+    height: 4.8rem;
+    width: 100%;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .product-page-qty-wrapper quantity-input.quantity:focus-within {
+    border-color: rgba(var(--color-foreground), 0.5);
   }
 
   .product-page-qty-wrapper .quantity__input {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 600;
+    text-align: center;
+    flex: 1;
+    height: 100%;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+
+  .product-page-qty-wrapper .quantity__input::-webkit-outer-spin-button,
+  .product-page-qty-wrapper .quantity__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .product-page-qty-wrapper .quantity__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 100%;
+    flex-shrink: 0;
+    background: rgba(var(--color-foreground), 0.04);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .product-page-qty-wrapper .quantity__button:first-child {
+    border-right: 1px solid rgba(var(--color-foreground), 0.1);
+  }
+
+  .product-page-qty-wrapper .quantity__button:last-of-type {
+    border-left: 1px solid rgba(var(--color-foreground), 0.1);
+  }
+
+  .product-page-qty-wrapper .quantity__button svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    pointer-events: none;
   }
 
   .product-page-qty-hint {
     margin: 0;
-    font-size: 1.25rem;
-    color: rgba(var(--color-foreground), 0.45);
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.65);
     line-height: 1.5;
   }
 {% endstyle %}
