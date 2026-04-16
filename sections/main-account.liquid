@@ -33,7 +33,9 @@
                 <tr role="row">
                   <th id="ColumnOrder" scope="col">{{ 'customer.orders.order_number' | t }}</th>
                   <th id="ColumnDate" scope="col">{{ 'customer.orders.date' | t }}</th>
+                  {% comment %}Hiding now to not show payment status - Pratham
                   <th id="ColumnPayment" scope="col">{{ 'customer.orders.payment_status' | t }}</th>
+                  {% endcomment %}
                   <th id="ColumnFulfillment" scope="col">{{ 'customer.orders.fulfillment_status' | t }}</th>
                   <th id="ColumnTotal" scope="col">{{ 'customer.orders.total' | t }}</th>
                   <th id="ColumnBuyAgain" scope="col" style="text-align:center; width:150px;">Buy again</th>
@@ -97,11 +99,13 @@
                     <td data-label="{{ 'customer.orders.date' | t }}">
                       {{ order.created_at | time_tag: format: 'date' }}
                     </td>
-
+                    
+                    {% comment %}Hiding now to not show payment status - Pratham
                     <td data-label="{{ 'customer.orders.payment_status' | t }}">
                       {{ order.financial_status_label }}
                     </td>
-
+                    {% endcomment %}
+                     
                     <td data-label="{{ 'customer.orders.fulfillment_status' | t }}">
                       {{ order.fulfillment_status_label }}
                     </td>
