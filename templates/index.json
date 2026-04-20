@@ -12,6 +12,16 @@
     "personal_greeting_HbeFHY": {
       "type": "personal-greeting",
       "blocks": {
+        "customer_greeting_cVirCP": {
+          "type": "customer_greeting",
+          "settings": {
+            "customer_tag": "Metromart",
+            "logo_position": "after_welcome",
+            "logo_size": "medium",
+            "desktop_message": "Metromart, We’re delighted to have you here at the Worthy Products online portal.",
+            "mobile_message": "Welcome Metromart customers to the Worthy Products online portal."
+          }
+        },
         "customer_greeting_3JD3V7": {
           "type": "customer_greeting",
           "settings": {
@@ -45,6 +55,7 @@
         }
       },
       "block_order": [
+        "customer_greeting_cVirCP",
         "customer_greeting_3JD3V7",
         "customer_greeting_84fcFe",
         "customer_greeting_CnBECN"
