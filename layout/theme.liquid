@@ -36,7 +36,7 @@
     {%- if _ok == false and _path contains '/policies/' -%}{%- assign _ok = true -%}{%- endif -%}
 
     {%- unless _ok -%}
-    <meta http-equiv="refresh" content="0;url=/account/login">
+    <meta http-equiv="refresh" content="0;url=/account/login?ref=access">
     <script>
     (function () {
       function redirect() {
@@ -46,13 +46,11 @@
         if (p.indexOf('/challenge') === 0) return;
         if (p.indexOf('/apps/') === 0 || p.indexOf('/a/') === 0 || p.indexOf('/tools/') === 0) return;
         if (p === '/account/login') return;
-        location.replace('/account/login');
+        location.replace('/account/login?ref=access');
       }
 
-      // Immediate — script is in <head>, body hasn't rendered yet
       redirect();
 
-      // bfcache restore
       window.addEventListener('pageshow', function (e) {
         if (e.persisted) redirect();
       });
@@ -979,6 +977,58 @@
   </script>
 {% endif %}
 
+{% comment %} START Login redirect notice - Pratham {% endcomment %}
+<script>
+(function () {
+  if (window.location.pathname !== '/account/login') return;
+  if (window.location.search.indexOf('ref=access') === -1) return;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var target = document.querySelector('#MainContent') || document.body;
+    var notice = document.createElement('div');
+
+    notice.style.cssText = [
+      'max-width:640px',
+      'margin:0 auto 2.5rem auto',
+      'padding:1.5rem 2rem',
+      'background:#fafaf9',
+      'border:1px solid #e0ddd8',
+      'border-left:4px solid #363636',
+      'border-radius:4px',
+      'font-size:0.95rem',
+      'line-height:1.65',
+      'color:#333333',
+      'font-family:inherit'
+    ].join(';');
+
+    notice.innerHTML =
+      '<p style="margin:0 0 0.6rem 0;font-weight:700;font-size:1.1rem;color:#111">Login required to access this page</p>' +
+      '<p style="margin:0 0 1.2rem 0">The page, collection, or product you\'re trying to visit is only available to registered customers. Please log in below to continue.</p>' +
+
+      '<div style="border-top:1px solid #e0ddd8;padding-top:1.1rem;margin-top:0.2rem">' +
+        '<p style="margin:0 0 0.35rem 0;font-weight:700;color:#111">Want to open a B2B wholesale account?</p>' +
+        '<p style="margin:0 0 1.2rem 0">' +
+          'Visit our <a href="/pages/wholesale-inquiries" style="color:#363636;font-weight:600;text-decoration:underline">Wholesale Inquiries page</a> ' +
+          'to download the Direct Debit form and Credit Application form. Complete both and email them to ' +
+          '<a href="mailto:admin@worthyproducts.nz" style="color:#363636;font-weight:600;text-decoration:underline">admin@worthyproducts.nz</a> ' +
+          '\u2014 our team will get your account set up.' +
+        '</p>' +
+      '</div>' +
+
+      '<div style="border-top:1px solid #e0ddd8;padding-top:1.1rem">' +
+        '<p style="margin:0 0 0.35rem 0;font-weight:700;color:#111">Not a wholesale customer?</p>' +
+        '<p style="margin:0">' +
+          'You can <a href="/account/register" style="color:#363636;font-weight:600;text-decoration:underline">create a retail account</a> ' +
+          'to shop at standard B2C pricing. Please note that full payment is required when placing orders.' +
+        '</p>' +
+      '</div>';
+
+    target.insertBefore(notice, target.firstChild);
+  });
+})();
+</script>
+{% comment %} END Login redirect notice - Pratham {% endcomment %}
+ 
 {% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
 {% if customer %}
 <script>
