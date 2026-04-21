@@ -36,6 +36,7 @@
     {%- if _ok == false and _path contains '/policies/' -%}{%- assign _ok = true -%}{%- endif -%}
 
     {%- unless _ok -%}
+    <meta http-equiv="refresh" content="0;url=/account/login">
     <script>
     (function () {
       function redirect() {
@@ -48,15 +49,10 @@
         location.replace('/account/login');
       }
 
-      // Normal load
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', redirect, { once: true });
-      } else {
-        redirect();
-      }
+      // Immediate — script is in <head>, body hasn't rendered yet
+      redirect();
 
-      // Back/forward button — bfcache restores the frozen page without re-running JS.
-      // pageshow with e.persisted catches this case.
+      // bfcache restore
       window.addEventListener('pageshow', function (e) {
         if (e.persisted) redirect();
       });
