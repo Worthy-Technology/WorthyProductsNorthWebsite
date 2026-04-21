@@ -11,105 +11,66 @@
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}"{% if is_rtl %} dir="rtl"{% endif %}>
   <head>
-    {% comment %}
-    <!-- Start: Whitelist all account routes and existing paths to prevent unwanted login redirects - Pratham -->
- 
-    Purpose- Allow all Shopify account routes plus your existing public paths, so invites and resets reach Create Password instead of being forced to /account/login./pages/sell-with-us
-    {% endcomment %}
-   {% unless Shopify.designMode %}
-    {% if customer %}
-      {%- comment -%} Logged in — no redirect {%- endcomment -%}
-    {% else %}
-      {%- assign allowed_exact = '/' | append: ',/account' | append: ',/account/login' | append: ',/account/register' | append: ',/account/recover' | append: ',/pages/wholesale-inquiries' | append: ',/pages/sell-with-us' | append: ',/pages/contact' | append: ',/pages/product-catalog' | append: ',/pages/about-us' | split: ',' -%}
-      {%- assign allowed_prefixes = '/account/activate,/account/reset,/account/orders,/account/addresses,/account/logout' | split: ',' -%}
-      {%- assign current_path = request.path | downcase -%}
-      {%- assign allowed = false -%}
 
-      {%- for path in allowed_exact -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: path %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
+{% comment %}
+ Start Pratham Login enforcement
+  Login guard — blocks unauthenticated access to all store pages.
+  Allowed paths are checked server-side; the JS handles bfcache restores.
+{% endcomment %}
+{% unless Shopify.designMode %}
+  {% unless customer %}
+    {%- assign _allowed_exact = '/' | append: ',/account' | append: ',/account/login' | append: ',/account/register' | append: ',/account/recover' | append: ',/pages/wholesale-inquiries' | append: ',/pages/sell-with-us' | append: ',/pages/contact' | append: ',/pages/product-catalog' | append: ',/pages/about-us' | split: ',' -%}
+    {%- assign _allowed_prefix = '/account/activate,/account/reset,/account/orders,/account/addresses,/account/logout' | split: ',' -%}
+    {%- assign _path = request.path | downcase -%}
+    {%- assign _ok = false -%}
 
-        {%- if current_path == path -%}{%- assign allowed = true -%}{%- endif -%}
+    {%- for p in _allowed_exact -%}
+      {%- if _path == p -%}{%- assign _ok = true -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless _ok -%}
+      {%- for p in _allowed_prefix -%}
+        {%- assign _head = _path | slice: 0, p.size -%}
+        {%- if _head == p -%}{%- assign _ok = true -%}{%- break -%}{%- endif -%}
       {%- endfor -%}
-      {%- if allowed == false -%}
-        {%- for prefix in allowed_prefixes -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: prefix %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
+    {%- endunless -%}
+    {%- if _ok == false and _path contains '/policies/' -%}{%- assign _ok = true -%}{%- endif -%}
 
-          {%- assign head = current_path | slice: 0, prefix.size -%}
-          {%- if head == prefix -%}{%- assign allowed = true -%}{%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
-      {%- if allowed == false and current_path contains '/policies/' -%}
-        {%- assign allowed = true -%}
-      {%- endif -%}
-
-    {%- unless allowed -%}
+    {%- unless _ok -%}
     <script>
     (function () {
-      // ---- hard skips (editor & system pages)
-      if (window.Shopify && Shopify.designMode) return;
-      var p = location.pathname;
-      if (p === '/password' || p === '/robots.txt') return;
-      if (p.indexOf('/challenge') === 0 || document.documentElement.classList.contains('shopify-challenge__container')) return;
-      // Many apps/embeds live under /apps or /a – don’t hijack them
-      if (p.indexOf('/apps/') === 0 || p.indexOf('/a/') === 0 || p.indexOf('/tools/') === 0) return;
-
-      // ---- loop guard with TTL (10s)
-      try {
-        var k = '__dr_account_redirected_ts';
-        var ts = parseInt(sessionStorage.getItem(k) || '0', 10);
-        var now = Date.now();
-        // clear guard if we are on the login page
-        if (p === '/account/login') { sessionStorage.removeItem(k); return; }
-        // if a redirect happened very recently, abort
-        if (ts && (now - ts) < 10000) return;
-      } catch (e) {}
-
-      function go() {
-        try {
-          if (location.pathname !== '/account/login') {
-            // mark redirect time to avoid loops
-            sessionStorage.setItem('__dr_account_redirected_ts', String(Date.now()));
-            // use replace so back button doesn't bounce
-            location.replace('/account/login');
-          }
-        } catch (e) {}
+      function redirect() {
+        if (window.Shopify && Shopify.designMode) return;
+        var p = location.pathname;
+        if (p === '/password' || p === '/robots.txt') return;
+        if (p.indexOf('/challenge') === 0) return;
+        if (p.indexOf('/apps/') === 0 || p.indexOf('/a/') === 0 || p.indexOf('/tools/') === 0) return;
+        if (p === '/account/login') return;
+        location.replace('/account/login');
       }
 
-      // ---- avoid firing during prerender/prefetch (InstantPage, Chrome prerender, etc.)
-      if (document.prerendering || document.visibilityState === 'prerender') {
-        document.addEventListener('visibilitychange', function onVis() {
-          if (document.visibilityState === 'visible') {
-            document.removeEventListener('visibilitychange', onVis);
-            go();
-          }
-        });
-        return;
-      }
-
-      // ---- defer to DOM ready (safer with Shopify’s boot sequence)
+      // Normal load
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', go, { once: true });
+        document.addEventListener('DOMContentLoaded', redirect, { once: true });
       } else {
-        setTimeout(go, 0);
+        redirect();
       }
+
+      // Back/forward button — bfcache restores the frozen page without re-running JS.
+      // pageshow with e.persisted catches this case.
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) redirect();
+      });
     })();
     </script>
     {%- endunless -%}
+  {% endunless %}
+{% endunless %}
 
-    {% endif %}
-    {% endunless %}
-
-    <!-- End: Whitelist all account routes and existing paths to prevent unwanted login redirects - Pratham -->
+{% comment %}
+ End Pratham Login enforcement
+  Login guard — blocks unauthenticated access to all store pages.
+  Allowed paths are checked server-side; the JS handles bfcache restores.
+{% endcomment %}
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -923,6 +884,10 @@
         {% assign collection_redirect = '/collections/mobil' %}
         {% elsif customer.tags contains 'caltex' %}
         {% assign collection_redirect = '/collections/caltex' %}
+        {% elsif customer.tags contains 'NZMPEA' %}
+        {% assign collection_redirect = '/collections/nzmpea' %}
+        {% elsif customer.tags contains 'Metromart' %}
+        {% assign collection_redirect = '/collections/metromart' %}
       {% endif %}
           
       {% if collection_redirect != '' %}
@@ -1017,5 +982,78 @@
     console.log("Wishlist Data Loaded:", window.wishlistData);
   </script>
 {% endif %}
+
+{% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
+{% if customer %}
+<script>
+(function () {
+  var STORE_KEY = '__b2b_checkout_dest';
+  var path = window.location.pathname;
+
+  // On /cart: B2B Hub has loaded → show overlay → proceed to checkout
+  if (path === '/cart') {
+    var dest = sessionStorage.getItem(STORE_KEY);
+    if (dest) {
+      sessionStorage.removeItem(STORE_KEY);
+      document.addEventListener('DOMContentLoaded', function () {
+        var ov = document.createElement('div');
+        ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
+        ov.innerHTML =
+          '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">Applying your wholesale pricing\u2026</p>' +
+          '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
+          '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
+        document.body.appendChild(ov);
+        setTimeout(function () { window.location.href = dest; }, 2500);
+      });
+    }
+    return;
+  }
+
+  // All other pages: intercept any navigation toward checkout
+  function isCheckout(url) {
+    return url && (url.indexOf('/checkout') !== -1 || url.indexOf('checkout.shopify.com') !== -1);
+  }
+
+  function bounceViaCart(dest) {
+    sessionStorage.setItem(STORE_KEY, dest || '/checkout');
+    window.location.href = '/cart';
+  }
+
+  // Anchor links
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a');
+    if (a && isCheckout(a.getAttribute('href'))) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      bounceViaCart(a.getAttribute('href'));
+    }
+  }, true);
+
+  // Form submissions (cart form, cart drawer)
+  document.addEventListener('submit', function (e) {
+    if (isCheckout(e.target.getAttribute('action'))) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      bounceViaCart('/checkout');
+    }
+  }, true);
+
+  // Submit buttons inside checkout forms
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[name="checkout"], button[type="submit"]');
+    if (!btn) return;
+    var form = btn.closest('form');
+    if (form && isCheckout(form.getAttribute('action'))) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      bounceViaCart('/checkout');
+    }
+  }, true);
+
+})();
+</script>
+{% endif %}
+{% comment %} END B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
+
   </body>
 </html>
