@@ -987,6 +987,7 @@
     var target = document.querySelector('#MainContent') || document.body;
 
     var notice = document.createElement('div');
+    notice.id = 'wp-access-notice';
     notice.style.cssText = [
       'max-width:1040px',
       'margin:2.5rem auto 3.5rem',
@@ -1001,12 +1002,14 @@
     ].join(';');
 
     notice.innerHTML =
-      '<style>' +
+     '<style>' +
         '.wp-notice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem}' +
         '@media(max-width:760px){.wp-notice-grid{grid-template-columns:1fr}}' +
         '.wp-notice-btn:hover{opacity:0.88;transform:translateY(-1px)}' +
         '.wp-notice-btn{transition:all 0.18s ease}' +
-      '</style>' +
+        '@media(max-width:1080px){#wp-access-notice{margin-left:1rem!important;margin-right:1rem!important}}' +
+        '@media(max-width:600px){#wp-access-notice{padding:2rem 1.25rem!important}}' +
+    '</style>' +
 
       // Header
       '<div style="text-align:center;padding-bottom:2.5rem;border-bottom:1px solid #e8edf5;margin-bottom:2.5rem">' +
