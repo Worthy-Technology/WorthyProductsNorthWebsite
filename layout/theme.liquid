@@ -1061,14 +1061,14 @@
 {% comment %} END Login redirect notice - Pratham {% endcomment %}
 
 {% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
+{% if customer %}
 <script>
 (function () {
   var STORE_KEY = '__b2b_checkout_dest';
-  var IS_LOGGED_IN = {% if customer %}true{% else %}false{% endif %};
   var path = window.location.pathname;
 
-  // On /cart and logged in: B2B Hub has loaded → auto-proceed to checkout
-  if (path === '/cart' && IS_LOGGED_IN) {
+  // On /cart: B2B Hub has loaded → show overlay → proceed to checkout
+  if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) {
       sessionStorage.removeItem(STORE_KEY);
@@ -1088,25 +1088,15 @@
 
   // All other pages: intercept any navigation toward checkout
   function isCheckout(url) {
-    return url && (
-      url.indexOf('/checkout') !== -1 ||
-      url.indexOf('checkout.shopify.com') !== -1
-    );
+    return url && (url.indexOf('/checkout') !== -1 || url.indexOf('checkout.shopify.com') !== -1);
   }
 
   function bounceViaCart(dest) {
     sessionStorage.setItem(STORE_KEY, dest || '/checkout');
-    if (IS_LOGGED_IN) {
-      // Already logged in → bounce through cart so B2B Hub loads
-      window.location.href = '/cart';
-    } else {
-      // Not logged in → send to login with return_to=/cart
-      // After login Shopify sends them to /cart, B2B Hub loads, then auto-proceeds to checkout
-      window.location.href = '/account/login?return_to=%2Fcart&ref=access';
-    }
+    window.location.href = '/cart';
   }
 
-  // Anchor links to checkout
+  // Anchor links
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a');
     if (a && isCheckout(a.getAttribute('href'))) {
@@ -1116,7 +1106,7 @@
     }
   }, true);
 
-  // Form submissions to checkout
+  // Form submissions (cart form, cart drawer)
   document.addEventListener('submit', function (e) {
     if (isCheckout(e.target.getAttribute('action'))) {
       e.preventDefault();
@@ -1125,7 +1115,7 @@
     }
   }, true);
 
-  // Submit/checkout-named buttons inside checkout forms
+  // Submit buttons inside checkout forms
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('[name="checkout"], button[type="submit"]');
     if (!btn) return;
@@ -1139,6 +1129,7 @@
 
 })();
 </script>
+{% endif %}
 {% comment %} END B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
 
   </body>
