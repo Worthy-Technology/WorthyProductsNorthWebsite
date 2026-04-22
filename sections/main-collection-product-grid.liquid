@@ -1,4 +1,15 @@
 {%- comment -%}theme-check-disable NestedSnippet,LiquidTag{%- endcomment -%}
+
+{%- unless customer -%}
+  <section class="section">
+    <div class="page-width" style="text-align:center;padding:6rem 2rem;">
+      <h1 class="title">Members Only</h1>
+      <p style="margin:1.5rem 0 2.5rem;color:var(--color-foreground);">This collection is only available to registered customers.<br>Please log in to view products and pricing.</p>
+      <a href="/account/login" class="button">Log In to Your Account</a>
+    </div>
+  </section>
+{%- else -%}
+
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
@@ -724,6 +735,8 @@ document.addEventListener("DOMContentLoaded", function() {
 {% comment %} End Loader and Redirect to correct Products - Pratham {% endcomment %}
 
 {% render 'unit-price-product-grid' %}
+
+{%- endunless -%}
 {% schema %}
 {
   "name": "Product grid",

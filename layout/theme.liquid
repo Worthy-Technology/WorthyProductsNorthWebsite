@@ -38,55 +38,48 @@
       {%- endif -%}
 
     {%- unless allowed -%}
+    <style id="__guestHide">body{visibility:hidden}</style>
     <script>
     (function () {
+      function show() {
+        var s = document.getElementById(‘__guestHide’);
+        if (s) s.parentNode.removeChild(s);
+      }
+      function go() {
+        try {
+          sessionStorage.setItem(‘__dr_account_redirected_ts’, String(Date.now()));
+          location.replace(‘/account/login’);
+        } catch (e) { show(); }
+      }
+
       // ---- hard skips (editor & system pages)
-      if (window.Shopify && Shopify.designMode) return;
+      if (window.Shopify && Shopify.designMode) { show(); return; }
       var p = location.pathname;
-      if (p === '/password' || p === '/robots.txt') return;
-      if (p.indexOf('/challenge') === 0 || document.documentElement.classList.contains('shopify-challenge__container')) return;
-      // Many apps/embeds live under /apps or /a – don’t hijack them
-      if (p.indexOf('/apps/') === 0 || p.indexOf('/a/') === 0 || p.indexOf('/tools/') === 0) return;
+      if (p === ‘/password’ || p === ‘/robots.txt’) { show(); return; }
+      if (p.indexOf(‘/challenge’) === 0 || document.documentElement.classList.contains(‘shopify-challenge__container’)) { show(); return; }
+      if (p.indexOf(‘/apps/’) === 0 || p.indexOf(‘/a/’) === 0 || p.indexOf(‘/tools/’) === 0) { show(); return; }
 
       // ---- loop guard with TTL (10s)
       try {
-        var k = '__dr_account_redirected_ts';
-        var ts = parseInt(sessionStorage.getItem(k) || '0', 10);
+        var k = ‘__dr_account_redirected_ts’;
+        var ts = parseInt(sessionStorage.getItem(k) || ‘0’, 10);
         var now = Date.now();
-        // clear guard if we are on the login page
-        if (p === '/account/login') { sessionStorage.removeItem(k); return; }
-        // if a redirect happened very recently, abort
-        if (ts && (now - ts) < 10000) return;
+        if (ts && (now - ts) < 10000) { show(); return; }
       } catch (e) {}
 
-      function go() {
-        try {
-          if (location.pathname !== '/account/login') {
-            // mark redirect time to avoid loops
-            sessionStorage.setItem('__dr_account_redirected_ts', String(Date.now()));
-            // use replace so back button doesn't bounce
-            location.replace('/account/login');
-          }
-        } catch (e) {}
-      }
-
       // ---- avoid firing during prerender/prefetch (InstantPage, Chrome prerender, etc.)
-      if (document.prerendering || document.visibilityState === 'prerender') {
-        document.addEventListener('visibilitychange', function onVis() {
-          if (document.visibilityState === 'visible') {
-            document.removeEventListener('visibilitychange', onVis);
+      if (document.prerendering || document.visibilityState === ‘prerender’) {
+        document.addEventListener(‘visibilitychange’, function onVis() {
+          if (document.visibilityState === ‘visible’) {
+            document.removeEventListener(‘visibilitychange’, onVis);
             go();
           }
         });
         return;
       }
 
-      // ---- defer to DOM ready (safer with Shopify’s boot sequence)
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', go, { once: true });
-      } else {
-        setTimeout(go, 0);
-      }
+      // ---- synchronous redirect in <head> — fires before body paints, no flash
+      go();
     })();
     </script>
     {%- endunless -%}

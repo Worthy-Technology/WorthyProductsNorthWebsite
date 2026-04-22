@@ -1,4 +1,15 @@
 {%- comment -%}theme-check-disable NestedSnippet,SchemaJsonFormat{%- endcomment -%}
+
+{%- unless customer -%}
+  <section class="section">
+    <div class="page-width" style="text-align:center;padding:6rem 2rem;">
+      <h1 class="title">Members Only</h1>
+      <p style="margin:1.5rem 0 2.5rem;color:var(--color-foreground);">This page is only available to registered customers.<br>Please log in to view pricing and place orders.</p>
+      <a href="/account/login" class="button">Log In to Your Account</a>
+    </div>
+  </section>
+{%- else -%}
+
 {%- liquid
   if section.settings.info_color_scheme != section.settings.section_color_scheme
     assign info_color_scheme = section.settings.info_color_scheme
@@ -653,6 +664,8 @@
  {% comment %} Unit Price Code Snippet Rendered- Pratham {% endcomment %}
 {% render 'unit-price-product-grid' %}
 {% render 'unit-price-product-page' %}
+
+{%- endunless -%}
 {% schema %}
 {
   "name": "Product information",
