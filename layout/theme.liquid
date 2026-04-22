@@ -25,24 +25,10 @@
       {%- assign allowed = false -%}
 
       {%- for path in allowed_exact -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: path %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
-
         {%- if current_path == path -%}{%- assign allowed = true -%}{%- endif -%}
       {%- endfor -%}
       {%- if allowed == false -%}
         {%- for prefix in allowed_prefixes -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: prefix %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
-
           {%- assign head = current_path | slice: 0, prefix.size -%}
           {%- if head == prefix -%}{%- assign allowed = true -%}{%- endif -%}
         {%- endfor -%}
@@ -179,7 +165,6 @@
       <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    {% unless request.design_mode %}{% include 'wlm-head' %}{% endunless %}
 {{ content_for_header }}
 
     {%- liquid
@@ -272,13 +257,6 @@
 
       {%- assign color_schemes_with_heading_gradient = "" -%}
       {% for scheme in settings.color_schemes -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: scheme %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
-
         {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
         {% if forloop.index == 1 -%}
           :root,
@@ -775,9 +753,8 @@
     <div id="content" aria-hidden="true"></div>
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
-          {% if false %}{{ content_for_layout }}{% endif %}
-          {% include 'wlm-body' %}
-        </main>
+      {{ content_for_layout }}
+    </main>
 
     {% sections 'overlay-group' %}
     {% sections 'footer-group' %}
@@ -911,55 +888,6 @@
       <script src="{{ 'instant-page.js' | asset_url }}" defer="defer"></script>
     {%- endunless -%}
 
-    {% comment %} START Redirect Customers to right collections - Pratham  {% endcomment %}
-      {% if collection.handle == 'all' and customer %}
-      {% assign collection_redirect = '' %}
-      {% if customer.tags contains 'Mobil New' %}
-        {% assign collection_redirect = '/collections/mobil' %}
-        {% elsif customer.tags contains 'Mobil Existing' %}
-        {% assign collection_redirect = '/collections/mobil' %}
-        {% elsif customer.tags contains 'mobil' %}
-        {% assign collection_redirect = '/collections/mobil' %}
-        {% elsif customer.tags contains 'caltex' %}
-        {% assign collection_redirect = '/collections/caltex' %}
-      {% endif %}
-          
-      {% if collection_redirect != '' %}
-        <script>
-          // Show loader
-          var loader = document.createElement('div');
-          loader.id = 'drusk-loader-overlay';
-          loader.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:white;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;";
-          loader.innerHTML = `
-            <div style="font-size:2em;margin-bottom:1em;">
-              Loading your products<span id="drusk-dots">.</span>
-            </div>
-            <div style="border:6px solid #f3f3f3;border-top:6px solid #363636;border-radius:50%;width:60px;height:60px;animation:drusk-spin 1s linear infinite;"></div>
-            <style>
-            @keyframes drusk-spin {
-              0% { transform: rotate(0deg);}
-              100% { transform: rotate(360deg);}
-            }
-            </style>
-          `;
-          document.body.appendChild(loader);
-
-          // Animate the dots
-          var dots = loader.querySelector('#drusk-dots');
-          var dotCount = 1;
-          var dotInterval = setInterval(function() {
-            dotCount = (dotCount % 3) + 1;
-            dots.textContent = '.'.repeat(dotCount);
-          }, 50);
-
-          setTimeout(function() {
-            clearInterval(dotInterval);
-            location.replace("{{ collection_redirect }}");
-          }, 50); // Minimal seconds delay before redirecting
-        </script>
-      {% endif %}
-    {% endif %}
-    {% comment %} END Redirect Customers to right collections - Pratham {% endcomment %}
 
     {% comment %} Start Back in Stock Block CSS - Pratham {% endcomment %}
       <style>

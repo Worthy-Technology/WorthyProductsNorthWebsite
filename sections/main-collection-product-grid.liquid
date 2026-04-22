@@ -1,8 +1,3 @@
-{%- comment -%} Wholesale_Hub_Product_Visibility_Resource_Page Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility" %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% render "orbit_wholesale_page_replacement" %}
-{%- else -%}
 {%- comment -%}theme-check-disable NestedSnippet,LiquidTag{%- endcomment -%}
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
@@ -668,10 +663,6 @@
   }
   </script>
 {%- endif -%}
-
-
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_Resource_Page End {%- endcomment -%}
 
 
 {% comment %} Start Loader and Redirect to correct Products - Pratham {% endcomment %}
