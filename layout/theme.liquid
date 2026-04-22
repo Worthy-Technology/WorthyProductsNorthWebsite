@@ -38,33 +38,25 @@
       {%- endif -%}
 
     {%- unless allowed -%}
-    <style id="__guestHide">body{visibility:hidden}</style>
     <script>
     (function () {
-      function show() {
-        var s = document.getElementById(‘__guestHide’);
-        if (s) s.parentNode.removeChild(s);
-      }
       function go() {
-        try {
-          sessionStorage.setItem(‘__dr_account_redirected_ts’, String(Date.now()));
-          location.replace(‘/account/login’);
-        } catch (e) { show(); }
+        try { sessionStorage.setItem(‘__dr_account_redirected_ts’, String(Date.now())); } catch (e) {}
+        location.replace(‘/account/login’);
       }
 
       // ---- hard skips (editor & system pages)
-      if (window.Shopify && Shopify.designMode) { show(); return; }
+      if (window.Shopify && Shopify.designMode) return;
       var p = location.pathname;
-      if (p === ‘/password’ || p === ‘/robots.txt’) { show(); return; }
-      if (p.indexOf(‘/challenge’) === 0 || document.documentElement.classList.contains(‘shopify-challenge__container’)) { show(); return; }
-      if (p.indexOf(‘/apps/’) === 0 || p.indexOf(‘/a/’) === 0 || p.indexOf(‘/tools/’) === 0) { show(); return; }
+      if (p === ‘/password’ || p === ‘/robots.txt’) return;
+      if (p.indexOf(‘/challenge’) === 0 || document.documentElement.classList.contains(‘shopify-challenge__container’)) return;
+      if (p.indexOf(‘/apps/’) === 0 || p.indexOf(‘/a/’) === 0 || p.indexOf(‘/tools/’) === 0) return;
 
       // ---- loop guard with TTL (10s)
       try {
         var k = ‘__dr_account_redirected_ts’;
         var ts = parseInt(sessionStorage.getItem(k) || ‘0’, 10);
-        var now = Date.now();
-        if (ts && (now - ts) < 10000) { show(); return; }
+        if (ts && (Date.now() - ts) < 10000) return;
       } catch (e) {}
 
       // ---- avoid firing during prerender/prefetch (InstantPage, Chrome prerender, etc.)
@@ -78,7 +70,7 @@
         return;
       }
 
-      // ---- synchronous redirect in <head> — fires before body paints, no flash
+      // ---- synchronous call in <head>: fires before browser paints any body content
       go();
     })();
     </script>
