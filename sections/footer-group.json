@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "Footer",
   "type": "footer",
@@ -9,10 +18,10 @@
           "type": "image_and_text",
           "settings": {
             "heading": "Worthy Products",
-            "description": "<p>Supplying Aotearoa with top-quality snacks and drinks. Trusted by dairies, supermarkets, and stores NZ-wide<\/p>",
+            "description": "<p>New Zealand's wholesale partner for confectionery, snacks, beverages, stationery, and general merchandise.</p>",
             "collapsible": true,
             "wider": true,
-            "image": "shopify:\/\/shop_images\/09c3a46a-74ba-4eff-b891-c38c4d3a6210.png",
+            "image": "shopify://shop_images/09c3a46a-74ba-4eff-b891-c38c4d3a6210.png",
             "image_width": 100,
             "image_placement": "below_description"
           }
@@ -37,7 +46,7 @@
           "type": "image_and_text",
           "settings": {
             "heading": "Expert help",
-            "description": "<p>Need any advice before you buy? We're here to help.<\/p><p><a href=\"\/pages\/contact\" title=\"Contact\">Contact Us<\/a><\/p>",
+            "description": "<p>Need any advice before you buy? We're here to help.</p><p><a href=\"/pages/contact\" title=\"Contact\">Contact Us</a></p>",
             "collapsible": true,
             "wider": false,
             "image_width": 100,
