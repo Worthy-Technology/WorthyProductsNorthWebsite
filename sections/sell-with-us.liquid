@@ -1,0 +1,476 @@
+{% comment %}
+  Section: sell-with-us.liquid
+  Place in: sections/sell-with-us.liquid
+{% endcomment %}
+
+{%- liquid
+  assign s           = section.settings
+  assign color_pri   = s.color_primary  | default: '#2256c2'
+  assign color_hover = s.color_hover    | default: '#417cdd'
+  assign color_focus = s.color_focus    | default: '#508df6'
+  assign max_w       = s.max_width      | default: 780
+-%}
+
+<style>
+  /* ── Only structural styles here — fonts, sizes & colors inherit from Ignite theme ── */
+
+  #swu-{{ section.id }} {
+    --swu-primary:    {{ color_pri }};
+    --swu-hover:      {{ color_hover }};
+    --swu-focus:      {{ color_focus }};
+    --swu-focus-ring: {{ color_focus }}26;
+    --swu-max-width:  {{ max_w }}px;
+  }
+
+  /* Layout wrapper — no font/color overrides */
+  #swu-{{ section.id }} .swu-wrapper {
+    max-width: var(--swu-max-width);
+    margin: 0 auto;
+    padding-bottom: 4rem;
+  }
+
+  /* Heading — let theme handle font-family, size & weight */
+  #swu-{{ section.id }} h1.swu-heading {
+    margin-bottom: 1rem;
+  }
+
+  /* Intro paragraphs — tighter spacing */
+  #swu-{{ section.id }} .swu-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Accent divider */
+  #swu-{{ section.id }} .swu-divider {
+    width: 3rem;
+    height: 3px;
+    background: var(--swu-primary);
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  /* Form stack */
+  #swu-{{ section.id }} .swu-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  #swu-{{ section.id }} .swu-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  /* Two-column name row */
+  #swu-{{ section.id }} .swu-name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.875rem;
+  }
+
+  /* Inputs — focus override only; all other styles come from field__input */
+  #swu-{{ section.id }} .field__input:focus,
+  #swu-{{ section.id }} .field__input:focus-visible {
+    border-color: var(--swu-focus) !important;
+    box-shadow: 0 0 0 3px var(--swu-focus-ring) !important;
+    outline: none;
+  }
+
+  #swu-{{ section.id }} textarea.field__input {
+    resize: vertical;
+    min-height: 130px;
+  }
+
+  /* Submit button — use theme's button base, override only color */
+  #swu-{{ section.id }} .swu-submit {
+    background: var(--swu-primary) !important;
+    border-color: var(--swu-primary) !important;
+    color: #fff !important;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  }
+
+  #swu-{{ section.id }} .swu-submit:hover {
+    background: var(--swu-hover) !important;
+    border-color: var(--swu-hover) !important;
+    box-shadow: 0 4px 14px rgba(34, 86, 194, 0.3);
+    transform: translateY(-1px);
+  }
+
+  #swu-{{ section.id }} .swu-submit:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  /* Success message */
+  #swu-{{ section.id }} .swu-success {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: #eef3fd;
+    border-left: 4px solid var(--swu-primary);
+    border-radius: 6px;
+  }
+
+  #swu-{{ section.id }} .swu-success.is-visible {
+    display: block;
+  }
+
+  @media (max-width: 520px) {
+    #swu-{{ section.id }} .swu-name-row { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div id="swu-{{ section.id }}">
+  <div class="swu-wrapper">
+
+    {%- if s.heading != blank -%}
+      <h1 class="swu-heading">{{ s.heading }}</h1>
+    {%- endif -%}
+
+    <div class="swu-intro">
+      {%- if s.intro_1 != blank -%}<p>{{ s.intro_1 }}</p>{%- endif -%}
+      {%- if s.intro_2 != blank -%}<p>{{ s.intro_2 }}</p>{%- endif -%}
+      {%- if s.intro_3 != blank -%}<p>{{ s.intro_3 }}</p>{%- endif -%}
+      {%- if s.intro_4 != blank -%}<p>{{ s.intro_4 }}</p>{%- endif -%}
+      {%- if s.intro_5 != blank -%}<p>{{ s.intro_5 }}</p>{%- endif -%}
+    </div>
+
+    <div class="swu-divider"></div>
+
+    {%- form 'contact', id: 'swu-form' -%}
+      <input type="hidden" name="contact[tags]" value="sell-with-us">
+
+      <div class="swu-form">
+
+        {%- comment %} Full Name — two fields side by side {%- endcomment %}
+        <div class="swu-name-row">
+          <div class="field">
+            <input
+              class="field__input"
+              type="text"
+              id="swu-first-{{ section.id }}"
+              name="contact[First Name]"
+              placeholder="{{ s.placeholder_firstname | default: 'First name' }}"
+              autocomplete="given-name"
+              required
+            >
+            <label class="field__label" for="swu-first-{{ section.id }}">
+              {{- s.placeholder_firstname | default: 'First name' -}}
+            </label>
+          </div>
+          <div class="field">
+            <input
+              class="field__input"
+              type="text"
+              id="swu-last-{{ section.id }}"
+              name="contact[Last Name]"
+              placeholder="{{ s.placeholder_lastname | default: 'Last name' }}"
+              autocomplete="family-name"
+              required
+            >
+            <label class="field__label" for="swu-last-{{ section.id }}">
+              {{- s.placeholder_lastname | default: 'Last name' -}}
+            </label>
+          </div>
+        </div>
+
+        {%- comment %} Company {%- endcomment %}
+        <div class="field">
+          <input
+            class="field__input"
+            type="text"
+            id="swu-company-{{ section.id }}"
+            name="contact[Company]"
+            placeholder="{{ s.placeholder_company | default: 'Company' }}"
+            autocomplete="organization"
+            required
+          >
+          <label class="field__label" for="swu-company-{{ section.id }}">
+            {{- s.label_company | default: 'Company' -}}
+          </label>
+        </div>
+
+        {%- comment %} Category {%- endcomment %}
+        <div class="field">
+          <input
+            class="field__input"
+            type="text"
+            id="swu-category-{{ section.id }}"
+            name="contact[Category]"
+            placeholder="{{ s.placeholder_category | default: 'Category' }}"
+          >
+          <label class="field__label" for="swu-category-{{ section.id }}">
+            {{- s.label_category | default: 'Category' -}}
+          </label>
+        </div>
+
+        {%- comment %} Phone {%- endcomment %}
+        <div class="field">
+          <input
+            class="field__input"
+            type="tel"
+            id="swu-phone-{{ section.id }}"
+            name="contact[Phone]"
+            placeholder="{{ s.placeholder_phone | default: 'Phone' }}"
+            autocomplete="tel"
+          >
+          <label class="field__label" for="swu-phone-{{ section.id }}">
+            {{- s.label_phone | default: 'Phone' -}}
+          </label>
+        </div>
+
+        {%- comment %} Email {%- endcomment %}
+        <div class="field">
+          <input
+            class="field__input"
+            type="email"
+            id="swu-email-{{ section.id }}"
+            name="contact[email]"
+            placeholder="{{ s.placeholder_email | default: 'Email' }}"
+            autocomplete="email"
+            required
+          >
+          <label class="field__label" for="swu-email-{{ section.id }}">
+            {{- s.label_email | default: 'Email' -}}
+          </label>
+        </div>
+
+        {%- comment %} Comments / Message {%- endcomment %}
+        <div class="field">
+          <textarea
+            class="field__input"
+            id="swu-comments-{{ section.id }}"
+            name="contact[body]"
+            placeholder="{{ s.placeholder_comments | default: 'Message' }}"
+            required
+          ></textarea>
+          <label class="field__label" for="swu-comments-{{ section.id }}">
+            {{- s.label_comments | default: 'Message' -}}
+          </label>
+        </div>
+
+        <button type="submit" class="button button--primary swu-submit">
+          {{- s.button_label | default: 'Submit' -}}
+        </button>
+
+      </div>
+    {%- endform -%}
+
+    <div class="swu-success" id="swu-success-{{ section.id }}">
+      ✓ {{ s.success_message | default: "Thanks for reaching out! We'll be in touch shortly." }}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    var search = window.location.search;
+    if (
+      search.indexOf('contact%5Bposted_successfully%5D=true') !== -1 ||
+      search.indexOf('contact[posted_successfully]=true') !== -1
+    ) {
+      var form    = document.getElementById('swu-form');
+      var success = document.getElementById('swu-success-{{ section.id }}');
+      if (form)    form.style.display = 'none';
+      if (success) success.classList.add('is-visible');
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sell with us",
+  "tag": "section",
+  "class": "section-sell-with-us",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Page content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Partner with Worthy Products"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_1",
+      "label": "Intro paragraph 1",
+      "default": "Worthy Products is one of New Zealand's leading FMCG wholesale distributors, supplying thousands of retail, convenience, and foodservice outlets nationwide. If you're a brand serious about scaling in the New Zealand market, you're in the right place."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_2",
+      "label": "Intro paragraph 2",
+      "default": "We deliver end-to-end distribution — from warehousing and logistics to retail ranging and in-store execution. Our infrastructure is built to move product efficiently at scale, so your brand reaches the right shelves, in the right stores, at the right time."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_3",
+      "label": "Intro paragraph 3",
+      "default": "Whether you're an established international brand entering the NZ market or a local manufacturer ready to grow, we have the network, the relationships, and the operational capability to make it happen."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_4",
+      "label": "Intro paragraph 4",
+      "default": "We hold all required NZ regulatory certifications and our compliance standards are continuously updated to meet current Food Safety and Fair Trading requirements — giving you complete confidence in how your products are handled and represented."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_5",
+      "label": "Intro paragraph 5",
+      "default": "Fill in the form below and our partnerships team will be in touch. We look forward to building something great together."
+    },
+
+    {
+      "type": "header",
+      "content": "Form labels"
+    },
+    {
+      "type": "text",
+      "id": "label_fullname",
+      "label": "Full Name label",
+      "default": "Full Name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_firstname",
+      "label": "First name placeholder",
+      "default": "Enter your first name"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_lastname",
+      "label": "Surname placeholder",
+      "default": "Enter your surname"
+    },
+    {
+      "type": "text",
+      "id": "label_company",
+      "label": "Company label",
+      "default": "Company"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_company",
+      "label": "Company placeholder",
+      "default": "Enter your company name"
+    },
+    {
+      "type": "text",
+      "id": "label_category",
+      "label": "Category label",
+      "default": "Category"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_category",
+      "label": "Category placeholder",
+      "default": "What type of industry do you operate in..."
+    },
+    {
+      "type": "text",
+      "id": "label_phone",
+      "label": "Phone label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_phone",
+      "label": "Phone placeholder",
+      "default": "Enter your phone number"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Email placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "label_comments",
+      "label": "Comments label",
+      "default": "Comments"
+    },
+    {
+      "type": "textarea",
+      "id": "placeholder_comments",
+      "label": "Comments placeholder",
+      "default": "Tell us more about your business and product range..."
+    },
+
+    {
+      "type": "header",
+      "content": "Button & feedback"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Submit button text",
+      "default": "Submit"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message (after submission)",
+      "default": "Thanks for reaching out! We'll be in touch shortly."
+    },
+
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "color_primary",
+      "label": "Primary colour (button, divider, border)",
+      "default": "#2256c2"
+    },
+    {
+      "type": "color",
+      "id": "color_hover",
+      "label": "Hover colour",
+      "default": "#417cdd"
+    },
+    {
+      "type": "color",
+      "id": "color_focus",
+      "label": "Focus ring colour",
+      "default": "#508df6"
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width (px)",
+      "min": 480,
+      "max": 1200,
+      "step": 20,
+      "default": 780
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Sell with us"
+    }
+  ]
+}
+{% endschema %}
