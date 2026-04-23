@@ -3,9 +3,9 @@
     "main": {
       "type": "main-login-b2b",
       "settings": {
-        "heading": "Welcome Back",
-        "subheading": "Sign in to your Worthy Products account",
-        "b2b_tab_label": "Wholesale B2B",
+        "heading": "Welcome to Worthy Products",
+        "subheading": "Sign in to your account to continue",
+        "b2b_tab_label": "B2B Customer",
         "b2c_tab_label": "Retail Customer"
       }
     }

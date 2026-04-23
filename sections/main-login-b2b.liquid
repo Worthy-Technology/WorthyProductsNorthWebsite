@@ -314,15 +314,15 @@
       {%- elsif shop.logo != blank -%}
         <img src="{{ shop.logo | image_url: height: 88 }}" alt="{{ shop.name }}" class="ul-logo">
       {%- endif -%}
-      <h1>{{ section.settings.heading | default: 'Welcome Back' }}</h1>
-      <p>{{ section.settings.subheading | default: 'Sign in to your Worthy Products account' }}</p>
+      <h1>{{ section.settings.heading | default: 'Welcome to Worthy Products' }}</h1>
+      <p>{{ section.settings.subheading | default: 'Sign in to your account to continue' }}</p>
     </div>
 
     <!-- Tab switcher -->
     <div class="ul-tabs" role="tablist">
       <button class="ul-tab" id="tabB2B" role="tab" aria-selected="true"
               aria-controls="panelB2B" onclick="ulSwitchTab('b2b')">
-        {{ section.settings.b2b_tab_label | default: 'Wholesale B2B' }}
+        {{ section.settings.b2b_tab_label | default: 'B2B Customer' }}
       </button>
       <button class="ul-tab" id="tabB2C" role="tab" aria-selected="false"
               aria-controls="panelB2C" onclick="ulSwitchTab('b2c')">
@@ -340,7 +340,7 @@
         <!-- B2B Login sub-panel -->
         <div class="ul-sub-panel active" id="b2bLoginPanel">
           <div class="ul-alert info">
-            <strong>First time logging in?</strong> Click "Set up or reset your password" below and enter your email to receive your Store ID and setup link.
+            <strong>First time logging in?</strong> Click "Set up or reset your password" below to receive a password setup link by email. You will need your Store ID to log in. Your Store ID was included in your welcome email from Worthy Products. If you cannot find it, please contact our team at <a href="mailto:admin@worthyproducts.nz">admin@worthyproducts.nz</a> or call 09 580 4110.
           </div>
 
           <div id="b2bAlert" class="ul-alert error" role="alert" style="display:none"></div>
@@ -372,9 +372,9 @@
           <button class="ul-back" onclick="ulShowSub('b2bLoginPanel')">
             ← Back to login
           </button>
-          <p class="ul-section-title">Set Up / Reset Password</p>
+          <p class="ul-section-title">Set Up or Reset Your Password</p>
           <p class="ul-section-sub">
-            Enter your <strong>email address</strong> or <strong>Store ID</strong> — we'll send you a password setup link and your Store ID.
+            Enter your <strong>email address</strong> or <strong>Store ID</strong> and we will send you a password setup link along with your Store ID.
           </p>
 
           <div id="resetAlert" class="ul-alert" role="alert" style="display:none"></div>
@@ -610,19 +610,19 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Welcome Back"
+      "default": "Welcome to Worthy Products"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Sign in to your Worthy Products account"
+      "default": "Sign in to your account to continue"
     },
     {
       "type": "text",
       "id": "b2b_tab_label",
       "label": "B2B tab label",
-      "default": "Wholesale B2B"
+      "default": "B2B Customer"
     },
     {
       "type": "text",
