@@ -1,4 +1,9 @@
 {%- comment -%}theme-check-disable NestedSnippet,TemplateLength{%- endcomment -%}
+
+{%- unless customer -%}
+  {%- render 'member-only-gate' -%}
+{%- else -%}
+
 {{ 'component-cart.css' | asset_url | stylesheet_tag }}
 {{ 'component-totals.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
@@ -660,6 +665,7 @@
   });
 </script>
 
+{%- endunless -%}
 {% schema %}
 {
   "name": "Cart",
