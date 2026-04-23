@@ -179,10 +179,6 @@
       ];
     </script>
   {% else %}
-    <div class="text-center" style="padding: 4rem 0;">
-      <h1>{{ page.title }}</h1>
-      <p>Please log in to view favorites.</p>
-      <a href="{{ routes.account_login_url }}" class="button button--primary">Log In</a>
-    </div>
+    {%- render 'member-only-gate' -%}
   {% endif %}
 </div>

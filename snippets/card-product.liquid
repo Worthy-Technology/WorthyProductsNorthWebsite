@@ -295,7 +295,7 @@
           {%- render 'product-badge', badge_product: card_product -%}
         </div>
 
-        {%- if settings.card_enable_quick_add and quick_add_icon_over_image != 'never' and horizontal_class == blank -%}
+        {%- if customer and settings.card_enable_quick_add and quick_add_icon_over_image != 'never' and horizontal_class == blank -%}
           <button
             class="card__hover-button{% if settings.card_enable_quick_add %} card__hover-button-{{ quick_add_icon_over_image }}{% endif %} button button--primary tap-target"
             aria-haspopup="dialog"
@@ -706,7 +706,7 @@
           {%- render 'flash-sale', flash_sale_product: card_product, class: 'flash-sale--bottom card__information' -%}
         {% endif %}
 
-        {%- if show_quick_add -%}
+        {%- if customer and show_quick_add -%}
           {%- capture single_variant_bulk_button -%}
             <quick-add-bulk
                 data-min="{{ card_product.selected_or_first_available_variant.quantity_rule.min }}"

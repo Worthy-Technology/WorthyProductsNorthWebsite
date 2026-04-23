@@ -109,6 +109,12 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
+    {%- unless customer -%}
+      {%- if template.name == 'product' or template.name == 'collection' or template.name == 'cart' or template.name == 'search' or template.name == 'list-collections' -%}
+        <meta name="robots" content="noindex,nofollow">
+      {%- endif -%}
+    {%- endunless -%}
+
     {% render 'meta-tags' %}
 
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>

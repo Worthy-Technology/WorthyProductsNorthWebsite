@@ -17,7 +17,13 @@
   <h1 class="b-main-title">
     {{ 'templates.404.title' | t }}
   </h1>
-  <a href="{{ routes.all_products_collection_url }}" class="button">
-    {{ 'general.continue_shopping' | t }}
-  </a>
+  {%- if customer -%}
+    <a href="{{ routes.all_products_collection_url }}" class="button">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+  {%- else -%}
+    <p style="color:#6b7280;margin:0 0 24px;font-size:15px;">Log in to browse the full Worthy Products catalogue.</p>
+    <a href="/account/login" class="button button--primary">Log In to Your Account</a>
+    <a href="/pages/wholesale-inquiries" class="button" style="margin-top:12px;">Apply for an Account</a>
+  {%- endif -%}
 </div>
