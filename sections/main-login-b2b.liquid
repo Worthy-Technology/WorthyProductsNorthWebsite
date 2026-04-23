@@ -1,0 +1,640 @@
+{% comment %}
+  Unified B2B / B2C Login Section
+  Renders at /account/login
+  - B2B Wholesale tab: Store ID + Password → Odoo multipass
+  - Retail Customer tab: standard Shopify email + password form
+{% endcomment %}
+
+{%- assign CONNECTOR_URL = "https://odoo-connector-oivx.onrender.com" -%}
+{%- assign SHOP_URL = shop.permanent_domain -%}
+
+{%- comment %} Detect B2C form errors so we open the right tab on reload {%- endcomment %}
+{%- assign initial_tab = 'b2b' -%}
+{%- assign b2c_form_errors = blank -%}
+{%- form 'customer_login' -%}
+  {%- if form.errors -%}
+    {%- assign initial_tab = 'b2c' -%}
+    {%- assign b2c_form_errors = form.errors | default_errors -%}
+  {%- endif -%}
+{%- endform -%}
+
+{%- liquid
+  assign return_to = request.parameters.return_url | default: '/account'
+-%}
+
+<style>
+  .ul-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(24px, 5vw, 56px) clamp(12px, 4vw, 20px);
+    background: #f4f7ff;
+  }
+
+  .ul-card {
+    width: min(500px, 100%);
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 32px rgba(38,89,195,0.1);
+    border: 1.5px solid rgba(38,89,195,0.12);
+    overflow: hidden;
+  }
+
+  /* ── Brand header ─────────────────────── */
+  .ul-brand {
+    background: linear-gradient(150deg, #2659c3 0%, #1b46a8 100%);
+    padding: clamp(24px, 4vw, 36px) clamp(20px, 4vw, 32px) clamp(20px, 3vw, 28px);
+    text-align: center;
+  }
+
+  .ul-logo {
+    max-height: 44px;
+    width: auto;
+    margin-bottom: 14px;
+    filter: brightness(0) invert(1);
+  }
+
+  .ul-brand h1 {
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .ul-brand p {
+    font-size: clamp(12px, 1.8vw, 13.5px);
+    color: rgba(255,255,255,0.78);
+    margin: 0;
+  }
+
+  /* ── Tab switcher ─────────────────────── */
+  .ul-tabs {
+    display: flex;
+    border-bottom: 1.5px solid rgba(38,89,195,0.12);
+  }
+
+  .ul-tab {
+    flex: 1;
+    padding: 14px 12px;
+    font-size: clamp(12.5px, 1.8vw, 13.5px);
+    font-weight: 700;
+    color: #6b7280;
+    background: none;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -1.5px;
+  }
+
+  .ul-tab.active {
+    color: #2659c3;
+    border-bottom-color: #2659c3;
+  }
+
+  /* ── Body ─────────────────────────────── */
+  .ul-body {
+    padding: clamp(20px, 4vw, 32px);
+  }
+
+  .ul-panel { display: none; }
+  .ul-panel.active { display: block; }
+
+  /* ── Alert ────────────────────────────── */
+  .ul-alert {
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .ul-alert.error   { background: #fff4f4; border: 1px solid #fca5a5; color: #d82c0d; }
+  .ul-alert.success { background: #e3f1df; border: 1px solid #cce5cc; color: #008060; }
+  .ul-alert.info    { background: #e6f2ff; border: 1px solid #b3d7ff; color: #004085; }
+
+  /* ── Form fields ──────────────────────── */
+  .ul-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 5px;
+  }
+
+  .ul-input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111827;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+  .ul-input:focus {
+    border-color: #2659c3;
+    box-shadow: 0 0 0 3px rgba(38,89,195,0.12);
+  }
+
+  /* ── Buttons ──────────────────────────── */
+  .ul-btn {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+    box-sizing: border-box;
+  }
+  .ul-btn:active { transform: translateY(1px); }
+
+  .ul-btn--primary {
+    background: #2659c3;
+    color: #fff !important;
+  }
+  .ul-btn--primary:hover:not(:disabled) { background: #1b46a8; }
+  .ul-btn--primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* ── Spinner ──────────────────────────── */
+  .ul-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: ul-spin 0.6s linear infinite;
+    display: none;
+    flex-shrink: 0;
+  }
+  @keyframes ul-spin { to { transform: rotate(360deg); } }
+
+  /* ── Footer links ─────────────────────── */
+  .ul-sep {
+    height: 1px;
+    background: #f3f4f6;
+    margin: 20px 0;
+  }
+
+  .ul-footer-links {
+    text-align: center;
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.7;
+  }
+  .ul-footer-links a {
+    color: #2659c3;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .ul-footer-links a:hover { text-decoration: underline; }
+
+  /* ── B2B reset sub-panel ──────────────── */
+  .ul-sub-panel { display: none; }
+  .ul-sub-panel.active { display: block; }
+
+  .ul-back {
+    background: none;
+    border: none;
+    color: #2659c3;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+  }
+  .ul-back:hover { text-decoration: underline; }
+
+  .ul-section-title {
+    font-size: clamp(16px, 2.5vw, 18px);
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 6px;
+  }
+  .ul-section-sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 20px;
+    line-height: 1.55;
+  }
+
+  .ul-toggle {
+    font-size: 12px;
+    color: #6b7280;
+    margin: -10px 0 16px;
+  }
+  .ul-toggle a {
+    color: #2659c3;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .ul-toggle a:hover { text-decoration: underline; }
+
+  /* ── B2C Shopify form overrides ───────── */
+  .ul-b2c-form input[type="email"],
+  .ul-b2c-form input[type="password"],
+  .ul-b2c-form input[type="text"] {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111827;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    display: block;
+    -webkit-appearance: none;
+  }
+  .ul-b2c-form input:focus {
+    border-color: #2659c3;
+    box-shadow: 0 0 0 3px rgba(38,89,195,0.12);
+  }
+  .ul-b2c-form button[type="submit"] {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    background: #2659c3;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    min-height: 46px;
+    transition: background 0.15s;
+    box-sizing: border-box;
+  }
+  .ul-b2c-form button[type="submit"]:hover { background: #1b46a8; }
+
+  /* Shopify error list reset */
+  .ul-b2c-form ul.errors,
+  .ul-b2c-form .errors {
+    list-style: none;
+    padding: 11px 14px;
+    margin: 0 0 18px;
+    background: #fff4f4;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #d82c0d;
+  }
+
+  @media (max-width: 480px) {
+    .ul-card { border-radius: 16px; }
+    .ul-body { padding: 18px 16px 24px; }
+  }
+</style>
+
+<div class="ul-wrap">
+  <div class="ul-card">
+
+    <!-- Brand header -->
+    <div class="ul-brand">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: height: 88 }}" alt="{{ shop.name }}" class="ul-logo">
+      {%- elsif shop.logo != blank -%}
+        <img src="{{ shop.logo | image_url: height: 88 }}" alt="{{ shop.name }}" class="ul-logo">
+      {%- endif -%}
+      <h1>{{ section.settings.heading | default: 'Welcome Back' }}</h1>
+      <p>{{ section.settings.subheading | default: 'Sign in to your Worthy Products account' }}</p>
+    </div>
+
+    <!-- Tab switcher -->
+    <div class="ul-tabs" role="tablist">
+      <button class="ul-tab" id="tabB2B" role="tab" aria-selected="true"
+              aria-controls="panelB2B" onclick="ulSwitchTab('b2b')">
+        {{ section.settings.b2b_tab_label | default: 'Wholesale B2B' }}
+      </button>
+      <button class="ul-tab" id="tabB2C" role="tab" aria-selected="false"
+              aria-controls="panelB2C" onclick="ulSwitchTab('b2c')">
+        {{ section.settings.b2c_tab_label | default: 'Retail Customer' }}
+      </button>
+    </div>
+
+    <div class="ul-body">
+
+      <!-- ══════════════════════════════════
+           B2B PANEL
+           ══════════════════════════════════ -->
+      <div class="ul-panel active" id="panelB2B" role="tabpanel" aria-labelledby="tabB2B">
+
+        <!-- B2B Login sub-panel -->
+        <div class="ul-sub-panel active" id="b2bLoginPanel">
+          <div class="ul-alert info">
+            <strong>First time logging in?</strong> Click "Set up or reset your password" below and enter your email to receive your Store ID and setup link.
+          </div>
+
+          <div id="b2bAlert" class="ul-alert error" role="alert" style="display:none"></div>
+
+          <label class="ul-label" for="b2bOdooId">Store ID</label>
+          <input type="text" id="b2bOdooId" class="ul-input"
+                 placeholder="e.g. 35819"
+                 inputmode="numeric" autocomplete="username">
+
+          <label class="ul-label" for="b2bPassword">Password</label>
+          <input type="password" id="b2bPassword" class="ul-input"
+                 placeholder="Your password"
+                 autocomplete="current-password">
+
+          <button class="ul-btn ul-btn--primary" id="btnB2BLogin" onclick="doB2BLogin()">
+            <span class="ul-spinner" id="b2bSpinner"></span>
+            <span id="b2bBtnText">Log In</span>
+          </button>
+
+          <div class="ul-sep"></div>
+          <div class="ul-footer-links">
+            Need to set up or reset your password?
+            <a href="#" onclick="ulShowSub('b2bResetPanel'); return false;">Click here</a>
+          </div>
+        </div>
+
+        <!-- B2B Reset sub-panel -->
+        <div class="ul-sub-panel" id="b2bResetPanel">
+          <button class="ul-back" onclick="ulShowSub('b2bLoginPanel')">
+            ← Back to login
+          </button>
+          <p class="ul-section-title">Set Up / Reset Password</p>
+          <p class="ul-section-sub">
+            Enter your <strong>email address</strong> or <strong>Store ID</strong> — we'll send you a password setup link and your Store ID.
+          </p>
+
+          <div id="resetAlert" class="ul-alert" role="alert" style="display:none"></div>
+
+          <!-- Email input (default) -->
+          <div id="resetByEmail">
+            <label class="ul-label" for="resetEmail">Email Address</label>
+            <input type="email" id="resetEmail" class="ul-input"
+                   placeholder="e.g. manager@yourstore.com"
+                   autocomplete="email">
+            <p class="ul-toggle">
+              Know your Store ID?
+              <a onclick="ulResetMode('id')">Enter Store ID instead</a>
+            </p>
+          </div>
+
+          <!-- Store ID input (hidden by default) -->
+          <div id="resetById" style="display:none">
+            <label class="ul-label" for="resetOdooId">Store ID</label>
+            <input type="text" id="resetOdooId" class="ul-input"
+                   placeholder="e.g. 35819"
+                   inputmode="numeric">
+            <p class="ul-toggle">
+              Don't know your Store ID?
+              <a onclick="ulResetMode('email')">Use email instead</a>
+            </p>
+          </div>
+
+          <button class="ul-btn ul-btn--primary" id="btnReset" onclick="doB2BReset()">
+            <span class="ul-spinner" id="resetSpinner"></span>
+            <span id="resetBtnText">Send Setup Email</span>
+          </button>
+        </div>
+
+      </div><!-- /panelB2B -->
+
+      <!-- ══════════════════════════════════
+           B2C PANEL — native Shopify form
+           ══════════════════════════════════ -->
+      <div class="ul-panel" id="panelB2C" role="tabpanel" aria-labelledby="tabB2C">
+
+        <div class="ul-b2c-form">
+          {%- form 'customer_login', return_to: return_to -%}
+            {%- if form.errors -%}
+              {{ form.errors | default_errors }}
+            {%- endif -%}
+
+            <label class="ul-label" for="b2cEmail">Email Address</label>
+            <input type="email" id="b2cEmail"
+                   name="customer[email]"
+                   placeholder="your@email.com"
+                   autocomplete="email"
+                   autocapitalize="off"
+                   autocorrect="off"
+                   {%- if form.errors contains 'form' %}autofocus{% endif %}>
+
+            <label class="ul-label" for="b2cPassword">Password</label>
+            <input type="password" id="b2cPassword"
+                   name="customer[password]"
+                   placeholder="Your password"
+                   autocomplete="current-password">
+
+            <button type="submit">Log In</button>
+          {%- endform -%}
+        </div>
+
+        <div class="ul-sep"></div>
+        <div class="ul-footer-links">
+          <a href="{{ routes.account_recover_url }}">Forgot your password?</a>
+          &nbsp;&middot;&nbsp;
+          <a href="{{ routes.account_register_url }}">Create an account</a>
+        </div>
+
+      </div><!-- /panelB2C -->
+
+    </div><!-- /ul-body -->
+  </div><!-- /ul-card -->
+</div>
+
+<script>
+(function () {
+  var CONNECTOR = {{ CONNECTOR_URL | json }};
+  var SHOP      = {{ SHOP_URL | json }};
+  var RETURN_TO = {{ return_to | json }};
+  var resetMode = 'email';
+
+  /* ── Tab switching ───────────────────── */
+  window.ulSwitchTab = function (tab) {
+    ['b2b','b2c'].forEach(function(t) {
+      var btn   = document.getElementById('tab' + t.toUpperCase().replace('B','B').charAt(0) + t.toUpperCase().slice(1));
+      var panel = document.getElementById('panel' + t.toUpperCase().replace('B','B').charAt(0) + t.toUpperCase().slice(1));
+
+      var btnEl   = document.getElementById(t === 'b2b' ? 'tabB2B' : 'tabB2C');
+      var panelEl = document.getElementById(t === 'b2b' ? 'panelB2B' : 'panelB2C');
+
+      var isActive = (t === tab);
+      btnEl.classList.toggle('active', isActive);
+      btnEl.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      panelEl.classList.toggle('active', isActive);
+    });
+  };
+
+  /* ── Sub-panel switching (B2B) ───────── */
+  window.ulShowSub = function (id) {
+    document.querySelectorAll('.ul-sub-panel').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    document.getElementById('b2bAlert').style.display = 'none';
+    document.getElementById('resetAlert').style.display = 'none';
+  };
+
+  /* ── Reset mode toggle ───────────────── */
+  window.ulResetMode = function (mode) {
+    resetMode = mode;
+    document.getElementById('resetByEmail').style.display = (mode === 'email') ? 'block' : 'none';
+    document.getElementById('resetById').style.display    = (mode === 'id')    ? 'block' : 'none';
+    document.getElementById(mode === 'email' ? 'resetEmail' : 'resetOdooId').focus();
+  };
+
+  /* ── Helpers ─────────────────────────── */
+  function setLoading(spinnerId, textId, btnId, loading, originalText) {
+    document.getElementById(spinnerId).style.display = loading ? 'inline-block' : 'none';
+    document.getElementById(textId).textContent      = loading ? 'Please wait…' : originalText;
+    document.getElementById(btnId).disabled          = loading;
+  }
+
+  function showAlert(elId, message, type) {
+    var el = document.getElementById(elId);
+    el.className     = 'ul-alert ' + type;
+    el.innerHTML     = message;
+    el.style.display = 'block';
+  }
+
+  /* ── B2B Login ───────────────────────── */
+  window.doB2BLogin = async function () {
+    var odooId   = document.getElementById('b2bOdooId').value.trim();
+    var password = document.getElementById('b2bPassword').value;
+
+    if (!odooId || !password) {
+      showAlert('b2bAlert', 'Please enter your Store ID and password.', 'error');
+      return;
+    }
+
+    setLoading('b2bSpinner', 'b2bBtnText', 'btnB2BLogin', true, 'Log In');
+    document.getElementById('b2bAlert').style.display = 'none';
+
+    try {
+      var resp = await fetch(CONNECTOR + '/multipass/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ odoo_id: odooId, password: password, shop_url: SHOP, return_to: RETURN_TO })
+      });
+      var data = await resp.json();
+
+      if (data.success && data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        showAlert('b2bAlert', data.error || 'Login failed. Please try again.', 'error');
+        setLoading('b2bSpinner', 'b2bBtnText', 'btnB2BLogin', false, 'Log In');
+      }
+    } catch (err) {
+      showAlert('b2bAlert', 'Connection error. Please try again shortly.', 'error');
+      setLoading('b2bSpinner', 'b2bBtnText', 'btnB2BLogin', false, 'Log In');
+    }
+  };
+
+  /* ── B2B Password Reset ──────────────── */
+  window.doB2BReset = async function () {
+    var identifier = '';
+    if (resetMode === 'email') {
+      identifier = document.getElementById('resetEmail').value.trim();
+      if (!identifier) { showAlert('resetAlert', 'Please enter your email address.', 'error'); return; }
+    } else {
+      identifier = document.getElementById('resetOdooId').value.trim();
+      if (!identifier) { showAlert('resetAlert', 'Please enter your Store ID.', 'error'); return; }
+    }
+
+    setLoading('resetSpinner', 'resetBtnText', 'btnReset', true, 'Send Setup Email');
+    document.getElementById('resetAlert').style.display = 'none';
+
+    try {
+      var resp = await fetch(CONNECTOR + '/multipass/reset/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: identifier, shop_url: SHOP })
+      });
+      var data = await resp.json();
+
+      showAlert('resetAlert',
+        data.message || 'If we found a matching account, a setup email has been sent.',
+        data.success ? 'success' : 'error'
+      );
+    } catch (err) {
+      showAlert('resetAlert', 'Connection error. Please try again shortly.', 'error');
+    } finally {
+      setLoading('resetSpinner', 'resetBtnText', 'btnReset', false, 'Send Setup Email');
+    }
+  };
+
+  /* ── Enter key support ───────────────── */
+  document.getElementById('b2bOdooId').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('b2bPassword').focus();
+  });
+  document.getElementById('b2bPassword').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doB2BLogin();
+  });
+  document.getElementById('resetEmail').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doB2BReset();
+  });
+  document.getElementById('resetOdooId').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doB2BReset();
+  });
+
+  /* ── Initialise correct tab ──────────── */
+  var startTab = {{ initial_tab | json }};
+  ulSwitchTab(startTab);
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "B2B Login",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Custom logo (overrides shop logo)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome Back"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Sign in to your Worthy Products account"
+    },
+    {
+      "type": "text",
+      "id": "b2b_tab_label",
+      "label": "B2B tab label",
+      "default": "Wholesale B2B"
+    },
+    {
+      "type": "text",
+      "id": "b2c_tab_label",
+      "label": "Retail tab label",
+      "default": "Retail Customer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "B2B Login"
+    }
+  ]
+}
+{% endschema %}
