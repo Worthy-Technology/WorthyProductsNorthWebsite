@@ -1,3 +1,7 @@
+{%- unless customer -%}
+  {%- render 'member-only-gate' -%}
+{%- else -%}
+
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
 <div class="color-{{ section.settings.color_scheme }} isolate gradient {{ section.settings.line_separator }}">
@@ -62,6 +66,8 @@
     {%- endpaginate -%}
   </div>
 </div>
+
+{%- endunless -%}
 {% schema %}
 {
   "name": "Collections list page",

@@ -19,7 +19,7 @@
     {% if customer %}
       {%- comment -%} Logged in — no redirect {%- endcomment -%}
     {% else %}
-      {%- assign allowed_exact = '/' | append: ',/account' | append: ',/account/login' | append: ',/account/register' | append: ',/account/recover' | append: ',/pages/contact' | append: ',/pages/about-us' | split: ',' -%}
+      {%- assign allowed_exact = '/' | append: ',/account' | append: ',/account/login' | append: ',/account/register' | append: ',/account/recover' | append: ',/pages/contact' | append: ',/pages/about-us' | append: ',/pages/wholesale-inquiries' | append: ',/pages/sell-with-us' | split: ',' -%}
       {%- assign allowed_prefixes = '/account/activate,/account/reset,/account/orders,/account/addresses,/account/logout' | split: ',' -%}
       {%- assign current_path = request.path | downcase -%}
       {%- assign allowed = false -%}

@@ -1,4 +1,9 @@
 {%- comment -%}theme-check-disable NestedSnippet{%- endcomment -%}
+
+{%- unless customer -%}
+  {%- render 'member-only-gate' -%}
+{%- else -%}
+
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
@@ -628,6 +633,8 @@
 {% comment %} Unit Price Code Snippet Rendered- Pratham {% endcomment %}
 {% render 'unit-price-product-grid' %}
 {% render 'unit-price-product-page' %}
+
+{%- endunless -%}
 {% schema %}
 {
   "name": "Search results",
