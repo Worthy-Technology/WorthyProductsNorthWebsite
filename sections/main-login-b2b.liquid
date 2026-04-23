@@ -374,34 +374,16 @@
           </button>
           <p class="ul-section-title">Set Up or Reset Your Password</p>
           <p class="ul-section-sub">
-            Enter your <strong>email address</strong> or <strong>Store ID</strong> and we will send you a password setup link along with your Store ID.
+            Enter your <strong>Store ID</strong> and we will send a password setup link to the email address on your account.<br><br>
+            Your Store ID was included in your welcome email from Worthy Products. If you cannot find it, please contact our customer service team at <a href="mailto:admin@worthyproducts.nz">admin@worthyproducts.nz</a> or call <strong>09 580 4110</strong>.
           </p>
 
           <div id="resetAlert" class="ul-alert" role="alert" style="display:none"></div>
 
-          <!-- Email input (default) -->
-          <div id="resetByEmail">
-            <label class="ul-label" for="resetEmail">Email Address</label>
-            <input type="email" id="resetEmail" class="ul-input"
-                   placeholder="e.g. manager@yourstore.com"
-                   autocomplete="email">
-            <p class="ul-toggle">
-              Know your Store ID?
-              <a onclick="ulResetMode('id')">Enter Store ID instead</a>
-            </p>
-          </div>
-
-          <!-- Store ID input (hidden by default) -->
-          <div id="resetById" style="display:none">
-            <label class="ul-label" for="resetOdooId">Store ID</label>
-            <input type="text" id="resetOdooId" class="ul-input"
-                   placeholder="e.g. 35819"
-                   inputmode="numeric">
-            <p class="ul-toggle">
-              Don't know your Store ID?
-              <a onclick="ulResetMode('email')">Use email instead</a>
-            </p>
-          </div>
+          <label class="ul-label" for="resetOdooId">Store ID</label>
+          <input type="text" id="resetOdooId" class="ul-input"
+                 placeholder="e.g. 35819"
+                 inputmode="numeric" autocomplete="off">
 
           <button class="ul-btn ul-btn--primary" id="btnReset" onclick="doB2BReset()">
             <span class="ul-spinner" id="resetSpinner"></span>
@@ -459,7 +441,6 @@
   var CONNECTOR = {{ CONNECTOR_URL | json }};
   var SHOP      = {{ SHOP_URL | json }};
   var RETURN_TO = {{ return_to | json }};
-  var resetMode = 'email';
 
   /* ── Tab switching ───────────────────── */
   window.ulSwitchTab = function (tab) {
@@ -485,14 +466,6 @@
     document.getElementById(id).classList.add('active');
     document.getElementById('b2bAlert').style.display = 'none';
     document.getElementById('resetAlert').style.display = 'none';
-  };
-
-  /* ── Reset mode toggle ───────────────── */
-  window.ulResetMode = function (mode) {
-    resetMode = mode;
-    document.getElementById('resetByEmail').style.display = (mode === 'email') ? 'block' : 'none';
-    document.getElementById('resetById').style.display    = (mode === 'id')    ? 'block' : 'none';
-    document.getElementById(mode === 'email' ? 'resetEmail' : 'resetOdooId').focus();
   };
 
   /* ── Helpers ─────────────────────────── */
@@ -544,13 +517,10 @@
 
   /* ── B2B Password Reset ──────────────── */
   window.doB2BReset = async function () {
-    var identifier = '';
-    if (resetMode === 'email') {
-      identifier = document.getElementById('resetEmail').value.trim();
-      if (!identifier) { showAlert('resetAlert', 'Please enter your email address.', 'error'); return; }
-    } else {
-      identifier = document.getElementById('resetOdooId').value.trim();
-      if (!identifier) { showAlert('resetAlert', 'Please enter your Store ID.', 'error'); return; }
+    var identifier = document.getElementById('resetOdooId').value.trim();
+    if (!identifier) {
+      showAlert('resetAlert', 'Please enter your Store ID.', 'error');
+      return;
     }
 
     setLoading('resetSpinner', 'resetBtnText', 'btnReset', true, 'Send Setup Email');
@@ -581,9 +551,6 @@
   });
   document.getElementById('b2bPassword').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') doB2BLogin();
-  });
-  document.getElementById('resetEmail').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') doB2BReset();
   });
   document.getElementById('resetOdooId').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') doB2BReset();
