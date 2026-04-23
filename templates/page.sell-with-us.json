@@ -1,0 +1,207 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_j66BXX": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_RDyxmx": {
+          "type": "heading",
+          "settings": {
+            "heading": "Sell with us",
+            "heading_italic_convert": "",
+            "heading_size": "h3",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "text_mE3PPQ": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Worthy is a leading wholesale distribution group, operating through two specialised businesses, Worthy Products and Dutch Rusk. Together, we service over 3,000 customers across New Zealand, Australia, and 19 Pacific Island nations, connecting leading consumer brands with retail, convenience, grocery, and foodservice channels at scale.</p><p>With a nationwide distribution network, purpose-built warehousing, and a team that understands the retail landscape across our markets, we give your brand the reach, visibility, and operational support it needs to grow with confidence.</p><p>We specialise in bringing both local and international brands to market, managing everything from logistics and inventory to in-store ranging and retailer relationships. Our scale and infrastructure ensure your products move faster, land on more shelves, and reach more consumers across multiple regions, not just within a single market.</p><p>Through Worthy Products and Dutch Rusk, we provide a dual-market capability across the North and South Islands of New Zealand, while also enabling expansion into Australia and the Pacific through our established distribution network.</p><p>Partnering with Worthy means working with a business that is fully compliant with New Zealand Food Safety Authority regulations, Fair Trading Act requirements, and all import and labelling standards. Every brand we represent is supported by a strong compliance framework, so you can focus on building your product while we handle the complexity of distribution.</p><p>If you’re ready to scale your brand across New Zealand, Australia, and the Pacific, across FMCG, grocery, convenience, or specialty retail channels, we’d love to hear from you.</p><p>Fill out the form below and our brand partnerships team will be in touch.</p>",
+            "text_size": "t3"
+          }
+        }
+      },
+      "block_order": [
+        "heading_RDyxmx",
+        "text_mE3PPQ"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "desktop_content_position": "left",
+        "content_max_width": "xl",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "center",
+        "section_color_scheme": "",
+        "container_color_scheme": "",
+        "show_content_shadow": true,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "contact_form_edACHb": {
+      "type": "contact-form",
+      "blocks": {
+        "heading_dK8Aww": {
+          "type": "heading",
+          "settings": {
+            "visibility": "always",
+            "heading": "Get in touch",
+            "heading_italic_convert": "",
+            "heading_size": "h2",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "custom_text_qczyGB": {
+          "type": "custom_text",
+          "settings": {
+            "title": "First name",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "custom_text_e3fdyL": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Last name",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "name_QXAhYA": {
+          "type": "name",
+          "settings": {
+            "title": "Company Name",
+            "tip": "Feel free to type in your trading name aswell",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "custom_text_MwXpe4": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Category",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": false
+          }
+        },
+        "phone_UXRVFF": {
+          "type": "phone",
+          "settings": {
+            "title": "Phone",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": false
+          }
+        },
+        "email_NFANXP": {
+          "type": "email",
+          "settings": {
+            "title": "Email",
+            "tip": "",
+            "half_width_on_desktop": false
+          }
+        },
+        "textarea_9JizH4": {
+          "type": "textarea",
+          "settings": {
+            "title": "Message",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "text_PTyQfH": {
+          "type": "text",
+          "settings": {
+            "visibility": "always",
+            "text": "<p>We'll aim to get back to you within 24 hours.</p>",
+            "text_size": "t6"
+          }
+        }
+      },
+      "block_order": [
+        "heading_dK8Aww",
+        "custom_text_qczyGB",
+        "custom_text_e3fdyL",
+        "name_QXAhYA",
+        "custom_text_MwXpe4",
+        "phone_UXRVFF",
+        "email_NFANXP",
+        "textarea_9JizH4",
+        "text_PTyQfH"
+      ],
+      "name": "Contact form",
+      "settings": {
+        "preview_success": false,
+        "show_standard_success_message": true,
+        "submit_button_text": "",
+        "image": "shopify://shop_images/Company_Growth_2_-_frame_at_0m8s.jpg",
+        "image_overlay_opacity": 20,
+        "desktop_section_height": 500,
+        "mobile_section_height": 400,
+        "desktop_media_width": 50,
+        "layout": "media_first",
+        "content_layout": "no-overlap",
+        "show_header_beside": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "desktop_content_position": "md:justify-start md:items-end",
+        "mobile_content_position": "justify-center items-center",
+        "title": "Partner with Worthy Products",
+        "italic_convert": "",
+        "heading_size": "h4",
+        "text": "<p>New Zealand's Premier FMCG Wholesale Distributor</p>",
+        "text_size": "t4",
+        "button_text_size": "t5",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary",
+        "button_style_show_arrow": false,
+        "button_style_show_gradient_border": false,
+        "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "image_overlay_color_scheme": "",
+        "show_content_shadow": true,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h3"
+      }
+    }
+  },
+  "order": [
+    "rich_text_j66BXX",
+    "contact_form_edACHb"
+  ]
+}

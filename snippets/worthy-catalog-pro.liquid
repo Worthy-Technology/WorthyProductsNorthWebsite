@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@2.0.0/css/dflip.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dflip@2.0.0/css/themify-icons.min.css">
+
+<style>
+  #worthy-pdf-container {
+    width: 100%;
+    height: 800px;
+    background: #222;
+    margin: 20px 0;
+  }
+</style>
+
+<div id="worthy-pdf-container">
+  <div class="_df_book" 
+       source="https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Worthy_Products_CATALOGUE_2026-compressed_1.pdf?v=1774305501" 
+       id="worthy_catalogue">
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dflip@2.0.0/js/dflip.min.js"></script>
+
+<script>
+  var dFlipOptions = {
+    pdfjsSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js",
+    pdfjsWorkerSrc: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js",
+    
+    // FORCED STABILITY FOR 1000 PAGES
+    webgl: false,               // Prevents the "Loading WebGL" hang
+    overwritePDFOutline: true,  // Uses your PDF's built-in chapters
+    enableThumbnail: true,      // Must-have for 1000 pages
+    hideZoom: false,
+    scrollWheel: true,
+    
+    // LIGHTWEIGHT MODE
+    isMobile: true,             // Forces a simpler render engine even on desktop
+    pageMode: 1                 // Single page view is faster for huge files
+  };
+</script>

@@ -1,0 +1,325 @@
+{% comment %}
+  B2B Login Page Template — login.liquid
+  ========================================
+  HOW TO INSTALL:
+  1. Shopify Admin → Online Store → Themes → Edit Code
+  2. Templates → Add template → page → liquid → name it "login" → paste this → Save
+  3. Online Store → Pages → Add page
+       Title: "B2B Login"   Template: page.login   → Save
+  4. Only change needed: set CONNECTOR_URL to your Render app URL below.
+     SHOP_URL is automatic — Shopify fills it in for you.
+  ========================================
+{% endcomment %}
+
+{% assign CONNECTOR_URL = "https://odoo-connector-oivx.onrender.com" %}
+{% assign SHOP_URL = shop.permanent_domain %}
+
+<style>
+  .b2b-login-wrap {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .b2b-login-card {
+    background: #fff;
+    border: 1px solid #e1e3e5;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(63,63,68,.15);
+    padding: 36px 40px;
+    width: 100%;
+    max-width: 430px;
+  }
+  .b2b-login-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #202223;
+  }
+  .b2b-login-card .subtitle {
+    font-size: 14px;
+    color: #6d7175;
+    margin-bottom: 28px;
+  }
+  .b2b-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #202223;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .b2b-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d2d5d8;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #202223;
+    outline: none;
+    transition: border-color .15s;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+  .b2b-input:focus { border-color: #005bd3; box-shadow: 0 0 0 2px rgba(0,91,211,.15); }
+  .b2b-btn {
+    width: 100%;
+    padding: 11px;
+    background: #202223;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .b2b-btn:hover:not(:disabled) { background: #444; }
+  .b2b-btn:disabled { opacity: .65; cursor: not-allowed; }
+  .b2b-alert {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .b2b-alert.error   { background: #fff4f4; border: 1px solid #fca5a5; color: #d82c0d; }
+  .b2b-alert.success { background: #e3f1df; border: 1px solid #cce5cc; color: #008060; }
+  .b2b-divider { border: none; border-top: 1px solid #e1e3e5; margin: 22px 0; }
+  .b2b-footer  { text-align: center; font-size: 13px; color: #6d7175; }
+  .b2b-footer a { color: #005bd3; text-decoration: none; }
+  .b2b-footer a:hover { text-decoration: underline; }
+  .b2b-spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .b2b-toggle-hint {
+    font-size: 12px;
+    color: #6d7175;
+    margin-top: -10px;
+    margin-bottom: 16px;
+  }
+  .b2b-toggle-hint a { color: #005bd3; cursor: pointer; }
+  .b2b-toggle-hint a:hover { text-decoration: underline; }
+
+  #forgotPanel { display: none; }
+  #loginPanel  { display: block; }
+</style>
+
+<div class="b2b-login-wrap">
+  <div class="b2b-login-card">
+
+    <div class="b2b-alert" style="background: #e6f2ff; border: 1px solid #b3d7ff; color: #004085; display: block;">
+      <strong>Welcome to our new B2B Portal!</strong><br>
+      Logging in for the first time? Click "Need to set up or reset your password" below, enter your email, and we will send you your new Store ID.
+    </div>
+
+    <!-- ── LOGIN PANEL ────────────────────── -->
+    <div id="loginPanel">
+      <h2>B2B Account Login</h2>
+      <p class="subtitle">Enter your Store ID and password to access your catalog and pricing.</p>
+
+      <div id="loginAlert" class="b2b-alert error" role="alert"></div>
+
+      <label class="b2b-label" for="odooId">Store ID</label>
+      <input type="text" id="odooId" class="b2b-input"
+             placeholder="e.g. 35819"
+             inputmode="numeric" autocomplete="username" />
+
+      <label class="b2b-label" for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" class="b2b-input"
+             placeholder="Your password"
+             autocomplete="current-password" />
+
+      <button class="b2b-btn" id="btnLogin" onclick="doLogin()">
+        <span class="b2b-spinner" id="loginSpinner"></span>
+        <span id="loginBtnText">Log In</span>
+      </button>
+
+      <hr class="b2b-divider">
+      <p class="b2b-footer">
+        Need to set up or reset your password?&nbsp;
+        <a href="#" onclick="showForgot(); return false;">Click here</a>
+      </p>
+    </div>
+
+    <!-- ── FORGOT / SETUP PANEL ───────────── -->
+    <div id="forgotPanel">
+      <h2>Set Up / Reset Password</h2>
+      <p class="subtitle">
+        Enter your <strong>email address</strong> or <strong>Store ID</strong> — 
+        we'll send both your Store ID and a password setup link to your email.
+      </p>
+
+      <div id="forgotAlert" class="b2b-alert" role="alert"></div>
+
+      <!-- Email input — shown by default -->
+      <div id="inputByEmail">
+        <label class="b2b-label" for="resetEmail">Email Address</label>
+        <input type="email" id="resetEmail" class="b2b-input"
+               placeholder="e.g. manager@yourstore.com"
+               autocomplete="email" />
+        <p class="b2b-toggle-hint">
+          Know your Store ID?&nbsp;
+          <a onclick="switchToId(); return false;">Enter Store ID instead</a>
+        </p>
+      </div>
+
+      <!-- Store ID input — hidden by default -->
+      <div id="inputById" style="display:none;">
+        <label class="b2b-label" for="resetOdooId">Store ID</label>
+        <input type="text" id="resetOdooId" class="b2b-input"
+               placeholder="e.g. 35819"
+               inputmode="numeric" />
+        <p class="b2b-toggle-hint">
+          Don't know your Store ID?&nbsp;
+          <a onclick="switchToEmail(); return false;">Use email address instead</a>
+        </p>
+      </div>
+
+      <button class="b2b-btn" id="btnReset" onclick="doReset()">
+        <span class="b2b-spinner" id="resetSpinner"></span>
+        <span id="resetBtnText">Send Setup Email</span>
+      </button>
+
+      <hr class="b2b-divider">
+      <p class="b2b-footer">
+        <a href="#" onclick="showLogin(); return false;">← Back to login</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const CONNECTOR = "{{ CONNECTOR_URL }}";
+  const SHOP      = "{{ SHOP_URL }}";  // Auto-filled by Shopify Liquid — always correct
+
+  let forgotMode = 'email'; // 'email' or 'id'
+
+  /* ── INPUT TOGGLE ────────────────────── */
+  function switchToId() {
+    forgotMode = 'id';
+    document.getElementById('inputByEmail').style.display = 'none';
+    document.getElementById('inputById').style.display    = 'block';
+    document.getElementById('resetOdooId').focus();
+  }
+  function switchToEmail() {
+    forgotMode = 'email';
+    document.getElementById('inputById').style.display    = 'none';
+    document.getElementById('inputByEmail').style.display = 'block';
+    document.getElementById('resetEmail').focus();
+  }
+
+  /* ── PANEL SWITCHING ─────────────────── */
+  function showForgot() {
+    document.getElementById('loginPanel').style.display  = 'none';
+    document.getElementById('forgotPanel').style.display = 'block';
+    document.getElementById('forgotAlert').style.display = 'none';
+  }
+  function showLogin() {
+    document.getElementById('forgotPanel').style.display = 'none';
+    document.getElementById('loginPanel').style.display  = 'block';
+    document.getElementById('loginAlert').style.display  = 'none';
+  }
+
+  /* ── HELPERS ─────────────────────────── */
+  function setLoading(spinnerId, btnTextId, btnId, loading, originalText) {
+    document.getElementById(spinnerId).style.display = loading ? 'inline-block' : 'none';
+    document.getElementById(btnTextId).textContent   = loading ? 'Please wait…' : originalText;
+    document.getElementById(btnId).disabled          = loading;
+  }
+  function showAlert(alertId, message, type) {
+    const el = document.getElementById(alertId);
+    el.className     = `b2b-alert ${type}`;
+    el.textContent   = message;
+    el.style.display = 'block';
+  }
+
+  /* ── LOGIN ───────────────────────────── */
+  async function doLogin() {
+    const odooId   = document.getElementById('odooId').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!odooId || !password) {
+      showAlert('loginAlert', 'Please enter your Store ID and password.', 'error');
+      return;
+    }
+
+    setLoading('loginSpinner', 'loginBtnText', 'btnLogin', true, 'Log In');
+    document.getElementById('loginAlert').style.display = 'none';
+
+    try {
+      const resp = await fetch(`${CONNECTOR}/multipass/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ odoo_id: odooId, password: password, shop_url: SHOP })
+      });
+      const data = await resp.json();
+
+      if (data.success && data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        showAlert('loginAlert', data.error || 'Login failed. Please try again.', 'error');
+        setLoading('loginSpinner', 'loginBtnText', 'btnLogin', false, 'Log In');
+      }
+    } catch (err) {
+      showAlert('loginAlert', 'Connection error. Please try again.', 'error');
+      setLoading('loginSpinner', 'loginBtnText', 'btnLogin', false, 'Log In');
+    }
+  }
+
+  /* ── FORGOT / SETUP ──────────────────── */
+  async function doReset() {
+    let identifier = '';
+    if (forgotMode === 'email') {
+      identifier = document.getElementById('resetEmail').value.trim();
+      if (!identifier) {
+        showAlert('forgotAlert', 'Please enter your email address.', 'error');
+        return;
+      }
+    } else {
+      identifier = document.getElementById('resetOdooId').value.trim();
+      if (!identifier) {
+        showAlert('forgotAlert', 'Please enter your Store ID.', 'error');
+        return;
+      }
+    }
+
+    setLoading('resetSpinner', 'resetBtnText', 'btnReset', true, 'Send Setup Email');
+    document.getElementById('forgotAlert').style.display = 'none';
+
+    try {
+      const resp = await fetch(`${CONNECTOR}/multipass/reset/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: identifier, shop_url: SHOP })
+      });
+      const data = await resp.json();
+
+      showAlert('forgotAlert',
+        data.message || 'If we found a matching account, a setup email has been sent.',
+        data.success ? 'success' : 'error'
+      );
+    } catch (err) {
+      showAlert('forgotAlert', 'Connection error. Please try again.', 'error');
+    } finally {
+      setLoading('resetSpinner', 'resetBtnText', 'btnReset', false, 'Send Setup Email');
+    }
+  }
+
+  /* ── ENTER KEY SUPPORT ───────────────── */
+  document.getElementById('loginPassword').addEventListener('keydown',  e => { if (e.key === 'Enter') doLogin(); });
+  document.getElementById('odooId').addEventListener('keydown',         e => { if (e.key === 'Enter') document.getElementById('loginPassword').focus(); });
+  document.getElementById('resetEmail').addEventListener('keydown',     e => { if (e.key === 'Enter') doReset(); });
+  document.getElementById('resetOdooId').addEventListener('keydown',    e => { if (e.key === 'Enter') doReset(); });
+</script>

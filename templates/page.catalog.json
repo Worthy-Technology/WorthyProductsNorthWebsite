@@ -1,0 +1,285 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+        "spacing": 0,
+        "color_scheme": "",
+        "line_separator": "",
+        "visibility": ""
+      }
+    },
+    "rich_text_3wjwRH": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_6EfVmd": {
+          "type": "heading",
+          "settings": {
+            "heading": "Looking to Open a Credit Account for Your Business?",
+            "heading_italic_convert": "",
+            "heading_size": "h3",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "text_jPRiYz": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Fill out our Credit Application and Direct Debit Forms and one of our friendly team members will be in touch shortly.</p>",
+            "text_size": "t3"
+          }
+        },
+        "buttons_6A3YAb": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t5",
+            "button_label_1": "Download Credit Application Form",
+            "button_link_1": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Account_Request_Form_Worthy_Products.pdf?v=1763413461",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "Download Direct Debit Form",
+            "button_link_2": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/DD_Form_Worthy_Products.pdf?v=1763413461",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": true,
+            "button_style_2_show_gradient_border": true,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(209, 224, 241, 1) 11%, rgba(37, 89, 193, 1) 84%)"
+          }
+        }
+      },
+      "block_order": [
+        "heading_6EfVmd",
+        "text_jPRiYz",
+        "buttons_6A3YAb"
+      ],
+      "disabled": true,
+      "name": "Rich text",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_max_width": "m",
+        "desktop_content_alignment": "center",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "container_color_scheme": "",
+        "show_content_shadow": false,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "page_width": "narrow",
+        "content_max_width": "xl",
+        "custom_page_header": false,
+        "title": "Section heading",
+        "italic_convert": "",
+        "heading_size": "h1",
+        "show_view_all_link": true,
+        "view_all_link": "",
+        "view_all_text": "",
+        "view_all_text_size": "t3",
+        "color_scheme": "",
+        "heading_tag": "h1"
+      }
+    },
+    "contact_form_PJxtT9": {
+      "type": "contact-form",
+      "blocks": {
+        "heading_g4eCwP": {
+          "type": "heading",
+          "settings": {
+            "visibility": "always",
+            "heading": "Get in touch",
+            "heading_italic_convert": "",
+            "heading_size": "h2",
+            "heading_size_custom": 2.4,
+            "heading_line_height_custom": 1.2,
+            "heading_tag": "h2"
+          }
+        },
+        "text_Xz4eqf": {
+          "type": "text",
+          "settings": {
+            "visibility": "always",
+            "text": "<p>We're available five days a week to assist. Just let us know what we can help you with and we'll do our best.</p>",
+            "text_size": "t3"
+          }
+        },
+        "custom_text_Nx4Rh3": {
+          "type": "custom_text",
+          "settings": {
+            "title": "First name",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "custom_text_yEgVmH": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Last name",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "custom_text_GCtqjM": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Company Name",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "custom_text_LVkH3X": {
+          "type": "custom_text",
+          "settings": {
+            "title": "Trading Name",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "phone_rfzJGE": {
+          "type": "phone",
+          "settings": {
+            "title": "Phone",
+            "tip": "",
+            "half_width_on_desktop": true,
+            "required": false
+          }
+        },
+        "email_ykeBiR": {
+          "type": "email",
+          "settings": {
+            "title": "Email",
+            "tip": "",
+            "half_width_on_desktop": true
+          }
+        },
+        "textarea_UEy6en": {
+          "type": "textarea",
+          "settings": {
+            "title": "Message",
+            "tip": "",
+            "half_width_on_desktop": false,
+            "required": true
+          }
+        },
+        "text_fWXKHg": {
+          "type": "text",
+          "settings": {
+            "visibility": "always",
+            "text": "<p>We'll aim to get back to you within 24 hours.</p>",
+            "text_size": "t6"
+          }
+        }
+      },
+      "block_order": [
+        "heading_g4eCwP",
+        "text_Xz4eqf",
+        "custom_text_Nx4Rh3",
+        "custom_text_yEgVmH",
+        "custom_text_GCtqjM",
+        "custom_text_LVkH3X",
+        "phone_rfzJGE",
+        "email_ykeBiR",
+        "textarea_UEy6en",
+        "text_fWXKHg"
+      ],
+      "disabled": true,
+      "name": "Contact form",
+      "settings": {
+        "preview_success": false,
+        "show_standard_success_message": true,
+        "submit_button_text": "",
+        "image": "shopify://shop_images/Wholesale_inquiries.webp",
+        "image_overlay_opacity": 20,
+        "desktop_section_height": 500,
+        "mobile_section_height": 400,
+        "desktop_media_width": 50,
+        "layout": "media_first",
+        "content_layout": "no-overlap",
+        "show_header_beside": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "desktop_content_position": "md:justify-start md:items-end",
+        "mobile_content_position": "justify-center items-center",
+        "title": "Need support?",
+        "italic_convert": "",
+        "heading_size": "h3",
+        "text": "<p>Check out our support guides first.</p>",
+        "text_size": "t4",
+        "button_text_size": "t5",
+        "button_label": "Support FAQs",
+        "button_link": "/",
+        "button_style": "secondary",
+        "button_style_show_arrow": true,
+        "button_style_show_gradient_border": false,
+        "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "image_overlay_color_scheme": "",
+        "show_content_shadow": true,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h3"
+      }
+    },
+    "custom_liquid_UthL4h": {
+      "type": "custom-liquid",
+      "name": "Custom Liquid",
+      "settings": {
+        "custom_liquid": "<div class=\"worthy-catalog-wrapper\" style=\"margin: 20px auto; max-width: 1200px; padding: 0 15px;\">\n  <div class=\"catalog-responsive-container\" style=\"position: relative; padding-bottom: 141.4%; height: 0; overflow: hidden; border: 1px solid #e1e1e1; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);\">\n    <iframe \n      src=\"https://docs.google.com/viewer?url=https://cdn.shopify.com/s/files/1/0530/2176/9881/files/WOP_-_W14-compressed.pdf?v=1774996506&embedded=true\" \n      style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;\" \n      allowfullscreen>\n    </iframe>\n  </div>\n  \n  <div style=\"text-align: center; margin-top: 20px;\">\n    <a href=\"https://cdn.shopify.com/s/files/1/0530/2176/9881/files/WOP_-_W14-compressed.pdf?v=1774996506\" \n       target=\"_blank\" \n       class=\"button\" \n       style=\"text-decoration: none; padding: 12px 25px; background: #000; color: #fff; border-radius: 4px; font-family: inherit; font-weight: bold; display: inline-block;\">\n       Download PDF Version\n    </a>\n  </div>\n</div>\n{% render 'worthy-catalog-pro' %}",
+        "full_width": true,
+        "color_scheme": "",
+        "line_separator": "",
+        "top_padding": "pt-0",
+        "bottom_padding": "pb-0",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "rich_text_3wjwRH",
+    "main",
+    "contact_form_PJxtT9",
+    "custom_liquid_UthL4h"
+  ]
+}
