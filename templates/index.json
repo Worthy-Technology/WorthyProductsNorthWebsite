@@ -517,12 +517,19 @@
         "heading_qYJFfj": {
           "type": "heading",
           "settings": {
-            "heading": "From Our Shelves to Yours ++ <em><strong>NZ’s Go-To Distributor. </strong></em><strong> </strong>",
+            "heading": "New Zealand's Wholesale Distributor for ++ <em><strong>Confectionery, Beverages & Grocery</strong></em>",
             "heading_italic_convert": "accent",
             "heading_size": "custom",
             "heading_size_custom": 3.6,
             "heading_line_height_custom": 1.5,
             "heading_tag": "h2"
+          }
+        },
+        "text_6MDhiP": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Worthy Products is a New Zealand wholesale distributor supplying  confectionery, beverages, grocery, health and beauty products to  3,000+ NZ dairies, petrol stations, supermarkets, convenience stores  and school canteens. Operating from our Auckland warehouse, we stock  1,500+ products from brands including Cadbury, Whittaker's, Wrigley's,  Nestlé, Pascall, Mars, Indomie, Pringles, Bundaberg, Mogu Mogu, Dove,  Colgate, BIC and many more. Orders placed before 10am are dispatched same day, NZ-wide. We are the exclusive NZ distributor for brands like H2 Coco, Riclan, Lava Lush, Fararelle and many more.  New wholesale accounts welcome, download our application forms to get started.</p>",
+            "text_size": "t3"
           }
         },
         "buttons_hQg9JW": {
@@ -546,6 +553,7 @@
       },
       "block_order": [
         "heading_qYJFfj",
+        "text_6MDhiP",
         "buttons_hQg9JW"
       ],
       "settings": {
