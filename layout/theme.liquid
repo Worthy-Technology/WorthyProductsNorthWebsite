@@ -54,21 +54,15 @@ document.addEventListener('click', function (e) {
   if (!btn) return;
   e.preventDefault();
   e.stopImmediatePropagation();
-  e.stopPropagation();
   window.location.href = '/account/login';
-  return false;
 }, true);
-
-// Also intercept on the product-card element directly
-document.querySelectorAll('product-card').forEach(function(card) {
-  card.addEventListener('click', function(e) {
-    if (e.target.closest('.wp-lp')) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      window.location.href = '/account/login';
-    }
+// Override product-card click navigation for login buttons
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.wp-lp')) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.location.href = '/account/login';
   }, true);
-});
 </script>
 {% endunless %}
 {% comment %} END Worthy Products — B2B Visibility Guard {% endcomment %}
