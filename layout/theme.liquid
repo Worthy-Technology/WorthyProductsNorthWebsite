@@ -34,8 +34,14 @@ document.addEventListener('DOMContentLoaded', function () {
     wrap.className = 'wp-lp';
     wrap.style.cssText = 'margin:0.5rem 0 0.75rem';
     wrap.innerHTML = btn;
-    var anchor = card.querySelector('.card__information, .card-information__wrapper, .card__content');
-    if (anchor) anchor.appendChild(wrap);
+    // Insert after the product title/heading, not at bottom of card
+  var heading = card.querySelector('.card__heading, .card__title, h3, h2');
+  var anchor = card.querySelector('.card__information, .card-information__wrapper, .card__content');
+  if (heading && heading.parentNode) {
+    heading.parentNode.insertBefore(wrap, heading.nextSibling);
+  } else if (anchor) {
+    anchor.insertBefore(wrap, anchor.firstChild);
+  }
   });
 
   // One button on the product page form
