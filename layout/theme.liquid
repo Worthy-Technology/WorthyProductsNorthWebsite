@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Product cards on collection/search pages
   document.querySelectorAll('.card__content > .card__information').forEach(function (info) {
     if (info.querySelector('.wp-lp')) return;
+    // Skip flash-sale elements — they share the card__information class
+    if (!info.querySelector('.card__heading, h3, h2')) return;
     var wrap = document.createElement('div');
     wrap.className = 'wp-lp';
     wrap.style.cssText = 'margin:1.25rem 0 0.5rem';
