@@ -56,13 +56,6 @@ document.addEventListener('click', function (e) {
   e.stopImmediatePropagation();
   window.location.href = '/account/login';
 }, true);
-// Override product-card click navigation for login buttons
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.wp-lp')) return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    window.location.href = '/account/login';
-  }, true);
 </script>
 {% endunless %}
 {% comment %} END Worthy Products — B2B Visibility Guard {% endcomment %}
