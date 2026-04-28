@@ -25,35 +25,38 @@
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  var btn = '<a href="/account/login" style="display:inline-flex;align-items:center;gap:8px;background:#1d52c8;color:#fff;font-size:1.15rem;font-weight:600;padding:13px 24px;border-radius:8px;text-decoration:none;letter-spacing:0.02em"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Login to see pricing</a>';
+  var btnHTML = '<button type="button" class="wp-lp-btn" style="display:inline-flex;align-items:center;gap:8px;background:#1d52c8;color:#fff;font-size:1.15rem;font-weight:600;padding:13px 24px;border-radius:8px;border:none;cursor:pointer;letter-spacing:0.02em;width:100%;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Login to see pricing</button>';
 
-  // One button per .card__information block — appended as last child
+  // Product cards on collection/search pages
   document.querySelectorAll('.card__information').forEach(function (info) {
     if (info.querySelector('.wp-lp')) return;
-    // Skip if this card__information is inside a flash-sale section
     if (info.closest('.flash-sale') || info.closest('[class*="flash-sale"]')) return;
     var wrap = document.createElement('div');
     wrap.className = 'wp-lp';
     wrap.style.cssText = 'margin:1.25rem 0 0.5rem';
-    wrap.innerHTML = btn;
-    wrap.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      window.location.href = '/account/login';
-    });
+    wrap.innerHTML = btnHTML;
     info.appendChild(wrap);
   });
 
-  // One button on the product page form
+  // Product page form
   var form = document.querySelector('product-form, .product-form');
   if (form && !form.querySelector('.wp-lp')) {
     var wrap = document.createElement('div');
     wrap.className = 'wp-lp';
     wrap.style.cssText = 'margin:1rem 0';
-    wrap.innerHTML = btn;
+    wrap.innerHTML = btnHTML;
     form.appendChild(wrap);
   }
 });
+
+// Intercept at document level — catches clicks before the card <a> tag fires
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('.wp-lp-btn');
+  if (!btn) return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  window.location.href = '/account/login';
+}, true); // true = capture phase, fires BEFORE the anchor tag
 </script>
 {% endunless %}
 {% comment %} END Worthy Products — B2B Visibility Guard {% endcomment %}
