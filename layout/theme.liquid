@@ -36,9 +36,10 @@ document.addEventListener('DOMContentLoaded', function () {
     wrap.className = 'wp-lp';
     wrap.style.cssText = 'margin:1.25rem 0 0.5rem';
     wrap.innerHTML = btn;
-    // Stop click bubbling to the card's <a> tag
     wrap.addEventListener('click', function (e) {
+      e.preventDefault();
       e.stopPropagation();
+      window.location.href = '/account/login';
     });
     info.appendChild(wrap);
   });
