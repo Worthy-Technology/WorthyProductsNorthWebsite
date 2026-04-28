@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (info.querySelector('.wp-lp')) return;
     var wrap = document.createElement('div');
     wrap.className = 'wp-lp';
-    wrap.style.cssText = 'margin:1.25rem 0 0.5rem';
+    wrap.style.cssText = 'margin:1.25rem 0 0.5rem;position:relative;z-index:2';
     wrap.innerHTML = btnHTML;
     info.appendChild(wrap);
   });
