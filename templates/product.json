@@ -199,7 +199,6 @@
         },
         "description": {
           "type": "description",
-          "disabled": true,
           "settings": {
             "text_size": "t4",
             "max_height": 0,
