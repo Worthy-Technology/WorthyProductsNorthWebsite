@@ -37,11 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Insert after the product title/heading, not at bottom of card
   var heading = card.querySelector('.card__heading, .card__title, h3, h2');
   var anchor = card.querySelector('.card__information, .card-information__wrapper, .card__content');
-  if (heading && heading.parentNode) {
-    heading.parentNode.insertBefore(wrap, heading.nextSibling);
-  } else if (anchor) {
-    anchor.insertBefore(wrap, anchor.firstChild);
-  }
+  if (anchor) anchor.appendChild(wrap);
   });
 
   // One button on the product page form
