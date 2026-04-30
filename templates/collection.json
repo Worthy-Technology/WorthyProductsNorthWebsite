@@ -221,12 +221,31 @@
             "text": "<p><br/>Browse the full Worthy Products wholesale range, featuring New Zealand’s leading selection of FMCG essentials for convenience stores, petrol stations, dairies and supermarkets. Discover drinks, confectionery, gummies, chocolates, novelty lines, and everyday retail favourites sourced from trusted local and international brands. This page gives you a complete view of every product available for ordering, helping you quickly restock top sellers, compare options and keep your shelves ready for customers. Updated daily with new arrivals, pricing and stock availability.<br/><br/></p>",
             "text_size": "t3"
           }
+        },
+        "buttons_6dAwbz": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t5",
+            "button_label_1": "See all products on offer",
+            "button_link_1": "shopify://collections/all",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "primary",
+            "button_style_2_show_arrow": true,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
         }
       },
       "block_order": [
         "text_VefxhT",
         "heading_FmJxHK",
-        "text_LiJJqQ"
+        "text_LiJJqQ",
+        "buttons_6dAwbz"
       ],
       "settings": {
         "desktop_content_position": "center",
