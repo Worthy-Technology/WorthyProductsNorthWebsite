@@ -1,0 +1,13 @@
+{% for group in robots.default_groups %}
+  {% for rule in group.rules %}
+    {{ rule }}
+  {% endfor %}
+{% endfor %}
+
+Disallow: /collections/*/products/
+Disallow: /*.atom
+Disallow: /collections?page=*
+Disallow: /collections/*?page=*
+Disallow: /search
+
+Sitemap: {{ shop.url }}/sitemap.xml
