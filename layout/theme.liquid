@@ -66,8 +66,12 @@ document.addEventListener('click', function (e) {
     <meta name="theme-color" content="">
 
     {%- if canonical_url != blank -%}
-      <link rel="canonical" href="{{ canonical_url }}">
-    {%- endif -%}
+  <link rel="canonical" href="{{ canonical_url }}">
+{%- endif -%}
+
+{%- if request.path contains '/collections/' and request.path contains '/products/' -%}
+  <meta name="robots" content="noindex, follow">
+{%- endif -%}
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
