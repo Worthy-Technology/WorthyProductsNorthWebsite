@@ -735,9 +735,8 @@ document.addEventListener('click', function (e) {
     <div id="content" aria-hidden="true"></div>
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
-          {% if false %}{{ content_for_layout }}{% endif %}
-          {% include 'wlm-body' %}
-        </main>
+  {{ content_for_layout }}
+    </main>
 
     {% sections 'overlay-group' %}
     {% sections 'footer-group' %}
