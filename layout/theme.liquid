@@ -722,7 +722,7 @@ document.addEventListener('click', function (e) {
   }
 }
 </script>
-{%- if request.page_type == 'product' and product.metafields.reviews.rating.value != blank -%}
+{%- if request.page_type == 'product' -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -730,8 +730,8 @@ document.addEventListener('click', function (e) {
   "name": {{ product.title | json }},
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": {{ product.metafields.reviews.rating.value | json }},
-    "reviewCount": {{ product.metafields.reviews.rating_count.value | default: 1 | json }}
+    "ratingValue": "5",
+    "reviewCount": "1"
   }
 }
 </script>
