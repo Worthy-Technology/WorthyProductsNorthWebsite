@@ -773,6 +773,71 @@
   </div>
 
   <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.getElementById('checkout');
+    const cartForm = document.getElementById('cart');
+
+    if (checkoutButton && cartForm) {
+      checkoutButton.addEventListener('click', async function (event) {
+        // Stop the standard form submission so we can intercept
+        event.preventDefault(); 
+
+        // Change button state so the Caltex user knows it's processing
+        const originalText = checkoutButton.innerHTML;
+        checkoutButton.innerHTML = 'Syncing PO...';
+        checkoutButton.disabled = true;
+
+        try {
+          // 1. Gather items in the exact DOM order (which is reversed per your Liquid)
+          const quantityInputs = document.querySelectorAll('.quantity__input');
+          const itemsToRebuild = [];
+
+          quantityInputs.forEach(input => {
+            const variantId = input.getAttribute('data-quantity-variant-id');
+            const quantity = parseInt(input.value, 10);
+            
+            if (variantId && quantity > 0) {
+              itemsToRebuild.push({
+                id: variantId,
+                quantity: quantity
+              });
+            }
+          });
+
+          // If empty for some reason, fallback to normal checkout
+          if (itemsToRebuild.length === 0) {
+            cartForm.submit(); 
+            return;
+          }
+
+          const routesRoot = window.Shopify.routes ? window.Shopify.routes.root : '/';
+
+          // 2. Clear the backend cart
+          await fetch(routesRoot + 'cart/clear.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          // 3. Re-add items in the correct PO order
+          await fetch(routesRoot + 'cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: itemsToRebuild })
+          });
+
+          // 4. Proceed to checkout
+          window.location.href = routesRoot + 'checkout';
+
+        } catch (error) {
+          console.error('Error rebuilding cart sequence:', error);
+          // Failsafe: just submit the form normally if the API fails
+          cartForm.submit();
+        }
+      });
+    }
+  });
+</script>
+  <script>
     document.addEventListener('DOMContentLoaded', function () {
       function isIE() {
         const ua = window.navigator.userAgent;
