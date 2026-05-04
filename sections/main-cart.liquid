@@ -773,6 +773,73 @@
   </div>
 
   <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.getElementById('checkout');
+    const cartForm = document.getElementById('cart');
+
+    if (checkoutButton && cartForm) {
+      checkoutButton.addEventListener('click', async function (event) {
+        event.preventDefault(); 
+
+        checkoutButton.innerHTML = 'Syncing PO...';
+        checkoutButton.disabled = true;
+
+        const routesRoot = window.Shopify.routes ? window.Shopify.routes.root : '/';
+
+        try {
+          // 1. Fetch exact backend cart
+          const cartReq = await fetch(routesRoot + 'cart.js');
+          const cartState = await cartReq.json();
+
+          if (!cartState || !cartState.items || cartState.items.length === 0) {
+            cartForm.submit();
+            return;
+          }
+
+          // 2. Build bare-minimum payload (strictly id and quantity)
+          // Stripping properties prevents the 400 Bad Request error from Shopify
+          const itemsToRebuild = cartState.items.map(item => {
+            return {
+              id: item.variant_id, 
+              quantity: item.quantity
+            };
+          }).reverse();
+
+          // 3. Clear the cart
+          await fetch(routesRoot + 'cart/clear.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          // 4. Re-add the perfectly reversed items
+          const addReq = await fetch(routesRoot + 'cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: itemsToRebuild })
+          });
+
+          // Verify Shopify accepted the payload
+          if (!addReq.ok) {
+            const errorLog = await addReq.text();
+            console.error('Shopify Add API Error:', errorLog);
+            throw new Error('Failed to re-add items to cart');
+          }
+
+          // 5. Success! Send the buyer to checkout with aligned PO
+          window.location.href = routesRoot + 'checkout';
+
+        } catch (error) {
+          console.error('Sequence rebuild failed:', error);
+          alert('There was a slight delay syncing your PO. Please try clicking checkout again.');
+          // Failsafe: Reload the cart page so the user is NOT sent to an empty checkout
+          window.location.reload();
+        }
+      });
+    }
+  });
+</script>
+
+  <script>
     document.addEventListener('DOMContentLoaded', function () {
       function isIE() {
         const ua = window.navigator.userAgent;
