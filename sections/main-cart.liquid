@@ -771,7 +771,72 @@
       </div>
     </div>
   </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.getElementById('checkout');
+    const cartForm = document.getElementById('cart');
 
+    if (checkoutButton && cartForm) {
+      checkoutButton.addEventListener('click', async function (event) {
+        event.preventDefault(); 
+
+        checkoutButton.innerHTML = 'Locking PO Sequence...';
+        checkoutButton.disabled = true;
+
+        const routesRoot = window.Shopify.routes ? window.Shopify.routes.root : '/';
+
+        try {
+          // 1. Fetch exact backend cart
+          const cartReq = await fetch(routesRoot + 'cart.js');
+          const cartState = await cartReq.json();
+
+          if (!cartState || !cartState.items || cartState.items.length === 0) {
+            cartForm.submit();
+            return;
+          }
+
+          // 2. Build the payload and reverse it to match the PO
+          const itemsToRebuild = cartState.items.map(item => {
+            return {
+              id: item.variant_id, 
+              quantity: item.quantity
+            };
+          }).reverse();
+
+          // 3. Clear the cart completely and WAIT for it to finish
+          await fetch(routesRoot + 'cart/clear.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          // 4. THE FIX: Add items SEQUENTIALLY (One by one)
+          // This forces Shopify to respect the exact order and prevents server race conditions
+          for (const item of itemsToRebuild) {
+            const addReq = await fetch(routesRoot + 'cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              // We send them as a single-item array one loop at a time
+              body: JSON.stringify({ items: [item] }) 
+            });
+
+            if (!addReq.ok) {
+               throw new Error(`Failed to add variant ${item.id}`);
+            }
+          }
+
+          // 5. Success! The database is locked in order. Send the buyer to checkout.
+          window.location.href = routesRoot + 'checkout';
+
+        } catch (error) {
+          console.error('Sequence rebuild failed:', error);
+          alert('There was a slight delay syncing your PO. Please try clicking checkout again.');
+          // Failsafe: Reload the cart page so the user is NOT sent to an empty checkout
+          window.location.reload();
+        }
+      });
+    }
+  });
+</script>
   
   <script>
     document.addEventListener('DOMContentLoaded', function () {
