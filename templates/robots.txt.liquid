@@ -1,13 +1,14 @@
 {% for group in robots.default_groups %}
-  {% for rule in group.rules %}
-    {{ rule }}
-  {% endfor %}
-{% endfor %}
+User-agent: {{ group.user_agent.value }}
+{%- for rule in group.rules %}
+{{ rule }}
+{%- endfor %}
 
+{% endfor %}
+User-agent: *
 Disallow: /collections/*/products/
 Disallow: /*.atom
 Disallow: /collections?page=*
 Disallow: /collections/*?page=*
-Disallow: /search
 
 Sitemap: {{ shop.url }}/sitemap.xml
