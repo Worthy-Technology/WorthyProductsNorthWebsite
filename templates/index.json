@@ -586,7 +586,7 @@
         "mobile_layout": "carousel",
         "columns_desktop": "4",
         "columns_mobile": "2",
-        "full_width": false,
+        "full_width": true,
         "content_max_width": "m",
         "desktop_heading_alignment": "left",
         "mobile_heading_alignment": "left",
@@ -686,7 +686,7 @@
           "type": "price",
           "settings": {
             "show_tax_info": true,
-            "price_color": "#EA0707",
+            "price_color": "#ea0707",
             "text_size": "h4-size"
           }
         },
@@ -783,7 +783,7 @@
         "media_color_scheme": "",
         "thumbnail_color_scheme": "",
         "info_color_scheme": "",
-        "star_color": "#F5E121",
+        "star_color": "#f5e121",
         "card_shadow": true,
         "image_replace_background": false,
         "line_separator": "border-top border-bottom",
