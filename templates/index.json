@@ -615,6 +615,197 @@
         "show_time_night": true
       }
     },
+    "featured_product_cKGeiz": {
+      "type": "featured-product",
+      "blocks": {
+        "title_VxFjx6": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h2",
+            "heading_size": "h3"
+          }
+        },
+        "rating_dCBgzc": {
+          "type": "rating",
+          "settings": {
+            "rating_size": "1.7"
+          }
+        },
+        "description_8V4TzY": {
+          "type": "description",
+          "settings": {
+            "text_size": "t3",
+            "max_height": 0
+          }
+        },
+        "spacer_rDFNF8": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": true,
+            "full_width": true,
+            "line_separator_style": "solid",
+            "spacing_top": 3,
+            "spacing_bottom": 3,
+            "spacer_visibility": "both",
+            "stock_visibility": "either",
+            "line_color": ""
+          }
+        },
+        "variant_picker_cpmExp": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "box",
+            "show_availability": true,
+            "box_size": "auto",
+            "pill_text_size": "t7",
+            "pill_text_weight": "normal",
+            "pill_text_transform": "uppercase",
+            "prefix": "",
+            "variant_label_text_size": "t3",
+            "variant_label_text_weight": "bold",
+            "variant_label_text_transform": "",
+            "swatch_enabled": true,
+            "swatch_size": 1.8,
+            "swatch_box": false,
+            "size_chart_options": "Size",
+            "popup_style": "center",
+            "size_chart_icon": "ruler",
+            "size_chart_label": "",
+            "size_chart_page": "",
+            "stock_visibility": "either"
+          }
+        },
+        "spacer_ixmjD7": {
+          "type": "spacer",
+          "settings": {
+            "show_line_separator": true,
+            "full_width": true,
+            "line_separator_style": "solid",
+            "spacing_top": 3,
+            "spacing_bottom": 3,
+            "spacer_visibility": "both",
+            "stock_visibility": "either",
+            "line_color": ""
+          }
+        },
+        "price_TidchG": {
+          "type": "price",
+          "settings": {
+            "show_tax_info": true,
+            "price_color": "#EA0707",
+            "text_size": "h4-size"
+          }
+        },
+        "buy_buttons_nJLhii": {
+          "type": "buy_buttons",
+          "settings": {
+            "button_text_transform": "none",
+            "button_text_font_weight": "bold",
+            "icon": "cart",
+            "icon_position": "left",
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true,
+            "show_quantity": true,
+            "show_price": false
+          }
+        },
+        "view_more_link_6FBKhn": {
+          "type": "view_more_link",
+          "settings": {
+            "button_text_size": "t4",
+            "button_label_1": "View more",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_underline": true
+          }
+        },
+        "panel_w7GdGp": {
+          "type": "panel",
+          "settings": {
+            "padding": 0,
+            "panel_icon": "lock",
+            "panel_heading": "PANEL",
+            "heading_style": "text-body",
+            "heading_text_size": "t4",
+            "heading_text_weight": "bold",
+            "visibility": "",
+            "show_at_specific_time_of_day": false,
+            "show_time_morning": true,
+            "show_time_afternoon": true,
+            "show_time_evening": true,
+            "show_time_night": true,
+            "stock_visibility": "either",
+            "color_scheme": "scheme-3"
+          }
+        },
+        "enquiry_product_DM8iqQ": {
+          "type": "enquiry_product",
+          "settings": {
+            "icon": "",
+            "text": "<h4><strong>Got a question?</strong></h4><p>Don't be a stranger.</p>",
+            "text_size": "t3",
+            "text_padding": 0,
+            "stock_visibility": "either",
+            "color_scheme": "scheme-3",
+            "image_overlay_opacity": 6,
+            "card_shadow": false
+          }
+        }
+      },
+      "block_order": [
+        "title_VxFjx6",
+        "rating_dCBgzc",
+        "description_8V4TzY",
+        "spacer_rDFNF8",
+        "variant_picker_cpmExp",
+        "spacer_ixmjD7",
+        "price_TidchG",
+        "buy_buttons_nJLhii",
+        "view_more_link_6FBKhn",
+        "panel_w7GdGp",
+        "enquiry_product_DM8iqQ"
+      ],
+      "name": "Featured product",
+      "settings": {
+        "product": "redbull-can-473ml-1x12",
+        "slider_controls": "always",
+        "slider_controls_mobile": true,
+        "enable_sticky_info": true,
+        "slider_full_width_mobile": true,
+        "info_fullwidth_mob": true,
+        "media_size": "medium",
+        "main_image_ratio": "landscape",
+        "media_fit": false,
+        "product_media_radius": 12,
+        "product_media_scale": 100,
+        "show_media_shadow": true,
+        "enable_video_looping": false,
+        "image_zoom": "lightbox",
+        "image_zoom_level": "4",
+        "thumbnail_layout": "both",
+        "thumbnail_radius": 12,
+        "thumbnail_scale": 100,
+        "thumbnail_image_ratio": "square",
+        "thumbnail_cover": false,
+        "section_color_scheme": "",
+        "media_color_scheme": "",
+        "thumbnail_color_scheme": "",
+        "info_color_scheme": "",
+        "star_color": "#F5E121",
+        "card_shadow": true,
+        "image_replace_background": false,
+        "line_separator": "border-top border-bottom",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "lazy_load": true,
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
     "featured_collection_PCNhTz": {
       "type": "featured-collection",
       "settings": {
@@ -1631,197 +1822,6 @@
         "show_time_evening": true,
         "show_time_night": true
       }
-    },
-    "featured_product_cKGeiz": {
-      "type": "featured-product",
-      "blocks": {
-        "title_VxFjx6": {
-          "type": "title",
-          "settings": {
-            "heading_tag": "h2",
-            "heading_size": "h3"
-          }
-        },
-        "rating_dCBgzc": {
-          "type": "rating",
-          "settings": {
-            "rating_size": "1.7"
-          }
-        },
-        "description_8V4TzY": {
-          "type": "description",
-          "settings": {
-            "text_size": "t3",
-            "max_height": 0
-          }
-        },
-        "spacer_rDFNF8": {
-          "type": "spacer",
-          "settings": {
-            "show_line_separator": true,
-            "full_width": true,
-            "line_separator_style": "solid",
-            "spacing_top": 3,
-            "spacing_bottom": 3,
-            "spacer_visibility": "both",
-            "stock_visibility": "either",
-            "line_color": ""
-          }
-        },
-        "variant_picker_cpmExp": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_type": "box",
-            "show_availability": true,
-            "box_size": "auto",
-            "pill_text_size": "t7",
-            "pill_text_weight": "normal",
-            "pill_text_transform": "uppercase",
-            "prefix": "",
-            "variant_label_text_size": "t3",
-            "variant_label_text_weight": "bold",
-            "variant_label_text_transform": "",
-            "swatch_enabled": true,
-            "swatch_size": 1.8,
-            "swatch_box": false,
-            "size_chart_options": "Size",
-            "popup_style": "center",
-            "size_chart_icon": "ruler",
-            "size_chart_label": "",
-            "size_chart_page": "",
-            "stock_visibility": "either"
-          }
-        },
-        "spacer_ixmjD7": {
-          "type": "spacer",
-          "settings": {
-            "show_line_separator": true,
-            "full_width": true,
-            "line_separator_style": "solid",
-            "spacing_top": 3,
-            "spacing_bottom": 3,
-            "spacer_visibility": "both",
-            "stock_visibility": "either",
-            "line_color": ""
-          }
-        },
-        "price_TidchG": {
-          "type": "price",
-          "settings": {
-            "show_tax_info": true,
-            "price_color": "#EA0707",
-            "text_size": "h4-size"
-          }
-        },
-        "buy_buttons_nJLhii": {
-          "type": "buy_buttons",
-          "settings": {
-            "button_text_transform": "none",
-            "button_text_font_weight": "bold",
-            "icon": "cart",
-            "icon_position": "left",
-            "show_dynamic_checkout": true,
-            "show_gift_card_recipient": true,
-            "show_quantity": true,
-            "show_price": false
-          }
-        },
-        "view_more_link_6FBKhn": {
-          "type": "view_more_link",
-          "settings": {
-            "button_text_size": "t4",
-            "button_label_1": "View more",
-            "button_style_1_show_arrow": true,
-            "button_style_1_show_underline": true
-          }
-        },
-        "panel_w7GdGp": {
-          "type": "panel",
-          "settings": {
-            "padding": 0,
-            "panel_icon": "lock",
-            "panel_heading": "PANEL",
-            "heading_style": "text-body",
-            "heading_text_size": "t4",
-            "heading_text_weight": "bold",
-            "visibility": "",
-            "show_at_specific_time_of_day": false,
-            "show_time_morning": true,
-            "show_time_afternoon": true,
-            "show_time_evening": true,
-            "show_time_night": true,
-            "stock_visibility": "either",
-            "color_scheme": "scheme-3"
-          }
-        },
-        "enquiry_product_DM8iqQ": {
-          "type": "enquiry_product",
-          "settings": {
-            "icon": "",
-            "text": "<h4><strong>Got a question?</strong></h4><p>Don't be a stranger.</p>",
-            "text_size": "t3",
-            "text_padding": 0,
-            "stock_visibility": "either",
-            "color_scheme": "scheme-3",
-            "image_overlay_opacity": 6,
-            "card_shadow": false
-          }
-        }
-      },
-      "block_order": [
-        "title_VxFjx6",
-        "rating_dCBgzc",
-        "description_8V4TzY",
-        "spacer_rDFNF8",
-        "variant_picker_cpmExp",
-        "spacer_ixmjD7",
-        "price_TidchG",
-        "buy_buttons_nJLhii",
-        "view_more_link_6FBKhn",
-        "panel_w7GdGp",
-        "enquiry_product_DM8iqQ"
-      ],
-      "name": "Featured product",
-      "settings": {
-        "product": "redbull-can-473ml-1x12",
-        "slider_controls": "always",
-        "slider_controls_mobile": true,
-        "enable_sticky_info": true,
-        "slider_full_width_mobile": true,
-        "info_fullwidth_mob": true,
-        "media_size": "medium",
-        "main_image_ratio": "landscape",
-        "media_fit": false,
-        "product_media_radius": 12,
-        "product_media_scale": 100,
-        "show_media_shadow": true,
-        "enable_video_looping": false,
-        "image_zoom": "lightbox",
-        "image_zoom_level": "4",
-        "thumbnail_layout": "both",
-        "thumbnail_radius": 12,
-        "thumbnail_scale": 100,
-        "thumbnail_image_ratio": "square",
-        "thumbnail_cover": false,
-        "section_color_scheme": "",
-        "media_color_scheme": "",
-        "thumbnail_color_scheme": "",
-        "info_color_scheme": "",
-        "star_color": "#F5E121",
-        "card_shadow": true,
-        "image_replace_background": false,
-        "line_separator": "border-top border-bottom",
-        "top_padding": "pt-s",
-        "bottom_padding": "pb-s",
-        "lazy_load": true,
-        "visibility": "",
-        "hide_when_empty": false,
-        "show_at_specific_time_of_day": false,
-        "show_time_morning": true,
-        "show_time_afternoon": true,
-        "show_time_evening": true,
-        "show_time_night": true
-      }
     }
   },
   "order": [
@@ -1830,8 +1830,9 @@
     "slideshow_VN8Cyn",
     "slideshow_wfeKTk",
     "icons_with_text_jjRLYL",
-    "featured_collection_VgNgUt",
     "rich_text_8NPrMc",
+    "featured_collection_VgNgUt",
+    "featured_product_cKGeiz",
     "featured_collection_PCNhTz",
     "collection_list_8epked",
     "image_banner_UpXT8f",
@@ -1840,7 +1841,6 @@
     "stats_JYTTVY",
     "testimonials_eeVUTL",
     "scrolling_text_XDEjRT",
-    "icons_with_text_f3bxbj",
-    "featured_product_cKGeiz"
+    "icons_with_text_f3bxbj"
   ]
 }
