@@ -511,45 +511,6 @@
         "show_time_night": true
       }
     },
-    "featured_collection_VgNgUt": {
-      "type": "featured-collection",
-      "name": "Featured collection",
-      "settings": {
-        "collection": "oxyshred-energy-drinks",
-        "products_to_show": 24,
-        "desktop_layout": "carousel",
-        "mobile_layout": "carousel",
-        "columns_desktop": "4",
-        "columns_mobile": "2",
-        "full_width": false,
-        "content_max_width": "m",
-        "desktop_heading_alignment": "left",
-        "mobile_heading_alignment": "left",
-        "title": "<em>Oxyshred Energy Drinks - New Arrivals</em>",
-        "italic_convert": "glow",
-        "heading_size": "h3",
-        "text": "",
-        "text_size": "t3",
-        "show_view_all_link": true,
-        "view_all_text": "View more",
-        "view_all_text_size": "t4",
-        "view_all_card_visibility": "",
-        "view_all_card_text": "There's plenty more",
-        "color_scheme": "",
-        "view_all_color_scheme": "",
-        "line_separator": "",
-        "top_padding": "pt-s",
-        "bottom_padding": "pb-s",
-        "visibility": "",
-        "hide_when_empty": false,
-        "show_at_specific_time_of_day": false,
-        "show_time_morning": true,
-        "show_time_afternoon": true,
-        "show_time_evening": true,
-        "show_time_night": true,
-        "heading_tag": "h2"
-      }
-    },
     "rich_text_8NPrMc": {
       "type": "rich-text",
       "blocks": {
@@ -615,6 +576,45 @@
         "show_time_night": true
       }
     },
+    "featured_collection_VgNgUt": {
+      "type": "featured-collection",
+      "name": "Featured collection",
+      "settings": {
+        "collection": "oxyshred-energy-drinks",
+        "products_to_show": 24,
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "4",
+        "columns_mobile": "2",
+        "full_width": false,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "<em>Oxyshred Energy Drinks - New Arrivals</em>",
+        "italic_convert": "glow",
+        "heading_size": "h3",
+        "text": "",
+        "text_size": "t3",
+        "show_view_all_link": true,
+        "view_all_text": "View more",
+        "view_all_text_size": "t4",
+        "view_all_card_visibility": "",
+        "view_all_card_text": "There's plenty more",
+        "color_scheme": "",
+        "view_all_color_scheme": "",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
+      }
+    },
     "featured_product_cKGeiz": {
       "type": "featured-product",
       "blocks": {
@@ -623,12 +623,6 @@
           "settings": {
             "heading_tag": "h2",
             "heading_size": "h3"
-          }
-        },
-        "rating_dCBgzc": {
-          "type": "rating",
-          "settings": {
-            "rating_size": "1.7"
           }
         },
         "description_8V4TzY": {
@@ -703,10 +697,10 @@
             "button_text_font_weight": "bold",
             "icon": "cart",
             "icon_position": "left",
-            "show_dynamic_checkout": true,
+            "show_dynamic_checkout": false,
             "show_gift_card_recipient": true,
             "show_quantity": true,
-            "show_price": false
+            "show_price": true
           }
         },
         "view_more_link_6FBKhn": {
@@ -723,7 +717,7 @@
           "settings": {
             "padding": 0,
             "panel_icon": "lock",
-            "panel_heading": "PANEL",
+            "panel_heading": "Reach out to us",
             "heading_style": "text-body",
             "heading_text_size": "t4",
             "heading_text_weight": "bold",
@@ -753,7 +747,6 @@
       },
       "block_order": [
         "title_VxFjx6",
-        "rating_dCBgzc",
         "description_8V4TzY",
         "spacer_rDFNF8",
         "variant_picker_cpmExp",
