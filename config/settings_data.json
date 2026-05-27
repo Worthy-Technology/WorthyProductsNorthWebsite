@@ -183,6 +183,26 @@
         "settings": {
           "drawerId": "additional-checkout-buttons"
         }
+      },
+      "1064529437809880580": {
+        "type": "shopify://apps/miko-loyalty-and-rewards/blocks/loyalty-embed/019e4968-51f5-7319-82d6-54354d710bb0",
+        "disabled": false,
+        "settings": {
+          "points_label": "pts",
+          "position": "bottom-right",
+          "heading_font": "assistant_n4",
+          "body_font": "assistant_n4",
+          "corner_radius": 16,
+          "badge_color": "#2559c1",
+          "panel_bg": "#FFFFFF",
+          "panel_text": "#0F172A",
+          "hero_gradient_from": "#82aceb",
+          "hero_gradient_to": "#FFFFFF",
+          "panel_title": "Worthy Rewards Program",
+          "guest_message": "Join Rewards",
+          "guest_panel_title": "Earn rewards with every purchase",
+          "guest_panel_subtitle": "Sign up to start earning points and unlock exclusive perks."
+        }
       }
     },
     "color_schemes": {
