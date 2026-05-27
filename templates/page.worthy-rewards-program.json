@@ -63,6 +63,7 @@
         "text_jPRiYz",
         "buttons_6A3YAb"
       ],
+      "disabled": true,
       "name": "Rich text",
       "settings": {
         "desktop_content_position": "center",
@@ -208,6 +209,7 @@
         "textarea_UEy6en",
         "text_fWXKHg"
       ],
+      "disabled": true,
       "name": "Contact form",
       "settings": {
         "preview_success": false,
@@ -253,12 +255,46 @@
         "show_time_night": true,
         "heading_tag": "h3"
       }
+    },
+    "1779921523391256f0": {
+      "type": "apps",
+      "blocks": {
+        "miko_loyalty_and_rewards_loyalty_page_ra3yr6": {
+          "type": "shopify://apps/miko-loyalty-and-rewards/blocks/loyalty-page/019e4968-51f5-7319-82d6-54354d710bb0",
+          "settings": {
+            "heading": "Your Rewards",
+            "text_align": "left",
+            "accent_color": "#d3e4fa",
+            "background_color": "#FFFFFF",
+            "text_color": "#0F172A",
+            "corner_radius": 14,
+            "padding_y": 48
+          }
+        }
+      },
+      "block_order": [
+        "miko_loyalty_and_rewards_loyalty_page_ra3yr6"
+      ],
+      "settings": {
+        "include_margins": true,
+        "color_scheme": "",
+        "line_separator": "",
+        "top_padding": "pt-0",
+        "bottom_padding": "pb-0",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
     }
   },
   "order": [
     "breadcrumbs",
     "rich_text_3wjwRH",
     "main",
-    "contact_form_PJxtT9"
+    "contact_form_PJxtT9",
+    "1779921523391256f0"
   ]
 }
