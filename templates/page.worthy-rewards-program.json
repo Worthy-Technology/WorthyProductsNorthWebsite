@@ -262,7 +262,7 @@
         "miko_loyalty_and_rewards_loyalty_page_ra3yr6": {
           "type": "shopify://apps/miko-loyalty-and-rewards/blocks/loyalty-page/019e4968-51f5-7319-82d6-54354d710bb0",
           "settings": {
-            "heading": "Your Rewards",
+            "heading": "Your Worthy Rewards",
             "text_align": "left",
             "accent_color": "#d3e4fa",
             "background_color": "#FFFFFF",
