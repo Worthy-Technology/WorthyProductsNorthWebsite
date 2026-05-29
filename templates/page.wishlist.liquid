@@ -164,6 +164,31 @@
     </div>
 
    <script>
+  window.wishlistData = [
+    {%- assign wl_handles = customer.metafields.custom.favorites_handles.value -%}
+    {%- assign wl_refs = customer.metafields.custom.favorites.value -%}
+    {%- if wl_handles != blank -%}
+      {%- comment -%} Migrated: read from json metafield — no 50-item limit {%- endcomment -%}
+      {%- assign first = true -%}
+      {%- for item in wl_handles -%}
+        {%- if item.handle != blank -%}
+          {%- unless first -%},{%- endunless -%}
+          {"handle":"{{ item.handle | escape }}","id":{{ item.id }}}
+          {%- assign first = false -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- elsif wl_refs != blank -%}
+      {%- comment -%} Not yet migrated: fall back to list.product_reference (50-item cap) {%- endcomment -%}
+      {%- assign first = true -%}
+      {%- for product in wl_refs -%}
+        {%- if product != blank -%}
+          {%- unless first -%},{%- endunless -%}
+          {"handle":"{{ product.handle }}","id":{{ product.id }}}
+          {%- assign first = false -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  ];
   window.wishlistCustomerId = "{{ customer.id }}";
 </script>
   {% else %}
