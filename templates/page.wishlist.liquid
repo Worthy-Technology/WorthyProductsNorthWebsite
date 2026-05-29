@@ -164,20 +164,21 @@
     </div>
 
     <script>
-      // Load Data
-      window.wishlistData = [
-        {%- if customer.metafields.custom.favorites.value -%}
-          {%- assign favorite_ids = customer.metafields.custom.favorites.value -%}
-          {%- for product_id in favorite_ids -%}
-             {%- assign product_handle = product_id | split: '/' | last -%}
-             {%- assign fav_product = all_products[product_handle] -%}
-             {%- if fav_product != empty -%}
-               { "handle": "{{ fav_product.handle }}", "id": {{ fav_product.id }} }{% unless forloop.last %},{% endunless %}
-             {%- endif -%}
-          {%- endfor -%}
+  window.wishlistData = [
+    {%- assign wishlist_products = customer.metafields.custom.favorites.value -%}
+    {%- if wishlist_products -%}
+      {%- assign first = true -%}
+      {%- for product in wishlist_products -%}
+        {%- if product != blank -%}
+          {%- unless first -%},{%- endunless -%}
+          {"handle":"{{ product.handle }}","id":{{ product.id }}}
+          {%- assign first = false -%}
         {%- endif -%}
-      ];
-    </script>
+      {%- endfor -%}
+    {%- endif -%}
+  ];
+  window.wishlistCustomerId = "{{ customer.id }}";
+</script>
   {% else %}
     <div class="text-center" style="padding: 4rem 0;">
       <h1>{{ page.title }}</h1>
