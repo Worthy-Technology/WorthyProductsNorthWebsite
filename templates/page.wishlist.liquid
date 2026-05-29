@@ -163,20 +163,7 @@
       <a href="{{ routes.all_products_collection_url }}" class="button button--primary">Continue Shopping</a>
     </div>
 
-    <script>
-  window.wishlistData = [
-    {%- assign wishlist_products = customer.metafields.custom.favorites.value -%}
-    {%- if wishlist_products -%}
-      {%- assign first = true -%}
-      {%- for product in wishlist_products -%}
-        {%- if product != blank -%}
-          {%- unless first -%},{%- endunless -%}
-          {"handle":"{{ product.handle }}","id":{{ product.id }}}
-          {%- assign first = false -%}
-        {%- endif -%}
-      {%- endfor -%}
-    {%- endif -%}
-  ];
+   <script>
   window.wishlistCustomerId = "{{ customer.id }}";
 </script>
   {% else %}
