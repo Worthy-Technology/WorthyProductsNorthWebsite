@@ -6,14 +6,23 @@
 <div class="wishlist-button-container">
   {% if customer %}
     {% assign is_favorite = false %}
-    {% if customer.metafields.custom.favorites.value != blank %}
-      {% for item in customer.metafields.custom.favorites.value %}
-        {% if item.id == product.id or item.handle == product.handle %}
-          {% assign is_favorite = true %}
-          {% break %}
-        {% endif %}
-      {% endfor %}
+{% if customer.metafields.custom.favorites_handles.value != blank %}
+  {% comment %} Migrated: check json metafield (no 50-item limit) {% endcomment %}
+  {% for item in customer.metafields.custom.favorites_handles.value %}
+    {% if item.id == product.id %}
+      {% assign is_favorite = true %}
+      {% break %}
     {% endif %}
+  {% endfor %}
+{% else %}
+  {% comment %} Not yet migrated: check list.product_reference {% endcomment %}
+  {% for item in customer.metafields.custom.favorites.value %}
+    {% if item.id == product.id %}
+      {% assign is_favorite = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
     <button type="button"
             class="wishlist-btn {% if is_favorite %}is-active{% endif %}"
