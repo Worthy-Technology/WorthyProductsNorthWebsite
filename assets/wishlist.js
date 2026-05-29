@@ -233,12 +233,17 @@ async function renderWishlistPage() {
   const sidebar = document.getElementById('wishlist-filters');
   const clearBtn = document.getElementById('clear-all-wishlist');
   const addAllBtn = document.getElementById('add-all-to-cart');
-
   const customerId = window.wishlistCustomerId;
   if (!customerId) return;
 
-  // ← CORE FIX: Fetch full list from worker API — no Liquid, no 50-item cap
-  let favorites = [];
+  // Step 1: Build handle lookup from Liquid data (window.wishlistData has up to 50 handles)
+  const handleMap = {};
+  (window.wishlistData || []).forEach(item => {
+    if (item.id && item.handle) handleMap[String(item.id)] = item.handle;
+  });
+
+  // Step 2: Get full ID list from worker (all 55 items, handles may be null)
+  let workerItems = [];
   try {
     const res = await fetch(WISHLIST_API, {
       method: 'POST',
@@ -246,12 +251,31 @@ async function renderWishlistPage() {
       body: JSON.stringify({ customerId, action: 'get' })
     });
     const data = await res.json();
-    favorites = data.list || [];
+    workerItems = data.list || [];
   } catch (err) {
-    console.error("Failed to load wishlist:", err);
-    grid.innerHTML = '<p>Failed to load wishlist. Please refresh.</p>';
-    return;
+    console.error('Worker error, falling back to Liquid data:', err);
+    workerItems = (window.wishlistData || []).map(p => ({ id: p.id, handle: p.handle }));
   }
+
+  // Step 3: Fill in missing handles using the Liquid lookup map
+  const merged = workerItems.map(item => ({
+    id: item.id,
+    handle: item.handle || handleMap[String(item.id)] || null
+  }));
+
+  // Step 4: One-time migration — save resolved handles to worker as json type
+  // After this fires, Liquid will output ALL items on next page load (no 50-item cap)
+  const needsMigration = merged.some((item, i) => item.handle && !workerItems[i].handle);
+  if (needsMigration) {
+    fetch(WISHLIST_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customerId, action: 'migrate_handles', items: merged })
+    }).catch(() => {});
+  }
+
+  // Step 5: Render only items that have handles
+  const favorites = merged.filter(item => item.handle);
 
   if (favorites.length === 0) {
     if (grid) grid.parentElement.style.display = 'none';
@@ -273,7 +297,7 @@ async function renderWishlistPage() {
         grid.appendChild(cardWrapper);
         productCards.push(cardWrapper);
       }
-    } catch (e) { console.error("Item load fail:", e); }
+    } catch (e) { console.error('Item load fail:', e); }
   }
 
   if (sidebar) sidebar.style.display = 'block';
