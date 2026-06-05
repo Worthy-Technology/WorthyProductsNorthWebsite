@@ -1088,21 +1088,103 @@ document.addEventListener('click', function (e) {
   var path = window.location.pathname;
 
   // On /cart: B2B Hub has loaded → show overlay → proceed to checkout
+  // \u2500\u2500 FIFO reorder \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // Shopify stores cart lines newest-first; checkout renders them in stored
+  // order. Re-adding the lines in their CURRENT cart.items order flips the
+  // stored order so checkout comes out oldest-first = PO-entry order (no
+  // .reverse(): the re-add itself produces the flip \u2014 verified on draft theme).
+  // Orbit re-reads /cart.js at checkout-click, so it picks up the new order for
+  // both its draft flow and native /checkout \u2014 as will native B2B catalogs later.
+  function reorderCartFIFO() {
+    return fetch('/cart.js', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        if (!cart.items || cart.items.length <= 1) return false;
+
+        var payload = cart.items.map(function (it) {
+          var e = { id: it.variant_id, quantity: it.quantity };
+          if (it.properties && Object.keys(it.properties).length) e.properties = it.properties;
+          if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
+            e.selling_plan = it.selling_plan_allocation.selling_plan.id;
+          return e;
+        });
+        // Abort if any line lacks a variant id \u2014 never risk emptying the cart.
+        if (payload.some(function (i) { return !i.id; })) return false;
+
+        var expected = payload.reduce(function (n, i) { return n + (i.quantity || 0); }, 0);
+
+        return fetch('/cart/clear.js', { method: 'POST', credentials: 'same-origin' })
+          .then(function () {
+            return fetch('/cart/add.js', {
+              method: 'POST', credentials: 'same-origin',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: payload })
+            });
+          })
+          .then(function () {
+            var upd = {};
+            if (cart.note) upd.note = cart.note;
+            if (cart.attributes && Object.keys(cart.attributes).length) upd.attributes = cart.attributes;
+            if (!Object.keys(upd).length) return;
+            return fetch('/cart/update.js', {
+              method: 'POST', credentials: 'same-origin',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(upd)
+            });
+          })
+          .then(function () { return fetch('/cart.js', { credentials: 'same-origin' }).then(function (r) { return r.json(); }); })
+          .then(function (after) {
+            // Safety: if the re-add lost lines, don't send the buyer to an empty checkout.
+            if ((after.item_count || 0) < expected) {
+              console.error('[B2B Reorder] count mismatch', after.item_count, 'expected', expected);
+              return false;
+            }
+            return true;
+          });
+      })
+      .catch(function (err) { console.error('[B2B Reorder] failed', err); return false; });
+  }
+
+  function showOverlay() {
+    if (document.getElementById('_b2bov')) return;
+    var ov = document.createElement('div');
+    ov.id = '_b2bov';
+    ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
+    ov.innerHTML =
+      '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">Applying your wholesale pricing\u2026</p>' +
+      '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
+      '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
+    document.body.appendChild(ov);
+  }
+
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
+
+    // Arrived from the guard on another page \u2192 reorder, then go to checkout.
     if (dest) {
       sessionStorage.removeItem(STORE_KEY);
       document.addEventListener('DOMContentLoaded', function () {
-        var ov = document.createElement('div');
-        ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
-        ov.innerHTML =
-          '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">Applying your wholesale pricing\u2026</p>' +
-          '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
-          '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
-        document.body.appendChild(ov);
-        setTimeout(function () { window.location.href = dest; }, 2500);
+        showOverlay();
+        reorderCartFIFO().then(function () { window.location.href = dest; });
       });
+      return;
     }
+
+    // Buyer clicks CHECKOUT directly on the cart page (the real PO path).
+    // Intercept in capture phase so we reorder BEFORE Orbit's handler reads the
+    // cart, then re-fire the click so Orbit/native proceeds with the FIFO cart.
+    var reordered = false;
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
+      if (!btn || reordered) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      showOverlay();
+      reorderCartFIFO().then(function () {
+        reordered = true;
+        btn.click();
+      });
+    }, true);
     return;
   }
 
