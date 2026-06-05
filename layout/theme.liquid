@@ -1300,20 +1300,60 @@ document.addEventListener('click', function (e) {
   // versions that persisted snapshots. We no longer use that mechanism.
   try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
 
+  // Sweep any orphan _rkey lines left behind by a previous interrupted
+  // reorder (e.g. tab closed, network died, racing concurrent clicks).
+  // Self-healing: every /cart load starts from a clean baseline.
+  function cleanupAllRkeyOrphans() {
+    return readCart().then(function (c) {
+      var keys = (c.items || [])
+        .filter(function (it) { return it.properties && it.properties._rkey; })
+        .map(function (it) { return it.key; });
+      if (!keys.length) return;
+      console.log('[B2B Reorder] sweeping', keys.length, 'orphan reorder line(s) from previous attempt');
+      return keys.reduce(function (p, k) {
+        return p.then(function () { return changeLineQty(k, 0).catch(function () {}); });
+      }, Promise.resolve());
+    }).catch(function () {});
+  }
+
+  // Mark the checkout button as busy so the buyer can see their click
+  // registered. Inline visual change only - no overlay, no popup.
+  function markButtonBusy(btn) {
+    if (!btn || btn.dataset._b2bBusy) return;
+    btn.dataset._b2bBusy = '1';
+    btn.dataset._b2bOrigText = btn.tagName === 'INPUT' ? btn.value : btn.textContent;
+    if (btn.tagName === 'INPUT') btn.value = 'Processing...';
+    else btn.textContent = 'Processing...';
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'wait';
+    // pointer-events:none stops any further visual hover state but the
+    // capture-phase guard (reordered=true) is the real protection against
+    // double-fire; this just makes intent visible.
+    btn.style.pointerEvents = 'none';
+  }
+
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
 
+    // Run orphan sweep first so the upcoming reorder starts from a
+    // baseline cart matching what the buyer sees, not whatever residue
+    // a previous interrupted attempt may have left in storage.
+    cleanupAllRkeyOrphans();
+
     // Click interceptor attached SYNCHRONOUSLY so the first click is never
-    // missed by an async race. Silent: no overlay, no alerts. Always proceeds
-    // to checkout via the original click flow regardless of reorder outcome.
+    // missed by an async race. reordered is set IMMEDIATELY (before the
+    // async reorder begins) so rapid double/triple clicks while the
+    // first reorder is in flight are ignored - prevents the duplicate
+    // cohorts that piled up in the prior test.
     var reordered = false;
     document.addEventListener('click', function (e) {
       var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
       if (!btn || reordered) return;
+      reordered = true;
       e.preventDefault();
       e.stopImmediatePropagation();
+      markButtonBusy(btn);
       reorderCartSafe().then(function () {
-        reordered = true;
         // Read the cart and refuse to navigate if it is somehow empty.
         // Shopify redirects an empty /checkout back to /cart - that loop is
         // what surfaced as "cart got emptied" in the prior live incident.
