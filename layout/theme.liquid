@@ -1147,14 +1147,30 @@ document.addEventListener('click', function (e) {
     });
   }
 
-  // --- Reorder payload (idempotent, sorts by _seq DESC so storage ends ASC) ---
-  // Shopify stores cart lines newest-first; checkout/order/Odoo all read
-  // that stored order. To make stored order = FIFO (PO entry order), we
-  // re-add lines in _seq DESC order so Shopify stores them in _seq ASC.
-  // Each line is stamped with a _seq property; if missing, we derive it
-  // from the current cart position (items[N-1] = oldest = _seq 1).
-  // Re-running on an already-reordered cart yields the same result.
-  function buildReorderPayload(items) {
+  // --- Per-line change (used to remove originals after duplicates land) ---
+  function changeLineQty(lineKey, qty) {
+    return fetch('/cart/change.js', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: lineKey, quantity: qty })
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { throw new Error('change failed ' + r.status + ': ' + t); });
+      return r.json();
+    });
+  }
+
+  // --- Reorder payload ---------------------------------------------------
+  // For each line, stamp two properties:
+  //   _seq  - 1-based PO position (oldest = 1). Survives into the order and
+  //           is a backup sort key for Order Printer / email / Odoo even if
+  //           the storage reorder fails.
+  //   _rkey - per-reorder unique marker so duplicate lines we add don't
+  //           merge with the originals in the cart and so we can identify
+  //           our own lines for cleanup. New rkey every reorder attempt.
+  // Sorted DESC by _seq so Shopify (which stores newest-first) ends up
+  // storing the items in _seq ASC = FIFO. Idempotent: re-running on an
+  // already-FIFO cart preserves the order.
+  function buildReorderPayload(items, rkey) {
     var n = items.length;
     var stamped = items.map(function (it, i) {
       var existing = it.properties && it.properties._seq;
@@ -1172,6 +1188,7 @@ document.addEventListener('click', function (e) {
         }
       }
       props._seq = String(x.seq);
+      props._rkey = rkey;
       var e = { id: it.variant_id, quantity: it.quantity, properties: props };
       if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
         e.selling_plan = it.selling_plan_allocation.selling_plan.id;
@@ -1179,65 +1196,103 @@ document.addEventListener('click', function (e) {
     });
   }
 
-  // --- Restore payload preserves the buyer's exact original cart ---------
-  function buildRestorePayload(items) {
-    return items.slice().reverse().map(function (it) {
-      var props = {};
-      if (it.properties) {
-        for (var k in it.properties) {
-          if (Object.prototype.hasOwnProperty.call(it.properties, k)) props[k] = it.properties[k];
-        }
-      }
-      var e = { id: it.variant_id, quantity: it.quantity };
-      if (Object.keys(props).length) e.properties = props;
-      if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
-        e.selling_plan = it.selling_plan_allocation.selling_plan.id;
-      return e;
-    });
+  // --- Cleanup: remove only the lines we added (identified by rkey) ------
+  function cleanupRkey(rkey) {
+    return readCart().then(function (c) {
+      var keys = (c.items || [])
+        .filter(function (it) { return it.properties && it.properties._rkey === rkey; })
+        .map(function (it) { return it.key; });
+      return keys.reduce(function (p, k) {
+        return p.then(function () {
+          return changeLineQty(k, 0).catch(function (e) { console.error('[B2B Reorder] cleanup remove failed for', k, e); });
+        });
+      }, Promise.resolve());
+    }).catch(function (e) { console.error('[B2B Reorder] cleanup readCart failed', e); });
   }
 
-  function attemptRestore(snapshot) {
-    var restorePayload = buildRestorePayload(snapshot.items || []);
-    return clearCart()
-      .then(function () { return restorePayload.length ? addItems(restorePayload) : null; })
-      .then(function () { return updateAttrs(snapshot.note, snapshot.attributes); })
-      .then(function () { return true; })
-      .catch(function (e) { console.error('[B2B Reorder] restore failed', e); return false; });
-  }
-
-  // --- Silent reorder ----------------------------------------------------
-  // Always resolves. On any failure it attempts a silent restore of the
-  // original cart and resolves anyway. Caller proceeds to checkout in every
-  // case: worst case (reorder failed, restore succeeded) the buyer reaches
-  // checkout in the same order they would have today - no regression.
+  // --- Non-destructive reorder ------------------------------------------
+  // The cart is NEVER cleared. Pattern:
+  //   1. Add duplicates with a unique _rkey marker (additive only).
+  //   2. Verify the duplicates landed; if not, clean up our additions.
+  //   3. Remove the original lines (everything without our _rkey).
+  //   4. Verify final state; if mixed, clean up our additions so cart
+  //      returns to (close to) original state.
+  // At every step the cart has at least the originals OR the new lines,
+  // never zero. If anything fails, the worst outcome is cart-unchanged
+  // (originals intact) - same behavior as today, no regression.
+  // Always resolves with the final cart object (or null on read failure).
   function reorderCartSafe() {
     return readCart().then(function (snapshot) {
-      if (!snapshot.items || snapshot.items.length <= 1) return;
-      var payload = buildReorderPayload(snapshot.items);
+      if (!snapshot.items || snapshot.items.length <= 1) return snapshot;
+
+      var rkey = 'r' + Date.now() + Math.random().toString(36).slice(2, 8);
+      var payload = buildReorderPayload(snapshot.items, rkey);
       if (payload.some(function (i) { return !i.id; })) {
         console.warn('[B2B Reorder] missing variant id, skipping reorder');
-        return;
+        return snapshot;
       }
-      var expectedQty = snapshot.items.reduce(function (n, i) { return n + (i.quantity || 0); }, 0);
-      var expectedLines = snapshot.items.length;
 
-      return clearCart()
-        .then(function () { return addItems(payload); })
-        .then(function () { return updateAttrs(snapshot.note, snapshot.attributes); })
+      // Phase 1: Add duplicates. Cart now has originals + new lines (2N).
+      return addItems(payload)
         .then(function () { return readCart(); })
-        .then(function (verify) {
-          var lines = (verify.items && verify.items.length) || 0;
-          var count = verify.item_count || 0;
-          if (lines !== expectedLines || count !== expectedQty) {
-            throw new Error('verification failed lines=' + lines + '/' + expectedLines + ' qty=' + count + '/' + expectedQty);
+        .then(function (mid) {
+          var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+          if (ours.length !== payload.length) {
+            // Add succeeded HTTP-wise but not all our lines are present
+            // (catalog scope rejected some, merge collision, etc). Bail.
+            throw new Error('add verification: ' + ours.length + '/' + payload.length + ' new lines landed');
           }
+          // Phase 2: Remove every line that is NOT one of ours. Sequential
+          // change.js calls so Shopify processes them cleanly.
+          var origKeys = (mid.items || [])
+            .filter(function (it) { return !(it.properties && it.properties._rkey === rkey); })
+            .map(function (it) { return it.key; });
+          return origKeys.reduce(function (p, k) {
+            return p.then(function () {
+              return changeLineQty(k, 0).catch(function (e) {
+                console.error('[B2B Reorder] remove original failed for line', k, e);
+              });
+            });
+          }, Promise.resolve()).then(function () { return readCart(); });
+        })
+        .then(function (final) {
+          var ours = (final.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+          if (final.items && final.items.length === payload.length && ours.length === payload.length) {
+            // Success: only our reordered lines remain.
+            return updateAttrs(snapshot.note, snapshot.attributes).then(function () { return final; });
+          }
+          // Mixed state (some originals didn't remove). Clean up our
+          // duplicates so cart returns to (mostly) original state, then
+          // the buyer can retry from a known cart.
+          console.warn('[B2B Reorder] mixed final state, cleaning up duplicates');
+          return cleanupRkey(rkey).then(function () { return readCart(); });
         })
         .catch(function (err) {
-          console.error('[B2B Reorder] reorder failed, restoring silently', err);
-          return attemptRestore(snapshot);
+          console.error('[B2B Reorder] failed during reorder, cleaning up duplicates', err);
+          return cleanupRkey(rkey).then(function () { return readCart(); });
         });
     }).catch(function (err) {
       console.error('[B2B Reorder] could not read cart', err);
+      return null;
+    });
+  }
+
+  // --- Navigation guard --------------------------------------------------
+  // The empty-cart-redirects-to-/cart loop is what made the previous live
+  // incident look like Shopify "cancelled" the checkout. Before navigating
+  // to /checkout, re-read the cart; if it has no items, do not navigate
+  // there (Shopify will bounce to /cart). Reload /cart so the buyer sees
+  // the actual state rather than a confusing redirect chain.
+  function safeNavigateAfterReorder(dest) {
+    return readCart().then(function (c) {
+      if (c && c.item_count > 0) {
+        window.location.href = dest;
+      } else {
+        console.error('[B2B Reorder] cart empty, refusing to navigate to checkout');
+        window.location.href = '/cart';
+      }
+    }).catch(function () {
+      window.location.href = '/cart';
     });
   }
 
@@ -1259,22 +1314,19 @@ document.addEventListener('click', function (e) {
       e.stopImmediatePropagation();
       reorderCartSafe().then(function () {
         reordered = true;
-        // Navigate directly. We can't re-fire the original click because
-        // the cart section may have re-rendered after the reorder's cart
-        // mutations, leaving the captured button detached from the DOM.
-        // The existing non-/cart guard already routes B2B traffic to native
-        // /checkout (line ~1116, bounceViaCart) so this matches the store's
-        // existing checkout flow.
-        window.location.href = '/checkout';
+        // Read the cart and refuse to navigate if it is somehow empty.
+        // Shopify redirects an empty /checkout back to /cart - that loop is
+        // what surfaced as "cart got emptied" in the prior live incident.
+        safeNavigateAfterReorder('/checkout');
       });
     }, true);
 
-    // If we arrived from the guard on another page, run the reorder silently
-    // then redirect to the original destination (no overlay).
+    // Arrived from the guard on another page: reorder then redirect, with
+    // the same cart-empty guard as the click path.
     if (dest) {
       sessionStorage.removeItem(STORE_KEY);
       reorderCartSafe().then(function () {
-        window.location.href = dest;
+        safeNavigateAfterReorder(dest);
       });
     }
     return;
