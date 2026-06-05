@@ -1081,7 +1081,14 @@ document.addEventListener('click', function (e) {
 {% comment %} END Login info block {% endcomment %}
 
 {% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
-{% if customer %}
+{%- comment -%}
+  Gated on customer.tags so only tagged B2B/wholesale customers run the
+  reorder + overlay flow. Retail customers (no tags, no wholesale pricing)
+  skip the entire guard and take the normal native checkout path.
+  Same condition Orbit itself uses to engage at orbit_wholesale_cart.liquid:2.
+  When migrating to native B2B catalogs, extend to: customer.tags != blank or customer.b2b?
+{%- endcomment -%}
+{% if customer.tags != blank %}
 <script>
 (function () {
   var STORE_KEY = '__b2b_checkout_dest';
@@ -1098,7 +1105,7 @@ document.addEventListener('click', function (e) {
     ov.id = '_b2bov';
     ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
     ov.innerHTML =
-      '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">' + (msg || 'Applying your wholesale pricing...') + '</p>' +
+      '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">' + (msg || 'Finalising your order...') + '</p>' +
       '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
       '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
     document.body.appendChild(ov);
@@ -1272,45 +1279,46 @@ document.addEventListener('click', function (e) {
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
 
-    document.addEventListener('DOMContentLoaded', function () {
-      recoverIfInterrupted().then(function (recovered) {
-        if (recovered) return;
-
-        if (dest) {
-          sessionStorage.removeItem(STORE_KEY);
-          showOverlay();
-          reorderCartSafe().then(function (res) {
-            if (res.ok) {
-              window.location.href = dest;
-            } else if (res.action === 'restored') {
-              hideOverlay();
-              alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
-            } else {
-              window.location.href = '/cart';
-            }
-          });
-          return;
+    // Click interceptor attached SYNCHRONOUSLY so the first click is never
+    // missed by an async race. Script lives at the end of <body> so document
+    // is parsed already; capture-phase delegation works for current and
+    // future-added checkout buttons.
+    var reordered = false;
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
+      if (!btn || reordered) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      showOverlay();
+      reorderCartSafe().then(function (res) {
+        if (res.ok) {
+          reordered = true;
+          btn.click();
+        } else if (res.action === 'restored') {
+          hideOverlay();
+          alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
+        } else {
+          window.location.href = '/cart';
         }
+      });
+    }, true);
 
-        var reordered = false;
-        document.addEventListener('click', function (e) {
-          var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
-          if (!btn || reordered) return;
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          showOverlay();
-          reorderCartSafe().then(function (res) {
-            if (res.ok) {
-              reordered = true;
-              btn.click();
-            } else if (res.action === 'restored') {
-              hideOverlay();
-              alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
-            } else {
-              window.location.href = '/cart';
-            }
-          });
-        }, true);
+    // Load-time async work: recover from an interrupted previous reorder,
+    // or (if we came from another page via the guard) reorder then redirect.
+    recoverIfInterrupted().then(function (recovered) {
+      if (recovered) return;
+      if (!dest) return;
+      sessionStorage.removeItem(STORE_KEY);
+      showOverlay();
+      reorderCartSafe().then(function (res) {
+        if (res.ok) {
+          window.location.href = dest;
+        } else if (res.action === 'restored') {
+          hideOverlay();
+          alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
+        } else {
+          window.location.href = '/cart';
+        }
       });
     });
     return;
