@@ -1088,21 +1088,231 @@ document.addEventListener('click', function (e) {
   var path = window.location.pathname;
 
   // On /cart: B2B Hub has loaded → show overlay → proceed to checkout
+  var SNAP_KEY = '__b2b_reorder_snapshot';
+  var SNAP_TTL_MS = 5 * 60 * 1000;
+
+  // --- Overlay -----------------------------------------------------------
+  function showOverlay(msg) {
+    if (document.getElementById('_b2bov')) return;
+    var ov = document.createElement('div');
+    ov.id = '_b2bov';
+    ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
+    ov.innerHTML =
+      '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">' + (msg || 'Applying your wholesale pricing...') + '</p>' +
+      '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
+      '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
+    document.body.appendChild(ov);
+  }
+  function hideOverlay() {
+    var ov = document.getElementById('_b2bov');
+    if (ov) ov.remove();
+  }
+
+  // --- Cart helpers ------------------------------------------------------
+  function readCart() {
+    return fetch('/cart.js', { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json(); });
+  }
+  function clearCart() {
+    return fetch('/cart/clear.js', { method: 'POST', credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) throw new Error('clear failed ' + r.status);
+      return r;
+    });
+  }
+  function addItems(items) {
+    return fetch('/cart/add.js', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { throw new Error('add failed ' + r.status + ': ' + t); });
+      return r.json();
+    });
+  }
+  function updateAttrs(note, attributes) {
+    var upd = {};
+    if (note) upd.note = note;
+    if (attributes && Object.keys(attributes).length) upd.attributes = attributes;
+    if (!Object.keys(upd).length) return Promise.resolve();
+    return fetch('/cart/update.js', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(upd)
+    });
+  }
+
+  // --- Reorder payload (idempotent, sorts by _seq DESC so storage ends ASC) ---
+  // Shopify stores cart lines newest-first; checkout/order/Odoo all read
+  // that stored order. To make stored order = FIFO (PO entry order), we
+  // re-add lines in _seq DESC order so Shopify stores them in _seq ASC.
+  // Each line is stamped with a _seq property; if missing, we derive it
+  // from the current cart position (items[N-1] = oldest = _seq 1).
+  // Re-running on an already-reordered cart yields the same result.
+  function buildReorderPayload(items) {
+    var n = items.length;
+    var stamped = items.map(function (it, i) {
+      var existing = it.properties && it.properties._seq;
+      var seqNum = parseInt(existing, 10);
+      if (!isFinite(seqNum) || seqNum <= 0) seqNum = n - i;
+      return { it: it, seq: seqNum };
+    });
+    stamped.sort(function (a, b) { return b.seq - a.seq; });
+    return stamped.map(function (x) {
+      var it = x.it;
+      var props = {};
+      if (it.properties) {
+        for (var k in it.properties) {
+          if (Object.prototype.hasOwnProperty.call(it.properties, k)) props[k] = it.properties[k];
+        }
+      }
+      props._seq = String(x.seq);
+      var e = { id: it.variant_id, quantity: it.quantity, properties: props };
+      if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
+        e.selling_plan = it.selling_plan_allocation.selling_plan.id;
+      return e;
+    });
+  }
+
+  // --- Restore payload preserves the buyer's exact original cart ---------
+  function buildRestorePayload(items) {
+    return items.slice().reverse().map(function (it) {
+      var props = {};
+      if (it.properties) {
+        for (var k in it.properties) {
+          if (Object.prototype.hasOwnProperty.call(it.properties, k)) props[k] = it.properties[k];
+        }
+      }
+      var e = { id: it.variant_id, quantity: it.quantity };
+      if (Object.keys(props).length) e.properties = props;
+      if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
+        e.selling_plan = it.selling_plan_allocation.selling_plan.id;
+      return e;
+    });
+  }
+
+  function attemptRestore(snapshot) {
+    var restorePayload = buildRestorePayload(snapshot.items || []);
+    return clearCart()
+      .then(function () { return restorePayload.length ? addItems(restorePayload) : null; })
+      .then(function () { return updateAttrs(snapshot.note, snapshot.attributes); })
+      .then(function () { return true; })
+      .catch(function (e) { console.error('[B2B Reorder] restore failed', e); return false; });
+  }
+
+  // --- The hardened reorder ----------------------------------------------
+  // Returns { ok, action } where action is one of:
+  //   'skipped'   - nothing to reorder, proceed normally
+  //   'reordered' - cart is now FIFO, proceed to checkout
+  //   'restored'  - failed but cart is intact, do NOT proceed (stay on /cart)
+  //   'broken'    - failed and restore failed too, reload /cart
+  function reorderCartSafe() {
+    return readCart().then(function (snapshot) {
+      if (!snapshot.items || snapshot.items.length <= 1) {
+        return { ok: true, action: 'skipped' };
+      }
+      var payload = buildReorderPayload(snapshot.items);
+      if (payload.some(function (i) { return !i.id; })) {
+        console.warn('[B2B Reorder] missing variant id, skipping reorder');
+        return { ok: true, action: 'skipped' };
+      }
+      var expectedQty = snapshot.items.reduce(function (n, i) { return n + (i.quantity || 0); }, 0);
+      var expectedLines = snapshot.items.length;
+
+      try {
+        sessionStorage.setItem(SNAP_KEY, JSON.stringify({ snapshot: snapshot, ts: Date.now() }));
+      } catch (e) { /* sessionStorage full or disabled - continue without resume */ }
+
+      return clearCart()
+        .then(function () { return addItems(payload); })
+        .then(function () { return updateAttrs(snapshot.note, snapshot.attributes); })
+        .then(function () { return readCart(); })
+        .then(function (verify) {
+          var lines = (verify.items && verify.items.length) || 0;
+          var count = verify.item_count || 0;
+          if (lines !== expectedLines || count !== expectedQty) {
+            throw new Error('verification failed lines=' + lines + '/' + expectedLines + ' qty=' + count + '/' + expectedQty);
+          }
+          try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
+          return { ok: true, action: 'reordered' };
+        })
+        .catch(function (err) {
+          console.error('[B2B Reorder] reorder failed, attempting restore', err);
+          return attemptRestore(snapshot).then(function (restored) {
+            try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
+            return { ok: false, action: restored ? 'restored' : 'broken' };
+          });
+        });
+    }).catch(function (err) {
+      console.error('[B2B Reorder] could not read cart', err);
+      return { ok: false, action: 'restored' };
+    });
+  }
+
+  // --- Refresh recovery: if interrupted, restore the cart on next /cart load ---
+  function recoverIfInterrupted() {
+    var raw;
+    try { raw = sessionStorage.getItem(SNAP_KEY); } catch (e) { return Promise.resolve(false); }
+    if (!raw) return Promise.resolve(false);
+    var parsed;
+    try { parsed = JSON.parse(raw); } catch (e) {
+      try { sessionStorage.removeItem(SNAP_KEY); } catch (_) {}
+      return Promise.resolve(false);
+    }
+    if (!parsed || !parsed.snapshot || (Date.now() - (parsed.ts || 0)) > SNAP_TTL_MS) {
+      try { sessionStorage.removeItem(SNAP_KEY); } catch (_) {}
+      return Promise.resolve(false);
+    }
+    showOverlay('Restoring your cart...');
+    return attemptRestore(parsed.snapshot).then(function () {
+      try { sessionStorage.removeItem(SNAP_KEY); } catch (_) {}
+      window.location.href = '/cart';
+      return true;
+    });
+  }
+
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
-    if (dest) {
-      sessionStorage.removeItem(STORE_KEY);
-      document.addEventListener('DOMContentLoaded', function () {
-        var ov = document.createElement('div');
-        ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
-        ov.innerHTML =
-          '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">Applying your wholesale pricing\u2026</p>' +
-          '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
-          '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
-        document.body.appendChild(ov);
-        setTimeout(function () { window.location.href = dest; }, 2500);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      recoverIfInterrupted().then(function (recovered) {
+        if (recovered) return;
+
+        if (dest) {
+          sessionStorage.removeItem(STORE_KEY);
+          showOverlay();
+          reorderCartSafe().then(function (res) {
+            if (res.ok) {
+              window.location.href = dest;
+            } else if (res.action === 'restored') {
+              hideOverlay();
+              alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
+            } else {
+              window.location.href = '/cart';
+            }
+          });
+          return;
+        }
+
+        var reordered = false;
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
+          if (!btn || reordered) return;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          showOverlay();
+          reorderCartSafe().then(function (res) {
+            if (res.ok) {
+              reordered = true;
+              btn.click();
+            } else if (res.action === 'restored') {
+              hideOverlay();
+              alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
+            } else {
+              window.location.href = '/cart';
+            }
+          });
+        }, true);
       });
-    }
+    });
     return;
   }
 
