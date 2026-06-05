@@ -1205,28 +1205,21 @@ document.addEventListener('click', function (e) {
       .catch(function (e) { console.error('[B2B Reorder] restore failed', e); return false; });
   }
 
-  // --- The hardened reorder ----------------------------------------------
-  // Returns { ok, action } where action is one of:
-  //   'skipped'   - nothing to reorder, proceed normally
-  //   'reordered' - cart is now FIFO, proceed to checkout
-  //   'restored'  - failed but cart is intact, do NOT proceed (stay on /cart)
-  //   'broken'    - failed and restore failed too, reload /cart
+  // --- Silent reorder ----------------------------------------------------
+  // Always resolves. On any failure it attempts a silent restore of the
+  // original cart and resolves anyway. Caller proceeds to checkout in every
+  // case: worst case (reorder failed, restore succeeded) the buyer reaches
+  // checkout in the same order they would have today - no regression.
   function reorderCartSafe() {
     return readCart().then(function (snapshot) {
-      if (!snapshot.items || snapshot.items.length <= 1) {
-        return { ok: true, action: 'skipped' };
-      }
+      if (!snapshot.items || snapshot.items.length <= 1) return;
       var payload = buildReorderPayload(snapshot.items);
       if (payload.some(function (i) { return !i.id; })) {
         console.warn('[B2B Reorder] missing variant id, skipping reorder');
-        return { ok: true, action: 'skipped' };
+        return;
       }
       var expectedQty = snapshot.items.reduce(function (n, i) { return n + (i.quantity || 0); }, 0);
       var expectedLines = snapshot.items.length;
-
-      try {
-        sessionStorage.setItem(SNAP_KEY, JSON.stringify({ snapshot: snapshot, ts: Date.now() }));
-      } catch (e) { /* sessionStorage full or disabled - continue without resume */ }
 
       return clearCart()
         .then(function () { return addItems(payload); })
@@ -1238,89 +1231,46 @@ document.addEventListener('click', function (e) {
           if (lines !== expectedLines || count !== expectedQty) {
             throw new Error('verification failed lines=' + lines + '/' + expectedLines + ' qty=' + count + '/' + expectedQty);
           }
-          try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
-          return { ok: true, action: 'reordered' };
         })
         .catch(function (err) {
-          console.error('[B2B Reorder] reorder failed, attempting restore', err);
-          return attemptRestore(snapshot).then(function (restored) {
-            try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
-            return { ok: false, action: restored ? 'restored' : 'broken' };
-          });
+          console.error('[B2B Reorder] reorder failed, restoring silently', err);
+          return attemptRestore(snapshot);
         });
     }).catch(function (err) {
       console.error('[B2B Reorder] could not read cart', err);
-      return { ok: false, action: 'restored' };
     });
   }
 
-  // --- Refresh recovery: if interrupted, restore the cart on next /cart load ---
-  function recoverIfInterrupted() {
-    var raw;
-    try { raw = sessionStorage.getItem(SNAP_KEY); } catch (e) { return Promise.resolve(false); }
-    if (!raw) return Promise.resolve(false);
-    var parsed;
-    try { parsed = JSON.parse(raw); } catch (e) {
-      try { sessionStorage.removeItem(SNAP_KEY); } catch (_) {}
-      return Promise.resolve(false);
-    }
-    if (!parsed || !parsed.snapshot || (Date.now() - (parsed.ts || 0)) > SNAP_TTL_MS) {
-      try { sessionStorage.removeItem(SNAP_KEY); } catch (_) {}
-      return Promise.resolve(false);
-    }
-    showOverlay('Restoring your cart...');
-    return attemptRestore(parsed.snapshot).then(function () {
-      try { sessionStorage.removeItem(SNAP_KEY); } catch (_) {}
-      window.location.href = '/cart';
-      return true;
-    });
-  }
+  // Defensive cleanup of any sessionStorage left over from earlier code
+  // versions that persisted snapshots. We no longer use that mechanism.
+  try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
 
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
 
     // Click interceptor attached SYNCHRONOUSLY so the first click is never
-    // missed by an async race. Script lives at the end of <body> so document
-    // is parsed already; capture-phase delegation works for current and
-    // future-added checkout buttons.
+    // missed by an async race. Silent: no overlay, no alerts. Always proceeds
+    // to checkout via the original click flow regardless of reorder outcome.
     var reordered = false;
     document.addEventListener('click', function (e) {
       var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
       if (!btn || reordered) return;
       e.preventDefault();
       e.stopImmediatePropagation();
-      showOverlay();
-      reorderCartSafe().then(function (res) {
-        if (res.ok) {
-          reordered = true;
-          btn.click();
-        } else if (res.action === 'restored') {
-          hideOverlay();
-          alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
-        } else {
-          window.location.href = '/cart';
-        }
+      reorderCartSafe().then(function () {
+        reordered = true;
+        btn.click();
       });
     }, true);
 
-    // Load-time async work: recover from an interrupted previous reorder,
-    // or (if we came from another page via the guard) reorder then redirect.
-    recoverIfInterrupted().then(function (recovered) {
-      if (recovered) return;
-      if (!dest) return;
+    // If we arrived from the guard on another page, run the reorder silently
+    // then redirect to the original destination (no overlay).
+    if (dest) {
       sessionStorage.removeItem(STORE_KEY);
-      showOverlay();
-      reorderCartSafe().then(function (res) {
-        if (res.ok) {
-          window.location.href = dest;
-        } else if (res.action === 'restored') {
-          hideOverlay();
-          alert('We could not finalise your order layout. Your cart is unchanged - please click Checkout again.');
-        } else {
-          window.location.href = '/cart';
-        }
+      reorderCartSafe().then(function () {
+        window.location.href = dest;
       });
-    });
+    }
     return;
   }
 
