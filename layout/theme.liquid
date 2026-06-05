@@ -1259,7 +1259,13 @@ document.addEventListener('click', function (e) {
       e.stopImmediatePropagation();
       reorderCartSafe().then(function () {
         reordered = true;
-        btn.click();
+        // Navigate directly. We can't re-fire the original click because
+        // the cart section may have re-rendered after the reorder's cart
+        // mutations, leaving the captured button detached from the DOM.
+        // The existing non-/cart guard already routes B2B traffic to native
+        // /checkout (line ~1116, bounceViaCart) so this matches the store's
+        // existing checkout flow.
+        window.location.href = '/checkout';
       });
     }, true);
 
