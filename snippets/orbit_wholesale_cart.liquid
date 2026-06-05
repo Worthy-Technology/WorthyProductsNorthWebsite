@@ -572,8 +572,7 @@
   window.saw_cart = {{cart | json}};
   window.saw_cart.items = [];
 
-  {% comment %} reversed → match cart page FIFO order so Orbit draft order / checkout / invoice follow the same sequence as the cart {% endcomment %}
-  {% for item in cart.items reversed %}
+  {% for item in cart.items %}
     var itemjs = {{item | json}} //includes properties
     itemjs.variant_title = "{{ item.variant.title | strip_newlines | escape }}";
     itemjs.compare_at_price =
