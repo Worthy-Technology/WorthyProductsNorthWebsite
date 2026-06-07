@@ -1280,18 +1280,22 @@ document.addEventListener('click', function (e) {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Start reorder immediately on page load — runs while the buyer reviews
-    // the cart so it is settled by the time they click checkout (no lag).
-    var reorderPromise = reorderCartSafe().catch(function () { return null; });
-
+    // Arrived from another page via bounceViaCart: reorder then navigate.
+    // Running here (not on click) is fine because the customer is not
+    // actively browsing the cart — they are mid-checkout-flow.
     if (dest) {
-      // Arrived from another page via bounceViaCart — navigate after reorder.
-      reorderPromise.then(function () { window.location.href = dest; });
+      reorderCartSafe().then(function () { window.location.href = dest; });
       return;
     }
 
-    // Lock on first checkout click, then await the already-running promise.
-    // Typical case: promise already settled → navigation is instant.
+    // Run the reorder only when the customer clicks Checkout — never on
+    // page load. This prevents our addItems/updateCart calls from changing
+    // the cart item count while the buyer is reviewing, which would trigger
+    // B2B Hub's reloadCartOnQtyChange and cause an unwanted full-page reload.
+    //
+    // alreadyOrdered fast path inside reorderCartSafe means repeat clicks
+    // (cart unchanged since last reorder) resolve in ~150 ms (one readCart),
+    // so the wait is imperceptible in that case.
     var locked = false;
     document.addEventListener('click', function (e) {
       var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
@@ -1299,7 +1303,7 @@ document.addEventListener('click', function (e) {
       locked = true;
       e.preventDefault();
       e.stopImmediatePropagation();
-      reorderPromise.then(function () { window.location.href = '/checkout'; });
+      reorderCartSafe().then(function () { window.location.href = '/checkout'; });
     }, true);
 
     return;
