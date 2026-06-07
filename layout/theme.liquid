@@ -1280,7 +1280,18 @@ document.addEventListener('click', function (e) {
     // them to see the cart visually rearranging and think their click had failed).
     var BUSY_CLASS = '_b2b-co-busy';
     var styleEl = document.createElement('style');
-    styleEl.textContent = '._b2b-co-busy [name="checkout"], ._b2b-co-busy a[href$="/checkout"] { pointer-events: none !important; opacity: 0.6 !important; cursor: wait !important; }';
+    // While the reorder is running:
+    //   1. Checkout button is disabled/greyed (prevents clicking mid-reorder).
+    //   2. Cart items area is hidden so the customer never sees the shuffle
+    //      (addItems → 2N items, batch-remove → N FEFO items all happen invisibly).
+    //   3. transition on the items element so it fades in smoothly when done.
+    // The body class survives Orbit's AJAX section re-renders; CSS auto-applies
+    // to newly injected elements that match the selectors.
+    styleEl.textContent = [
+      '._b2b-co-busy [name="checkout"], ._b2b-co-busy a[href$="/checkout"] { pointer-events:none !important; opacity:0.6 !important; cursor:wait !important; }',
+      '#main-cart-items, cart-items, .js-cart-items { transition: opacity 0.35s ease; }',
+      '._b2b-co-busy #main-cart-items, ._b2b-co-busy cart-items, ._b2b-co-busy .js-cart-items { opacity: 0 !important; }'
+    ].join(' ');
     document.head.appendChild(styleEl);
     document.body.classList.add(BUSY_CLASS);
 
@@ -1288,7 +1299,7 @@ document.addEventListener('click', function (e) {
     // reviews the cart. alreadyOrdered fast path means repeat visits
     // (unchanged cart) cost only one readCart (~150 ms) with zero mutations.
     var reorderPromise = reorderCartSafe().catch(function () { return null; }).then(function (v) {
-      document.body.classList.remove(BUSY_CLASS); // re-enable checkout button
+      document.body.classList.remove(BUSY_CLASS); // cart fades in, checkout re-enabled
       return v;
     });
 
