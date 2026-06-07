@@ -1089,7 +1089,8 @@ document.addEventListener('click', function (e) {
 {% if customer.tags != blank %}
 <script>
 (function () {
-  var STORE_KEY = '__b2b_checkout_dest';
+  var STORE_KEY  = '__b2b_checkout_dest';
+  var DONE_ATTR  = '_b2b_done_rkey';   // cart attribute set after every successful reorder
   var path = window.location.pathname;
 
   // --- Cart helpers -------------------------------------------------------
@@ -1128,20 +1129,29 @@ document.addEventListener('click', function (e) {
   }
 
   // --- Build FIFO-ordered payload ----------------------------------------
-  // Stamps each line with _seq (1 = oldest/first PO line) and a unique
-  // _rkey that marks this reorder attempt. Both are hidden properties
-  // (underscore prefix) so they are invisible to the customer.
-  // Sorted DESC so Shopify's newest-first storage lands items in _seq ASC
-  // (FIFO = PO entry order) in the final cart and downstream invoice/Odoo.
+  // Assigns clean 1..n _seq values (no gaps) preserving:
+  //   - relative order of existing _seq stamps (PO entry order)
+  //   - new items (no _seq) placed after existing ones, newest last
+  // Sorted DESC for addItems so Shopify's newest-first storage places
+  // them in _seq ASC order (seq=1 at index 0 = FIFO in invoice/Odoo).
   function buildReorderPayload(items, rkey) {
-    var n = items.length;
     var stamped = items.map(function (it, i) {
-      var existing = it.properties && it.properties._seq;
-      var seqNum = parseInt(existing, 10);
-      if (!isFinite(seqNum) || seqNum <= 0) seqNum = n - i;
-      return { it: it, seq: seqNum };
+      var s = parseInt(it.properties && it.properties._seq, 10);
+      // Items without a valid _seq are new additions — assign a large rank
+      // so they sort after all existing PO lines. Subtract i so that
+      // among new items, the one added earliest (higher Shopify index) ranks
+      // lower (comes first in PO order among the new additions).
+      var rank = (isFinite(s) && s > 0) ? s : 1e9 - i;
+      return { it: it, rank: rank };
     });
+
+    // Sort ASC = FIFO order; assign clean 1..n seq values (no gaps/collisions).
+    stamped.sort(function (a, b) { return a.rank - b.rank; });
+    stamped.forEach(function (x, i) { x.seq = i + 1; });
+
+    // Sort DESC for addItems (Shopify inverts; last-added = index 0 = seq 1).
     stamped.sort(function (a, b) { return b.seq - a.seq; });
+
     return stamped.map(function (x) {
       var it = x.it;
       var props = {};
@@ -1150,7 +1160,7 @@ document.addEventListener('click', function (e) {
           if (Object.prototype.hasOwnProperty.call(it.properties, k)) props[k] = it.properties[k];
         }
       }
-      props._seq = String(x.seq);
+      props._seq  = String(x.seq);
       props._rkey = rkey;
       var e = { id: it.variant_id, quantity: it.quantity, properties: props };
       if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
@@ -1170,60 +1180,99 @@ document.addEventListener('click', function (e) {
     }).catch(function () {});
   }
 
-  // --- Sweep orphan _rkey lines from previous interrupted reorders -------
-  function cleanupOrphans() {
-    return readCart().then(function (c) {
-      var orphans = (c.items || []).filter(function (it) { return it.properties && it.properties._rkey; });
-      if (!orphans.length) return;
-      return orphans.reduce(function (p, it) {
-        return p.then(function () { return changeLineQty(it.key, 0).catch(function () {}); });
-      }, Promise.resolve());
-    }).catch(function () {});
+  // --- Orphan sweep -------------------------------------------------------
+  // Only removes lines whose _rkey differs from the last COMPLETED reorder
+  // key stored in the cart attribute DONE_ATTR. This is stored server-side
+  // on the cart, so it is visible across tabs and browser restarts.
+  //
+  // Why this matters: after a successful reorder every cart line carries
+  // _rkey. A naive "remove all _rkey lines" sweep (the previous approach)
+  // would wipe the entire cart on the customer's next /cart visit.
+  function cleanupOrphans(cart) {
+    var doneRkey = cart.attributes && cart.attributes[DONE_ATTR];
+    var orphans = (cart.items || []).filter(function (it) {
+      var rk = it.properties && it.properties._rkey;
+      return rk && rk !== doneRkey;
+    });
+    if (!orphans.length) return Promise.resolve(false);
+    console.log('[B2B] sweeping', orphans.length, 'orphan line(s)');
+    return orphans.reduce(function (p, it) {
+      return p.then(function () { return changeLineQty(it.key, 0).catch(function () {}); });
+    }, Promise.resolve()).then(function () { return true; });
   }
 
   // --- Core reorder -------------------------------------------------------
-  // Non-destructive: adds FIFO-ordered duplicates first, verifies they
-  // landed, then removes the originals in a single batch update call
-  // (O(1) API calls regardless of cart size — no lag at checkout click).
-  // Always resolves; on any error, cleans up our additions so the cart
-  // returns to its original state.
+  // Non-destructive, O(1) API calls regardless of cart size.
+  // On success stamps DONE_ATTR so future orphan sweeps leave these lines alone.
+  // Always resolves — any error cleans up our additions, leaving the cart unchanged.
   function reorderCartSafe() {
     return readCart().then(function (snapshot) {
-      if (!snapshot.items || snapshot.items.length <= 1) return snapshot;
+      var items = snapshot.items || [];
+      if (items.length <= 1) return snapshot;
 
-      var rkey = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-      var payload = buildReorderPayload(snapshot.items, rkey);
-      if (payload.some(function (i) { return !i.id; })) return snapshot;
+      // Fast path: cart already has clean consecutive _seq stamps in position
+      // order (invariant after a successful reorder). Skip all mutations.
+      var alreadyOrdered = items.every(function (it, i) {
+        return parseInt(it.properties && it.properties._seq, 10) === i + 1;
+      });
+      if (alreadyOrdered) return snapshot;
 
-      return addItems(payload)
-        .then(function () { return readCart(); })
-        .then(function (mid) {
-          var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
-          if (ours.length !== payload.length) {
-            throw new Error('add verify: ' + ours.length + '/' + payload.length);
-          }
-          // Batch-remove all original lines in a single request.
-          // updates array index = cart line position; 0 removes that line.
-          var updates = (mid.items || []).map(function (it) {
-            return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
+      // Orphan sweep runs inline (uses snapshot we already have, no extra readCart).
+      return cleanupOrphans(snapshot).then(function (sweptAny) {
+        return sweptAny ? readCart() : Promise.resolve(snapshot);
+      }).then(function (clean) {
+        var cleanItems = clean.items || [];
+        if (cleanItems.length <= 1) return clean;
+
+        var rkey = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        var payload = buildReorderPayload(cleanItems, rkey);
+        if (payload.some(function (p) { return !p.id; })) return clean;
+
+        var expectedMidCount = cleanItems.length + payload.length;
+
+        return addItems(payload)
+          .then(function () { return readCart(); })
+          .then(function (mid) {
+            // Sanity: concurrent modification check.
+            // Mid should have exactly 2× the original item count.
+            if ((mid.items || []).length !== expectedMidCount) {
+              throw new Error('mid count ' + (mid.items || []).length + ' ≠ ' + expectedMidCount + ' (concurrent cart modification?)');
+            }
+            var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+            if (ours.length !== payload.length) {
+              throw new Error('add verify: ' + ours.length + '/' + payload.length);
+            }
+            // Batch-remove all original lines in a single request.
+            // updates array index = cart line position; 0 removes that line.
+            var updates = (mid.items || []).map(function (it) {
+              return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
+            });
+            return updateCart({ updates: updates });
+          })
+          .then(function (final) {
+            var finalItems = final.items || [];
+            var ours = finalItems.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+            if (finalItems.length === payload.length && ours.length === payload.length) {
+              // Stamp DONE_ATTR so future orphan sweeps leave these lines alone.
+              var attrs = {};
+              if (clean.attributes) {
+                for (var k in clean.attributes) {
+                  if (Object.prototype.hasOwnProperty.call(clean.attributes, k)) attrs[k] = clean.attributes[k];
+                }
+              }
+              attrs[DONE_ATTR] = rkey;
+              var upd = { attributes: attrs };
+              if (clean.note) upd.note = clean.note;
+              return updateCart(upd).then(function () { return final; });
+            }
+            console.warn('[B2B] mixed final state after batch remove, cleaning up');
+            return cleanupRkey(rkey).then(function () { return null; });
+          })
+          .catch(function (err) {
+            console.error('[B2B] reorder error, restoring cart:', err.message || err);
+            return cleanupRkey(rkey).then(function () { return null; });
           });
-          return updateCart({ updates: updates });
-        })
-        .then(function (final) {
-          var items = final.items || [];
-          var ours = items.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
-          if (items.length === payload.length && ours.length === payload.length) {
-            var upd = {};
-            if (snapshot.note) upd.note = snapshot.note;
-            if (snapshot.attributes && Object.keys(snapshot.attributes).length) upd.attributes = snapshot.attributes;
-            return Object.keys(upd).length ? updateCart(upd).then(function () { return final; }) : final;
-          }
-          return cleanupRkey(rkey).then(function () { return readCart(); });
-        })
-        .catch(function (err) {
-          console.error('[B2B] reorder error, restoring cart:', err);
-          return cleanupRkey(rkey).then(function () { return readCart(); });
-        });
+      });
     }).catch(function () { return null; });
   }
 
@@ -1231,12 +1280,9 @@ document.addEventListener('click', function (e) {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Start reorder immediately on page load — runs in the background
-    // while the buyer reviews the cart, so it is done (or nearly done)
-    // by the time they click checkout. No lag at the moment of clicking.
-    var reorderPromise = cleanupOrphans().then(function () {
-      return reorderCartSafe();
-    }).catch(function () { return null; });
+    // Start reorder immediately on page load — runs while the buyer reviews
+    // the cart so it is settled by the time they click checkout (no lag).
+    var reorderPromise = reorderCartSafe().catch(function () { return null; });
 
     if (dest) {
       // Arrived from another page via bounceViaCart — navigate after reorder.
@@ -1245,7 +1291,7 @@ document.addEventListener('click', function (e) {
     }
 
     // Lock on first checkout click, then await the already-running promise.
-    // In the typical case it settled during page review — navigation is instant.
+    // Typical case: promise already settled → navigation is instant.
     var locked = false;
     document.addEventListener('click', function (e) {
       var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
