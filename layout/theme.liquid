@@ -1273,12 +1273,24 @@ document.addEventListener('click', function (e) {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Pre-run the reorder on page load so it completes while the buyer
-    // reviews the cart. By the time they click Checkout the promise is
-    // already settled → navigation is instant.
-    // alreadyOrdered fast path means repeat visits (unchanged cart) cost
-    // only one readCart (~150 ms) with no mutations at all.
-    var reorderPromise = reorderCartSafe().catch(function () { return null; });
+    // Disable the checkout button while the background reorder is running.
+    // Applied via a body CSS class so it survives Orbit's section re-renders
+    // (the class stays on body; CSS automatically applies to re-rendered elements).
+    // This prevents the customer from clicking checkout mid-reorder (which caused
+    // them to see the cart visually rearranging and think their click had failed).
+    var BUSY_CLASS = '_b2b-co-busy';
+    var styleEl = document.createElement('style');
+    styleEl.textContent = '._b2b-co-busy [name="checkout"], ._b2b-co-busy a[href$="/checkout"] { pointer-events: none !important; opacity: 0.6 !important; cursor: wait !important; }';
+    document.head.appendChild(styleEl);
+    document.body.classList.add(BUSY_CLASS);
+
+    // Pre-run the reorder in the background so it completes while the buyer
+    // reviews the cart. alreadyOrdered fast path means repeat visits
+    // (unchanged cart) cost only one readCart (~150 ms) with zero mutations.
+    var reorderPromise = reorderCartSafe().catch(function () { return null; }).then(function (v) {
+      document.body.classList.remove(BUSY_CLASS); // re-enable checkout button
+      return v;
+    });
 
     if (dest) {
       reorderPromise.then(function () { window.location.href = dest; });
@@ -1292,6 +1304,7 @@ document.addEventListener('click', function (e) {
       locked = true;
       e.preventDefault();
       e.stopImmediatePropagation();
+      // Promise is already settled here (button was disabled until it resolved).
       reorderPromise.then(function () { window.location.href = '/checkout'; });
     }, true);
 
