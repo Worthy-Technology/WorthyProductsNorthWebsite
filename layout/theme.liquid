@@ -1083,10 +1083,8 @@ document.addEventListener('click', function (e) {
 {% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
 {%- comment -%}
   Gated on customer.tags so only tagged B2B/wholesale customers run the
-  reorder + overlay flow. Retail customers (no tags, no wholesale pricing)
-  skip the entire guard and take the normal native checkout path.
-  Same condition Orbit itself uses to engage at orbit_wholesale_cart.liquid:2.
-  When migrating to native B2B catalogs, extend to: customer.tags != blank or customer.b2b?
+  reorder flow. Retail customers skip and take the native checkout path.
+  When migrating to native B2B catalogs extend to: customer.tags != blank or customer.b2b?
 {%- endcomment -%}
 {% if customer.tags != blank %}
 <script>
@@ -1094,36 +1092,9 @@ document.addEventListener('click', function (e) {
   var STORE_KEY = '__b2b_checkout_dest';
   var path = window.location.pathname;
 
-  // On /cart: B2B Hub has loaded → show overlay → proceed to checkout
-  var SNAP_KEY = '__b2b_reorder_snapshot';
-  var SNAP_TTL_MS = 5 * 60 * 1000;
-
-  // --- Overlay -----------------------------------------------------------
-  function showOverlay(msg) {
-    if (document.getElementById('_b2bov')) return;
-    var ov = document.createElement('div');
-    ov.id = '_b2bov';
-    ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:inherit;';
-    ov.innerHTML =
-      '<p style="margin:0;font-size:1.05em;font-weight:600;letter-spacing:.02em">' + (msg || 'Finalising your order...') + '</p>' +
-      '<div style="width:34px;height:34px;border:3px solid #e0e0e0;border-top-color:#222;border-radius:50%;animation:_b2bspin .7s linear infinite"></div>' +
-      '<style>@keyframes _b2bspin{to{transform:rotate(360deg)}}</style>';
-    document.body.appendChild(ov);
-  }
-  function hideOverlay() {
-    var ov = document.getElementById('_b2bov');
-    if (ov) ov.remove();
-  }
-
-  // --- Cart helpers ------------------------------------------------------
+  // --- Cart helpers -------------------------------------------------------
   function readCart() {
     return fetch('/cart.js', { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json(); });
-  }
-  function clearCart() {
-    return fetch('/cart/clear.js', { method: 'POST', credentials: 'same-origin' }).then(function (r) {
-      if (!r.ok) throw new Error('clear failed ' + r.status);
-      return r;
-    });
   }
   function addItems(items) {
     return fetch('/cart/add.js', {
@@ -1135,19 +1106,16 @@ document.addEventListener('click', function (e) {
       return r.json();
     });
   }
-  function updateAttrs(note, attributes) {
-    var upd = {};
-    if (note) upd.note = note;
-    if (attributes && Object.keys(attributes).length) upd.attributes = attributes;
-    if (!Object.keys(upd).length) return Promise.resolve();
+  function updateCart(body) {
     return fetch('/cart/update.js', {
       method: 'POST', credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(upd)
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { throw new Error('update failed ' + r.status + ': ' + t); });
+      return r.json();
     });
   }
-
-  // --- Per-line change (used to remove originals after duplicates land) ---
   function changeLineQty(lineKey, qty) {
     return fetch('/cart/change.js', {
       method: 'POST', credentials: 'same-origin',
@@ -1159,17 +1127,12 @@ document.addEventListener('click', function (e) {
     });
   }
 
-  // --- Reorder payload ---------------------------------------------------
-  // For each line, stamp two properties:
-  //   _seq  - 1-based PO position (oldest = 1). Survives into the order and
-  //           is a backup sort key for Order Printer / email / Odoo even if
-  //           the storage reorder fails.
-  //   _rkey - per-reorder unique marker so duplicate lines we add don't
-  //           merge with the originals in the cart and so we can identify
-  //           our own lines for cleanup. New rkey every reorder attempt.
-  // Sorted DESC by _seq so Shopify (which stores newest-first) ends up
-  // storing the items in _seq ASC = FIFO. Idempotent: re-running on an
-  // already-FIFO cart preserves the order.
+  // --- Build FIFO-ordered payload ----------------------------------------
+  // Stamps each line with _seq (1 = oldest/first PO line) and a unique
+  // _rkey that marks this reorder attempt. Both are hidden properties
+  // (underscore prefix) so they are invisible to the customer.
+  // Sorted DESC so Shopify's newest-first storage lands items in _seq ASC
+  // (FIFO = PO entry order) in the final cart and downstream invoice/Odoo.
   function buildReorderPayload(items, rkey) {
     var n = items.length;
     var stamped = items.map(function (it, i) {
@@ -1196,193 +1159,115 @@ document.addEventListener('click', function (e) {
     });
   }
 
-  // --- Cleanup: remove only the lines we added (identified by rkey) ------
+  // --- Remove only our _rkey lines (error recovery) ----------------------
   function cleanupRkey(rkey) {
     return readCart().then(function (c) {
-      var keys = (c.items || [])
+      return (c.items || [])
         .filter(function (it) { return it.properties && it.properties._rkey === rkey; })
-        .map(function (it) { return it.key; });
-      return keys.reduce(function (p, k) {
-        return p.then(function () {
-          return changeLineQty(k, 0).catch(function (e) { console.error('[B2B Reorder] cleanup remove failed for', k, e); });
-        });
-      }, Promise.resolve());
-    }).catch(function (e) { console.error('[B2B Reorder] cleanup readCart failed', e); });
+        .reduce(function (p, it) {
+          return p.then(function () { return changeLineQty(it.key, 0).catch(function () {}); });
+        }, Promise.resolve());
+    }).catch(function () {});
   }
 
-  // --- Non-destructive reorder ------------------------------------------
-  // The cart is NEVER cleared. Pattern:
-  //   1. Add duplicates with a unique _rkey marker (additive only).
-  //   2. Verify the duplicates landed; if not, clean up our additions.
-  //   3. Remove the original lines (everything without our _rkey).
-  //   4. Verify final state; if mixed, clean up our additions so cart
-  //      returns to (close to) original state.
-  // At every step the cart has at least the originals OR the new lines,
-  // never zero. If anything fails, the worst outcome is cart-unchanged
-  // (originals intact) - same behavior as today, no regression.
-  // Always resolves with the final cart object (or null on read failure).
+  // --- Sweep orphan _rkey lines from previous interrupted reorders -------
+  function cleanupOrphans() {
+    return readCart().then(function (c) {
+      var orphans = (c.items || []).filter(function (it) { return it.properties && it.properties._rkey; });
+      if (!orphans.length) return;
+      return orphans.reduce(function (p, it) {
+        return p.then(function () { return changeLineQty(it.key, 0).catch(function () {}); });
+      }, Promise.resolve());
+    }).catch(function () {});
+  }
+
+  // --- Core reorder -------------------------------------------------------
+  // Non-destructive: adds FIFO-ordered duplicates first, verifies they
+  // landed, then removes the originals in a single batch update call
+  // (O(1) API calls regardless of cart size — no lag at checkout click).
+  // Always resolves; on any error, cleans up our additions so the cart
+  // returns to its original state.
   function reorderCartSafe() {
     return readCart().then(function (snapshot) {
       if (!snapshot.items || snapshot.items.length <= 1) return snapshot;
 
-      var rkey = 'r' + Date.now() + Math.random().toString(36).slice(2, 8);
+      var rkey = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       var payload = buildReorderPayload(snapshot.items, rkey);
-      if (payload.some(function (i) { return !i.id; })) {
-        console.warn('[B2B Reorder] missing variant id, skipping reorder');
-        return snapshot;
-      }
+      if (payload.some(function (i) { return !i.id; })) return snapshot;
 
-      // Phase 1: Add duplicates. Cart now has originals + new lines (2N).
       return addItems(payload)
         .then(function () { return readCart(); })
         .then(function (mid) {
           var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
           if (ours.length !== payload.length) {
-            // Add succeeded HTTP-wise but not all our lines are present
-            // (catalog scope rejected some, merge collision, etc). Bail.
-            throw new Error('add verification: ' + ours.length + '/' + payload.length + ' new lines landed');
+            throw new Error('add verify: ' + ours.length + '/' + payload.length);
           }
-          // Phase 2: Remove every line that is NOT one of ours. Sequential
-          // change.js calls so Shopify processes them cleanly.
-          var origKeys = (mid.items || [])
-            .filter(function (it) { return !(it.properties && it.properties._rkey === rkey); })
-            .map(function (it) { return it.key; });
-          return origKeys.reduce(function (p, k) {
-            return p.then(function () {
-              return changeLineQty(k, 0).catch(function (e) {
-                console.error('[B2B Reorder] remove original failed for line', k, e);
-              });
-            });
-          }, Promise.resolve()).then(function () { return readCart(); });
+          // Batch-remove all original lines in a single request.
+          // updates array index = cart line position; 0 removes that line.
+          var updates = (mid.items || []).map(function (it) {
+            return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
+          });
+          return updateCart({ updates: updates });
         })
         .then(function (final) {
-          var ours = (final.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
-          if (final.items && final.items.length === payload.length && ours.length === payload.length) {
-            // Success: only our reordered lines remain.
-            return updateAttrs(snapshot.note, snapshot.attributes).then(function () { return final; });
+          var items = final.items || [];
+          var ours = items.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+          if (items.length === payload.length && ours.length === payload.length) {
+            var upd = {};
+            if (snapshot.note) upd.note = snapshot.note;
+            if (snapshot.attributes && Object.keys(snapshot.attributes).length) upd.attributes = snapshot.attributes;
+            return Object.keys(upd).length ? updateCart(upd).then(function () { return final; }) : final;
           }
-          // Mixed state (some originals didn't remove). Clean up our
-          // duplicates so cart returns to (mostly) original state, then
-          // the buyer can retry from a known cart.
-          console.warn('[B2B Reorder] mixed final state, cleaning up duplicates');
           return cleanupRkey(rkey).then(function () { return readCart(); });
         })
         .catch(function (err) {
-          console.error('[B2B Reorder] failed during reorder, cleaning up duplicates', err);
+          console.error('[B2B] reorder error, restoring cart:', err);
           return cleanupRkey(rkey).then(function () { return readCart(); });
         });
-    }).catch(function (err) {
-      console.error('[B2B Reorder] could not read cart', err);
-      return null;
-    });
-  }
-
-  // --- Navigation guard --------------------------------------------------
-  // The empty-cart-redirects-to-/cart loop is what made the previous live
-  // incident look like Shopify "cancelled" the checkout. Before navigating
-  // to /checkout, re-read the cart; if it has no items, do not navigate
-  // there (Shopify will bounce to /cart). Reload /cart so the buyer sees
-  // the actual state rather than a confusing redirect chain.
-  function safeNavigateAfterReorder(dest) {
-    return readCart().then(function (c) {
-      if (c && c.item_count > 0) {
-        window.location.href = dest;
-      } else {
-        console.error('[B2B Reorder] cart empty, refusing to navigate to checkout');
-        window.location.href = '/cart';
-      }
-    }).catch(function () {
-      window.location.href = '/cart';
-    });
-  }
-
-  // Defensive cleanup of any sessionStorage left over from earlier code
-  // versions that persisted snapshots. We no longer use that mechanism.
-  try { sessionStorage.removeItem(SNAP_KEY); } catch (e) {}
-
-  // Sweep any orphan _rkey lines left behind by a previous interrupted
-  // reorder (e.g. tab closed, network died, racing concurrent clicks).
-  // Self-healing: every /cart load starts from a clean baseline.
-  function cleanupAllRkeyOrphans() {
-    return readCart().then(function (c) {
-      var keys = (c.items || [])
-        .filter(function (it) { return it.properties && it.properties._rkey; })
-        .map(function (it) { return it.key; });
-      if (!keys.length) return;
-      console.log('[B2B Reorder] sweeping', keys.length, 'orphan reorder line(s) from previous attempt');
-      return keys.reduce(function (p, k) {
-        return p.then(function () { return changeLineQty(k, 0).catch(function () {}); });
-      }, Promise.resolve());
-    }).catch(function () {});
-  }
-
-  // Mark the checkout button as busy so the buyer can see their click
-  // registered. Inline visual change only - no overlay, no popup.
-  function markButtonBusy(btn) {
-    if (!btn || btn.dataset._b2bBusy) return;
-    btn.dataset._b2bBusy = '1';
-    btn.dataset._b2bOrigText = btn.tagName === 'INPUT' ? btn.value : btn.textContent;
-    if (btn.tagName === 'INPUT') btn.value = 'Processing...';
-    else btn.textContent = 'Processing...';
-    btn.style.opacity = '0.7';
-    btn.style.cursor = 'wait';
-    // pointer-events:none stops any further visual hover state but the
-    // capture-phase guard (reordered=true) is the real protection against
-    // double-fire; this just makes intent visible.
-    btn.style.pointerEvents = 'none';
+    }).catch(function () { return null; });
   }
 
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
+    if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Run orphan sweep first so the upcoming reorder starts from a
-    // baseline cart matching what the buyer sees, not whatever residue
-    // a previous interrupted attempt may have left in storage.
-    cleanupAllRkeyOrphans();
+    // Start reorder immediately on page load — runs in the background
+    // while the buyer reviews the cart, so it is done (or nearly done)
+    // by the time they click checkout. No lag at the moment of clicking.
+    var reorderPromise = cleanupOrphans().then(function () {
+      return reorderCartSafe();
+    }).catch(function () { return null; });
 
-    // Click interceptor attached SYNCHRONOUSLY so the first click is never
-    // missed by an async race. reordered is set IMMEDIATELY (before the
-    // async reorder begins) so rapid double/triple clicks while the
-    // first reorder is in flight are ignored - prevents the duplicate
-    // cohorts that piled up in the prior test.
-    var reordered = false;
+    if (dest) {
+      // Arrived from another page via bounceViaCart — navigate after reorder.
+      reorderPromise.then(function () { window.location.href = dest; });
+      return;
+    }
+
+    // Lock on first checkout click, then await the already-running promise.
+    // In the typical case it settled during page review — navigation is instant.
+    var locked = false;
     document.addEventListener('click', function (e) {
       var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
-      if (!btn || reordered) return;
-      reordered = true;
+      if (!btn || locked) return;
+      locked = true;
       e.preventDefault();
       e.stopImmediatePropagation();
-      markButtonBusy(btn);
-      reorderCartSafe().then(function () {
-        // Read the cart and refuse to navigate if it is somehow empty.
-        // Shopify redirects an empty /checkout back to /cart - that loop is
-        // what surfaced as "cart got emptied" in the prior live incident.
-        safeNavigateAfterReorder('/checkout');
-      });
+      reorderPromise.then(function () { window.location.href = '/checkout'; });
     }, true);
 
-    // Arrived from the guard on another page: reorder then redirect, with
-    // the same cart-empty guard as the click path.
-    if (dest) {
-      sessionStorage.removeItem(STORE_KEY);
-      reorderCartSafe().then(function () {
-        safeNavigateAfterReorder(dest);
-      });
-    }
     return;
   }
 
-  // All other pages: intercept any navigation toward checkout
+  // All other pages: intercept checkout navigation and bounce via /cart
   function isCheckout(url) {
     return url && (url.indexOf('/checkout') !== -1 || url.indexOf('checkout.shopify.com') !== -1);
   }
-
   function bounceViaCart(dest) {
     sessionStorage.setItem(STORE_KEY, dest || '/checkout');
     window.location.href = '/cart';
   }
 
-  // Anchor links
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a');
     if (a && isCheckout(a.getAttribute('href'))) {
@@ -1392,7 +1277,6 @@ document.addEventListener('click', function (e) {
     }
   }, true);
 
-  // Form submissions (cart form, cart drawer)
   document.addEventListener('submit', function (e) {
     if (isCheckout(e.target.getAttribute('action'))) {
       e.preventDefault();
@@ -1401,7 +1285,6 @@ document.addEventListener('click', function (e) {
     }
   }, true);
 
-  // Submit buttons inside checkout forms
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('[name="checkout"], button[type="submit"]');
     if (!btn) return;
@@ -1417,6 +1300,5 @@ document.addEventListener('click', function (e) {
 </script>
 {% endif %}
 {% comment %} END B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
-{% comment %} <script src="{{ 'cart-checkout-reorder.js' | asset_url }}" defer></script> {% endcomment %}
   </body>
 </html>
