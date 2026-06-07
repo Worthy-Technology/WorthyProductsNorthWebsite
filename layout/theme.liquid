@@ -1089,8 +1089,10 @@ document.addEventListener('click', function (e) {
 {% if customer.tags != blank %}
 <script>
 (function () {
-  var STORE_KEY  = '__b2b_checkout_dest';
-  var DONE_ATTR  = '_b2b_done_rkey';   // cart attribute set after every successful reorder
+  var STORE_KEY = '__b2b_checkout_dest';
+  // _b2b_done_rkey: cart attribute written by earlier code versions.
+  // Still read by cleanupOrphans so existing carts migrate safely.
+  var DONE_ATTR = '_b2b_done_rkey';
   var path = window.location.pathname;
 
   // --- Cart helpers -------------------------------------------------------
@@ -1181,13 +1183,10 @@ document.addEventListener('click', function (e) {
   }
 
   // --- Orphan sweep -------------------------------------------------------
-  // Only removes lines whose _rkey differs from the last COMPLETED reorder
-  // key stored in the cart attribute DONE_ATTR. This is stored server-side
-  // on the cart, so it is visible across tabs and browser restarts.
-  //
-  // Why this matters: after a successful reorder every cart line carries
-  // _rkey. A naive "remove all _rkey lines" sweep (the previous approach)
-  // would wipe the entire cart on the customer's next /cart visit.
+  // Removes lines whose _rkey doesn't match the last completed reorder key
+  // (DONE_ATTR cart attribute). DONE_ATTR is still read for carts created by
+  // earlier code versions; new carts won't have _rkey at all after a
+  // successful reorder (stripRkeyBackground cleans it up).
   function cleanupOrphans(cart) {
     var doneRkey = cart.attributes && cart.attributes[DONE_ATTR];
     var orphans = (cart.items || []).filter(function (it) {
@@ -1195,29 +1194,50 @@ document.addEventListener('click', function (e) {
       return rk && rk !== doneRkey;
     });
     if (!orphans.length) return Promise.resolve(false);
-    console.log('[B2B] sweeping', orphans.length, 'orphan line(s)');
+    console.log('[B2B] sweeping', orphans.length, 'orphan(s)');
     return orphans.reduce(function (p, it) {
       return p.then(function () { return changeLineQty(it.key, 0).catch(function () {}); });
     }, Promise.resolve()).then(function () { return true; });
   }
 
+  // --- Strip _rkey after a successful reorder ----------------------------
+  // Fires change.js with keepalive:true for each final item so the request
+  // completes even after we navigate to /checkout. This keeps the cart
+  // "clean" — no _rkey on browsing items — so B2B Hub's saw_cart reconciler
+  // doesn't encounter stale _rkey data when Orbit re-renders after the
+  // customer removes or changes an item, which was causing the double-flash.
+  function stripRkeyBackground(items) {
+    items.forEach(function (it) {
+      if (!(it.properties && it.properties._rkey)) return;
+      var props = {};
+      for (var k in it.properties) {
+        if (Object.prototype.hasOwnProperty.call(it.properties, k) && k !== '_rkey') props[k] = it.properties[k];
+      }
+      fetch('/cart/change.js', {
+        method: 'POST', credentials: 'same-origin', keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: it.key, quantity: it.quantity, properties: props })
+      }).catch(function () {});
+    });
+  }
+
   // --- Core reorder -------------------------------------------------------
   // Non-destructive, O(1) API calls regardless of cart size.
-  // On success stamps DONE_ATTR so future orphan sweeps leave these lines alone.
   // Always resolves — any error cleans up our additions, leaving the cart unchanged.
   function reorderCartSafe() {
     return readCart().then(function (snapshot) {
       var items = snapshot.items || [];
       if (items.length <= 1) return snapshot;
 
-      // Fast path: cart already has clean consecutive _seq stamps in position
-      // order (invariant after a successful reorder). Skip all mutations.
+      // Fast path: _seq is already 1..n in order AND no item carries _rkey
+      // (invariant after a successful reorder + background strip).
       var alreadyOrdered = items.every(function (it, i) {
-        return parseInt(it.properties && it.properties._seq, 10) === i + 1;
+        return parseInt(it.properties && it.properties._seq, 10) === i + 1
+          && !(it.properties && it.properties._rkey);
       });
       if (alreadyOrdered) return snapshot;
 
-      // Orphan sweep runs inline (uses snapshot we already have, no extra readCart).
+      // Orphan sweep inline — uses the snapshot we already have.
       return cleanupOrphans(snapshot).then(function (sweptAny) {
         return sweptAny ? readCart() : Promise.resolve(snapshot);
       }).then(function (clean) {
@@ -1233,17 +1253,15 @@ document.addEventListener('click', function (e) {
         return addItems(payload)
           .then(function () { return readCart(); })
           .then(function (mid) {
-            // Sanity: concurrent modification check.
-            // Mid should have exactly 2× the original item count.
+            // Concurrent modification guard: abort if something else touched the cart.
             if ((mid.items || []).length !== expectedMidCount) {
-              throw new Error('mid count ' + (mid.items || []).length + ' ≠ ' + expectedMidCount + ' (concurrent cart modification?)');
+              throw new Error('mid count ' + (mid.items || []).length + ' ≠ ' + expectedMidCount);
             }
             var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
             if (ours.length !== payload.length) {
               throw new Error('add verify: ' + ours.length + '/' + payload.length);
             }
             // Batch-remove all original lines in a single request.
-            // updates array index = cart line position; 0 removes that line.
             var updates = (mid.items || []).map(function (it) {
               return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
             });
@@ -1253,23 +1271,22 @@ document.addEventListener('click', function (e) {
             var finalItems = final.items || [];
             var ours = finalItems.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
             if (finalItems.length === payload.length && ours.length === payload.length) {
-              // Stamp DONE_ATTR so future orphan sweeps leave these lines alone.
-              var attrs = {};
-              if (clean.attributes) {
-                for (var k in clean.attributes) {
-                  if (Object.prototype.hasOwnProperty.call(clean.attributes, k)) attrs[k] = clean.attributes[k];
-                }
-              }
-              attrs[DONE_ATTR] = rkey;
-              var upd = { attributes: attrs };
+              // Restore cart note/attributes, then fire-and-forget the _rkey strip.
+              // keepalive ensures the strip completes even after we navigate away.
+              var upd = {};
               if (clean.note) upd.note = clean.note;
-              return updateCart(upd).then(function () { return final; });
+              if (clean.attributes && Object.keys(clean.attributes).length) upd.attributes = clean.attributes;
+              return (Object.keys(upd).length ? updateCart(upd) : Promise.resolve(final))
+                .then(function () {
+                  stripRkeyBackground(finalItems);
+                  return final;
+                });
             }
-            console.warn('[B2B] mixed final state after batch remove, cleaning up');
+            console.warn('[B2B] mixed final state, cleaning up');
             return cleanupRkey(rkey).then(function () { return null; });
           })
           .catch(function (err) {
-            console.error('[B2B] reorder error, restoring cart:', err.message || err);
+            console.error('[B2B] reorder error:', err.message || err);
             return cleanupRkey(rkey).then(function () { return null; });
           });
       });
