@@ -1090,9 +1090,7 @@ document.addEventListener('click', function (e) {
 <script>
 (function () {
   var STORE_KEY = '__b2b_checkout_dest';
-  // _b2b_done_rkey: cart attribute written by earlier code versions.
-  // Still read by cleanupOrphans so existing carts migrate safely.
-  var DONE_ATTR = '_b2b_done_rkey';
+  var DONE_ATTR = '_b2b_done_rkey'; // cart attribute — marks the last completed reorder
   var path = window.location.pathname;
 
   // --- Cart helpers -------------------------------------------------------
@@ -1183,10 +1181,9 @@ document.addEventListener('click', function (e) {
   }
 
   // --- Orphan sweep -------------------------------------------------------
-  // Removes lines whose _rkey doesn't match the last completed reorder key
-  // (DONE_ATTR cart attribute). DONE_ATTR is still read for carts created by
-  // earlier code versions; new carts won't have _rkey at all after a
-  // successful reorder (stripRkeyBackground cleans it up).
+  // Removes lines whose _rkey differs from DONE_ATTR (the last completed
+  // reorder key, written to cart attributes after every successful reorder).
+  // DONE_ATTR lives server-side on the cart so it works across tabs.
   function cleanupOrphans(cart) {
     var doneRkey = cart.attributes && cart.attributes[DONE_ATTR];
     var orphans = (cart.items || []).filter(function (it) {
@@ -1200,44 +1197,23 @@ document.addEventListener('click', function (e) {
     }, Promise.resolve()).then(function () { return true; });
   }
 
-  // --- Strip _rkey after a successful reorder ----------------------------
-  // Fires change.js with keepalive:true for each final item so the request
-  // completes even after we navigate to /checkout. This keeps the cart
-  // "clean" — no _rkey on browsing items — so B2B Hub's saw_cart reconciler
-  // doesn't encounter stale _rkey data when Orbit re-renders after the
-  // customer removes or changes an item, which was causing the double-flash.
-  function stripRkeyBackground(items) {
-    items.forEach(function (it) {
-      if (!(it.properties && it.properties._rkey)) return;
-      var props = {};
-      for (var k in it.properties) {
-        if (Object.prototype.hasOwnProperty.call(it.properties, k) && k !== '_rkey') props[k] = it.properties[k];
-      }
-      fetch('/cart/change.js', {
-        method: 'POST', credentials: 'same-origin', keepalive: true,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: it.key, quantity: it.quantity, properties: props })
-      }).catch(function () {});
-    });
-  }
-
   // --- Core reorder -------------------------------------------------------
-  // Non-destructive, O(1) API calls regardless of cart size.
-  // Always resolves — any error cleans up our additions, leaving the cart unchanged.
+  // Non-destructive: adds FIFO-ordered duplicates, verifies, batch-removes
+  // originals in one request. O(1) API calls regardless of cart size.
+  // Always resolves — any error cleans up our additions leaving cart intact.
   function reorderCartSafe() {
     return readCart().then(function (snapshot) {
       var items = snapshot.items || [];
       if (items.length <= 1) return snapshot;
 
-      // Fast path: _seq is already 1..n in order AND no item carries _rkey
-      // (invariant after a successful reorder + background strip).
+      // Fast path: _seq stamps are already 1..n in position order.
+      // This is the invariant after a successful reorder. Skip all mutations.
       var alreadyOrdered = items.every(function (it, i) {
-        return parseInt(it.properties && it.properties._seq, 10) === i + 1
-          && !(it.properties && it.properties._rkey);
+        return parseInt(it.properties && it.properties._seq, 10) === i + 1;
       });
       if (alreadyOrdered) return snapshot;
 
-      // Orphan sweep inline — uses the snapshot we already have.
+      // Orphan sweep inline — reuses snapshot, avoids an extra readCart.
       return cleanupOrphans(snapshot).then(function (sweptAny) {
         return sweptAny ? readCart() : Promise.resolve(snapshot);
       }).then(function (clean) {
@@ -1253,7 +1229,6 @@ document.addEventListener('click', function (e) {
         return addItems(payload)
           .then(function () { return readCart(); })
           .then(function (mid) {
-            // Concurrent modification guard: abort if something else touched the cart.
             if ((mid.items || []).length !== expectedMidCount) {
               throw new Error('mid count ' + (mid.items || []).length + ' ≠ ' + expectedMidCount);
             }
@@ -1261,7 +1236,6 @@ document.addEventListener('click', function (e) {
             if (ours.length !== payload.length) {
               throw new Error('add verify: ' + ours.length + '/' + payload.length);
             }
-            // Batch-remove all original lines in a single request.
             var updates = (mid.items || []).map(function (it) {
               return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
             });
@@ -1271,16 +1245,18 @@ document.addEventListener('click', function (e) {
             var finalItems = final.items || [];
             var ours = finalItems.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
             if (finalItems.length === payload.length && ours.length === payload.length) {
-              // Restore cart note/attributes, then fire-and-forget the _rkey strip.
-              // keepalive ensures the strip completes even after we navigate away.
-              var upd = {};
+              // Write DONE_ATTR so future orphan sweeps know these lines are
+              // from a completed reorder, not an interrupted one.
+              var attrs = {};
+              if (clean.attributes) {
+                for (var k in clean.attributes) {
+                  if (Object.prototype.hasOwnProperty.call(clean.attributes, k)) attrs[k] = clean.attributes[k];
+                }
+              }
+              attrs[DONE_ATTR] = rkey;
+              var upd = { attributes: attrs };
               if (clean.note) upd.note = clean.note;
-              if (clean.attributes && Object.keys(clean.attributes).length) upd.attributes = clean.attributes;
-              return (Object.keys(upd).length ? updateCart(upd) : Promise.resolve(final))
-                .then(function () {
-                  stripRkeyBackground(finalItems);
-                  return final;
-                });
+              return updateCart(upd).then(function () { return final; });
             }
             console.warn('[B2B] mixed final state, cleaning up');
             return cleanupRkey(rkey).then(function () { return null; });
@@ -1297,22 +1273,18 @@ document.addEventListener('click', function (e) {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Arrived from another page via bounceViaCart: reorder then navigate.
-    // Running here (not on click) is fine because the customer is not
-    // actively browsing the cart — they are mid-checkout-flow.
+    // Pre-run the reorder on page load so it completes while the buyer
+    // reviews the cart. By the time they click Checkout the promise is
+    // already settled → navigation is instant.
+    // alreadyOrdered fast path means repeat visits (unchanged cart) cost
+    // only one readCart (~150 ms) with no mutations at all.
+    var reorderPromise = reorderCartSafe().catch(function () { return null; });
+
     if (dest) {
-      reorderCartSafe().then(function () { window.location.href = dest; });
+      reorderPromise.then(function () { window.location.href = dest; });
       return;
     }
 
-    // Run the reorder only when the customer clicks Checkout — never on
-    // page load. This prevents our addItems/updateCart calls from changing
-    // the cart item count while the buyer is reviewing, which would trigger
-    // B2B Hub's reloadCartOnQtyChange and cause an unwanted full-page reload.
-    //
-    // alreadyOrdered fast path inside reorderCartSafe means repeat clicks
-    // (cart unchanged since last reorder) resolve in ~150 ms (one readCart),
-    // so the wait is imperceptible in that case.
     var locked = false;
     document.addEventListener('click', function (e) {
       var btn = e.target.closest("[name='checkout'], a[href$='/checkout']");
@@ -1320,7 +1292,7 @@ document.addEventListener('click', function (e) {
       locked = true;
       e.preventDefault();
       e.stopImmediatePropagation();
-      reorderCartSafe().then(function () { window.location.href = '/checkout'; });
+      reorderPromise.then(function () { window.location.href = '/checkout'; });
     }, true);
 
     return;
