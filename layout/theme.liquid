@@ -1082,14 +1082,14 @@ document.addEventListener('click', function (e) {
 
 {% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
 {%- comment -%}
-  FEFO in checkout without breaking discounts.
-  Reorder runs ONLY at checkout-click time (never page load) so:
-  - No background mutations during browsing → B2B Hub reload poller never fires
-  - Cart display stays FEFO via Orbit "cart.items reversed" — untouched
-  - Discount codes saved from cart.discount_codes BEFORE reorder, re-applied
-    via checkout URL (?discount=CODE) AFTER — survives cart/add.js clearing
-  - B2B Hub reload suppressed for the ~1.5 s reorder window on click only
-  - alreadyOrdered fast path: repeat checkouts instant (1 readCart, no mutations)
+  Goal: FEFO order in cart display AND Shopify checkout.
+  Approach:
+  - Run FIFO reorder on page load (background, hidden by CSS).
+    FIFO array displayed forwards = FEFO. 'cart.items reversed' removed.
+  - Checkout click awaits the already-settled promise → instant navigation.
+  - No discount code handling — B2B Hub applies automatic pricing itself.
+  - B2B Hub reload suppressed during the ~1.5 s reorder window only.
+  - alreadyOrdered fast path: 1 readCart (~150 ms), zero mutations.
 {%- endcomment -%}
 {% if customer.tags != blank %}
 <script>
@@ -1132,6 +1132,8 @@ document.addEventListener('click', function (e) {
     });
   }
 
+  // Oldest item (highest Shopify index, added first) = seq 1.
+  // Sorted DESC so Shopify stores newest-added last → oldest ends at index 0 = FEFO.
   function buildPayload(items, rkey) {
     var stamped = items.map(function (it, i) {
       var s    = parseInt(it.properties && it.properties._seq, 10);
@@ -1164,24 +1166,16 @@ document.addEventListener('click', function (e) {
     }).catch(function () {});
   }
 
-  function reorderAndNavigate(dest) {
-    readCart().then(function (snapshot) {
+  // Reorder cart to FIFO. Resolves when done (or on error, cart unchanged).
+  function reorderToFifo() {
+    return readCart().then(function (snapshot) {
       var items = snapshot.items || [];
-      var savedCodes = (snapshot.discount_codes || []).map(function (d) { return d.code; }).filter(Boolean);
+      if (items.length <= 1) return snapshot;
 
-      function goToCheckout() {
-        var url = dest || '/checkout';
-        if (savedCodes.length) url += (url.indexOf('?') !== -1 ? '&' : '?') + 'discount=' + encodeURIComponent(savedCodes[0]);
-        window.location.href = url;
-      }
+      // Fast path — already in FIFO order.
+      if (items.every(function (it, i) { return parseInt(it.properties && it.properties._seq, 10) === i + 1; })) return snapshot;
 
-      if (items.length <= 1) { goToCheckout(); return; }
-
-      var alreadyOrdered = items.every(function (it, i) {
-        return parseInt(it.properties && it.properties._seq, 10) === i + 1;
-      });
-      if (alreadyOrdered) { goToCheckout(); return; }
-
+      // Suppress B2B Hub reload during the reorder window.
       var _reload;
       try { _reload = window.location.reload; window.location.reload = function () {}; } catch (e) {}
       var _rcqc = window.reloadCartOnQtyChange;
@@ -1191,25 +1185,23 @@ document.addEventListener('click', function (e) {
         if (typeof _rcqc === 'function') window.reloadCartOnQtyChange = _rcqc;
       }
 
-      var rkey    = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      var rkey = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       var payload = buildPayload(items, rkey);
-      if (payload.some(function (p) { return !p.id; })) { restore(); goToCheckout(); return; }
+      if (payload.some(function (p) { return !p.id; })) { restore(); return snapshot; }
 
-      var expectedMidCount = items.length + payload.length;
-
-      addItems(payload)
+      var expectedMid = items.length + payload.length;
+      return addItems(payload)
         .then(function () { return readCart(); })
         .then(function (mid) {
-          if ((mid.items || []).length !== expectedMidCount) throw new Error('mid count mismatch');
+          if ((mid.items || []).length !== expectedMid) throw new Error('mid count');
           var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
-          if (ours.length !== payload.length) throw new Error('add verify failed');
-          var updates = (mid.items || []).map(function (it) {
+          if (ours.length !== payload.length) throw new Error('add verify');
+          return updateCart({ updates: (mid.items || []).map(function (it) {
             return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
-          });
-          return updateCart({ updates: updates });
+          }) });
         })
         .then(function (final) {
-          var fi   = final.items || [];
+          var fi = final.items || [];
           var ours = fi.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
           if (fi.length === payload.length && ours.length === payload.length) {
             var attrs = {};
@@ -1221,101 +1213,38 @@ document.addEventListener('click', function (e) {
             attrs[DONE_ATTR] = rkey;
             var upd = { attributes: attrs };
             if (snapshot.note) upd.note = snapshot.note;
-            return updateCart(upd).then(function () { restore(); goToCheckout(); });
+            return updateCart(upd).then(function () { restore(); return final; });
           }
-          return cleanupRkey(rkey).then(function () { restore(); goToCheckout(); });
+          return cleanupRkey(rkey).then(function () { restore(); return null; });
         })
         .catch(function (err) {
           console.error('[B2B]', err.message || err);
-          cleanupRkey(rkey).then(function () { restore(); goToCheckout(); });
+          return cleanupRkey(rkey).then(function () { restore(); return null; });
         });
-
-    }).catch(function () { window.location.href = dest || '/checkout'; });
+    }).catch(function () { return null; });
   }
 
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Hide cart items while the background reorder runs so the customer
-    // never sees the LEFO→FEFO shuffle. Items fade in once done.
-    // cart.items reversed was removed from the template — FIFO array
-    // displayed forwards is FEFO. CSS transition gives a smooth reveal.
-    var styleEl = document.createElement('style');
-    styleEl.textContent = [
-      '#main-cart-items, cart-items, .js-cart-items { transition: opacity 0.3s ease; }',
-      'body._b2b-busy #main-cart-items, body._b2b-busy cart-items, body._b2b-busy .js-cart-items { opacity: 0 !important; }',
-      'body._b2b-busy [name="checkout"], body._b2b-busy a[href$="/checkout"] { pointer-events:none !important; opacity:0.6 !important; cursor:wait !important; }'
-    ].join(' ');
-    document.head.appendChild(styleEl);
+    // Hide cart while the background reorder runs — customer never sees the shuffle.
+    var style = document.createElement('style');
+    style.textContent = '#main-cart-items,cart-items,.js-cart-items{transition:opacity .3s ease}'
+      + ' body._b2b-busy #main-cart-items,body._b2b-busy cart-items,body._b2b-busy .js-cart-items{opacity:0!important}'
+      + ' body._b2b-busy [name=checkout],body._b2b-busy a[href$=/checkout]{pointer-events:none!important;opacity:.6!important;cursor:wait!important}';
+    document.head.appendChild(style);
     document.body.classList.add('_b2b-busy');
 
-    // Pre-run reorder on page load so by the time the customer clicks
-    // checkout the promise is already settled → instant navigation.
-    var reorderPromise = (function () {
-      // Re-use reorderAndNavigate's suppress + reorder logic but return a
-      // promise that resolves when the cart is in FIFO order (no navigate).
-      return readCart().then(function (snapshot) {
-        var items = snapshot.items || [];
-        if (items.length <= 1) return snapshot;
-        var alreadyOrdered = items.every(function (it, i) {
-          return parseInt(it.properties && it.properties._seq, 10) === i + 1;
-        });
-        if (alreadyOrdered) return snapshot;
-
-        var _reload;
-        try { _reload = window.location.reload; window.location.reload = function () {}; } catch (e) {}
-        var _rcqc = window.reloadCartOnQtyChange;
-        if (typeof _rcqc === 'function') window.reloadCartOnQtyChange = function () {};
-        function restore() {
-          try { if (_reload) window.location.reload = _reload; } catch (e) {}
-          if (typeof _rcqc === 'function') window.reloadCartOnQtyChange = _rcqc;
-        }
-
-        var rkey    = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-        var payload = buildPayload(items, rkey);
-        if (payload.some(function (p) { return !p.id; })) { restore(); return snapshot; }
-
-        var expectedMidCount = items.length + payload.length;
-        return addItems(payload)
-          .then(function () { return readCart(); })
-          .then(function (mid) {
-            if ((mid.items || []).length !== expectedMidCount) throw new Error('mid count');
-            var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
-            if (ours.length !== payload.length) throw new Error('add verify');
-            var updates = (mid.items || []).map(function (it) {
-              return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
-            });
-            return updateCart({ updates: updates });
-          })
-          .then(function (final) {
-            var fi = final.items || [];
-            var ours = fi.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
-            if (fi.length === payload.length && ours.length === payload.length) {
-              var attrs = {};
-              if (snapshot.attributes) {
-                for (var k in snapshot.attributes) {
-                  if (Object.prototype.hasOwnProperty.call(snapshot.attributes, k)) attrs[k] = snapshot.attributes[k];
-                }
-              }
-              attrs[DONE_ATTR] = rkey;
-              var upd = { attributes: attrs };
-              if (snapshot.note) upd.note = snapshot.note;
-              return updateCart(upd).then(function () { restore(); return final; });
-            }
-            return cleanupRkey(rkey).then(function () { restore(); return null; });
-          })
-          .catch(function (err) {
-            console.error('[B2B]', err.message || err);
-            return cleanupRkey(rkey).then(function () { restore(); return null; });
-          });
-      }).catch(function () { return null; });
-    })().then(function (v) {
-      document.body.classList.remove('_b2b-busy'); // reveal FEFO cart
+    var reorderPromise = reorderToFifo().catch(function () { return null; }).then(function (v) {
+      document.body.classList.remove('_b2b-busy'); // cart fades in as FEFO
       return v;
     });
 
-    if (dest) { reorderPromise.then(function () { reorderAndNavigate(dest); }); return; }
+    if (dest) {
+      reorderPromise.then(function () { window.location.href = dest; });
+      return;
+    }
 
     var locked = false;
     document.addEventListener('click', function (e) {
@@ -1324,13 +1253,14 @@ document.addEventListener('click', function (e) {
       locked = true;
       e.preventDefault();
       e.stopImmediatePropagation();
-      // Promise already settled by the time customer reads & clicks checkout.
-      reorderPromise.then(function () { reorderAndNavigate('/checkout'); });
+      // Promise already settled — navigation is instant in the typical case.
+      reorderPromise.then(function () { window.location.href = '/checkout'; });
     }, true);
 
     return;
   }
 
+  // Other pages: bounce checkout through /cart so the reorder runs first.
   function isCheckout(url) {
     return url && (url.indexOf('/checkout') !== -1 || url.indexOf('checkout.shopify.com') !== -1);
   }
@@ -1343,13 +1273,11 @@ document.addEventListener('click', function (e) {
     var a = e.target.closest('a');
     if (a && isCheckout(a.getAttribute('href'))) { e.preventDefault(); e.stopImmediatePropagation(); bounceViaCart(a.getAttribute('href')); }
   }, true);
-
   document.addEventListener('submit', function (e) {
     if (isCheckout(e.target.getAttribute('action'))) { e.preventDefault(); e.stopImmediatePropagation(); bounceViaCart('/checkout'); }
   }, true);
-
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest('[name="checkout"], button[type="submit"]');
+    var btn = e.target.closest('[name="checkout"],button[type="submit"]');
     if (!btn) return;
     var form = btn.closest('form');
     if (form && isCheckout(form.getAttribute('action'))) { e.preventDefault(); e.stopImmediatePropagation(); bounceViaCart('/checkout'); }
