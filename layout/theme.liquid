@@ -736,6 +736,22 @@ document.addEventListener('click', function (e) {
 }
 </script>
 {%- endif -%}
+{%- comment -%}
+  Hide the cart items area immediately for B2B customers on /cart so they
+  never see the LEFO flash before our JavaScript reorder runs.
+  The style element is removed by JS (with a smooth fade-in) once the
+  reorder completes. If JS fails the items reappear after 4 s via the
+  animation fallback so the cart is never permanently hidden.
+{%- endcomment -%}
+{%- if customer.tags != blank and request.path == '/cart' -%}
+<style id="_b2b_cart_init">
+  #main-cart-items, cart-items, .js-cart-items {
+    opacity: 0 !important;
+    animation: _b2b_reveal 0s 4s forwards;
+  }
+  @keyframes _b2b_reveal { to { opacity: 1 !important; } }
+</style>
+{%- endif -%}
 </head>
 
   <body class="{{ request.page_type | handleize }}-template page-{{ request.path | handleize | default: 'index' }}{% if template.suffix != blank %} {{ template.suffix | handleize }}-template-suffix{% endif %} gradient button--hover-{{ settings.animations_hover_buttons }}{% if settings.drawer_inset %} side-drawers-inset{% endif %} page-is-loading page-is-not-idle" data-lazy-load-js="{{ settings.lazy_load_js }}">
@@ -1332,7 +1348,9 @@ document.addEventListener('click', function (e) {
     // reviews the cart. alreadyOrdered fast path means repeat visits
     // (unchanged cart) cost only one readCart (~150 ms) with zero mutations.
     var reorderPromise = reorderCartSafe().catch(function () { return null; }).then(function (v) {
-      document.body.classList.remove(BUSY_CLASS); // cart fades in, checkout re-enabled
+      document.body.classList.remove(BUSY_CLASS);  // re-enables checkout button
+      var initHide = document.getElementById('_b2b_cart_init');
+      if (initHide) initHide.remove();              // triggers the 0.35s fade-in
       return v;
     });
 
