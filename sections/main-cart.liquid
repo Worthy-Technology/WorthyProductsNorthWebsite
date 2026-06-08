@@ -70,7 +70,7 @@
                       </thead>
 
                       <tbody>
-                      {%- for item in cart.items -%}
+                      {%- for item in cart.items reversed -%}
   {% comment %} Wholesale_Hub_Item_Prices Start {% endcomment %}
   {% if item.product %}{% assign base_product = item.product %}{% else %}{% assign base_product = item %}{% endif %}
   {% if item.variant %}{% assign base_variant = item.variant %}{% else %}{% assign base_variant = item.selected_or_first_available_variant %}{% endif %}
