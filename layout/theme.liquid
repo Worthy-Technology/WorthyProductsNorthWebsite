@@ -1202,6 +1202,37 @@ document.addEventListener('click', function (e) {
   // originals in one request. O(1) API calls regardless of cart size.
   // Always resolves — any error cleans up our additions leaving cart intact.
   function reorderCartSafe() {
+    // -----------------------------------------------------------------------
+    // Root cause of the page-reload issue:
+    //   orbit_wholesale_cart.liquid calls SAWCartCheck() on EVERY cart page
+    //   load (line ~594). For customers with active discounts this triggers
+    //   startCartPoller() → a 1-second setInterval → quantityChangePoller()
+    //   → reloadCartOnQtyChange() → window.location.reload() whenever
+    //   cart.item_count changes.
+    //   Our addItems (N → 2N) is detected by that poller → page reloads.
+    //
+    // Fix: suppress window.location.reload AND reloadCartOnQtyChange for the
+    // duration of the reorder, then restore both and resync saw_cart so the
+    // next poll tick finds count unchanged.
+    // -----------------------------------------------------------------------
+    var _origReload;
+    try { _origReload = window.location.reload; window.location.reload = function () {}; } catch (e) {}
+    var _origRCQC = window.reloadCartOnQtyChange;
+    if (typeof _origRCQC === 'function') window.reloadCartOnQtyChange = function () {};
+
+    function restoreReloadGuard() {
+      try { if (_origReload) window.location.reload = _origReload; } catch (e) {}
+      if (typeof _origRCQC === 'function') window.reloadCartOnQtyChange = _origRCQC;
+      // Resync saw_cart.item_count so the next poller tick sees no discrepancy.
+      try {
+        if (window.saw_cart) {
+          readCart().then(function (c) {
+            if (window.saw_cart) window.saw_cart.item_count = c.item_count;
+          }).catch(function () {});
+        }
+      } catch (e) {}
+    }
+
     return readCart().then(function (snapshot) {
       var items = snapshot.items || [];
       if (items.length <= 1) return snapshot;
@@ -1245,8 +1276,6 @@ document.addEventListener('click', function (e) {
             var finalItems = final.items || [];
             var ours = finalItems.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
             if (finalItems.length === payload.length && ours.length === payload.length) {
-              // Write DONE_ATTR so future orphan sweeps know these lines are
-              // from a completed reorder, not an interrupted one.
               var attrs = {};
               if (clean.attributes) {
                 for (var k in clean.attributes) {
@@ -1266,7 +1295,11 @@ document.addEventListener('click', function (e) {
             return cleanupRkey(rkey).then(function () { return null; });
           });
       });
-    }).catch(function () { return null; });
+    }).catch(function () { return null; })
+      .then(function (result) {
+        restoreReloadGuard();
+        return result;
+      });
   }
 
   if (path === '/cart') {
