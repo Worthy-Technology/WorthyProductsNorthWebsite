@@ -1082,90 +1082,162 @@ document.addEventListener('click', function (e) {
 
 {% comment %} START B2B Wholesale Hub checkout guard - Pratham {% endcomment %}
 {%- comment -%}
-  Strategy: property-stamp only.
-  We stamp _seq (FIFO position) on cart line properties using change.js.
-  No items are added or removed, so:
-    - Discount codes are never cleared (cart/add.js clears them; we don't use it)
-    - B2B Hub's wholesale pricing is never lost
-    - Item count never changes → B2B Hub's reloadCartOnQtyChange never fires
-    - Cart display stays FEFO (Orbit renders cart.items reversed = oldest first)
-    - Odoo reads _seq to sort the invoice in FEFO order
-  Parallel change.js calls → ~300 ms regardless of cart size.
+  FEFO in checkout without breaking discounts.
+  Reorder runs ONLY at checkout-click time (never page load) so:
+  - No background mutations during browsing → B2B Hub reload poller never fires
+  - Cart display stays FEFO via Orbit "cart.items reversed" — untouched
+  - Discount codes saved from cart.discount_codes BEFORE reorder, re-applied
+    via checkout URL (?discount=CODE) AFTER — survives cart/add.js clearing
+  - B2B Hub reload suppressed for the ~1.5 s reorder window on click only
+  - alreadyOrdered fast path: repeat checkouts instant (1 readCart, no mutations)
 {%- endcomment -%}
 {% if customer.tags != blank %}
 <script>
 (function () {
   var STORE_KEY = '__b2b_checkout_dest';
+  var DONE_ATTR = '_b2b_done_rkey';
   var path      = window.location.pathname;
 
   function readCart() {
-    return fetch('/cart.js', { credentials: 'same-origin', cache: 'no-store' })
-      .then(function (r) { return r.json(); });
+    return fetch('/cart.js', { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json(); });
+  }
+  function addItems(items) {
+    return fetch('/cart/add.js', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { throw new Error('add ' + r.status + ': ' + t); });
+      return r.json();
+    });
+  }
+  function updateCart(body) {
+    return fetch('/cart/update.js', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { throw new Error('update ' + r.status + ': ' + t); });
+      return r.json();
+    });
+  }
+  function changeLineQty(key, qty) {
+    return fetch('/cart/change.js', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: qty })
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { throw new Error('change ' + r.status + ': ' + t); });
+      return r.json();
+    });
   }
 
-  // Stamp _seq on lines that need it, in parallel.
-  // items[i] at higher Shopify index = added earlier = lower _seq (FEFO: oldest = 1).
-  // Existing _seq values are preserved; only new/unstamped lines + _rkey cleanup.
-  function stampSeq() {
-    return readCart().then(function (cart) {
-      var items = cart.items || [];
-      if (!items.length) return cart;
-
-      var maxSeq  = 0;
-      var toStamp = [];
-
-      items.forEach(function (it, i) {
-        var s      = parseInt(it.properties && it.properties._seq, 10);
-        var hasSeq = isFinite(s) && s > 0;
-        var hasRk  = !!(it.properties && it.properties._rkey);
-        if (hasSeq && s > maxSeq) maxSeq = s;
-        if (!hasSeq || hasRk) toStamp.push({ it: it, i: i, existingSeq: hasSeq ? s : null });
-      });
-
-      if (!toStamp.length) return cart; // all correctly stamped — nothing to do
-
-      // Assign seq to lines without one. Higher index = older addition = lower seq.
-      var needSeq = toStamp.filter(function (x) { return x.existingSeq === null; });
-      needSeq.sort(function (a, b) { return b.i - a.i; }); // oldest first → lowest seq
-      needSeq.forEach(function (x, j) { x.seq = maxSeq + j + 1; });
-      // Lines with _rkey but valid _seq: keep existing seq, just drop _rkey.
-      toStamp.filter(function (x) { return x.existingSeq !== null; })
-             .forEach(function (x) { x.seq = x.existingSeq; });
-
-      // Parallel change.js — property update only (qty unchanged, no add/remove).
-      return Promise.all(toStamp.map(function (x) {
-        var it = x.it;
-        var props = {};
-        if (it.properties) {
-          for (var k in it.properties) {
-            if (Object.prototype.hasOwnProperty.call(it.properties, k) && k !== '_rkey') {
-              props[k] = it.properties[k];
-            }
-          }
+  function buildPayload(items, rkey) {
+    var stamped = items.map(function (it, i) {
+      var s    = parseInt(it.properties && it.properties._seq, 10);
+      var rank = (isFinite(s) && s > 0) ? s : 1e9 - i;
+      return { it: it, rank: rank };
+    });
+    stamped.sort(function (a, b) { return a.rank - b.rank; });
+    stamped.forEach(function (x, i) { x.seq = i + 1; });
+    stamped.sort(function (a, b) { return b.seq - a.seq; });
+    return stamped.map(function (x) {
+      var it = x.it, props = {};
+      if (it.properties) {
+        for (var k in it.properties) {
+          if (Object.prototype.hasOwnProperty.call(it.properties, k) && k !== '_rkey') props[k] = it.properties[k];
         }
-        props._seq = String(x.seq);
-        return fetch('/cart/change.js', {
-          method: 'POST', credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: it.key, quantity: it.quantity, properties: props })
-        }).catch(function () {});
-      })).then(function () { return cart; });
+      }
+      props._seq = String(x.seq); props._rkey = rkey;
+      var e = { id: it.variant_id, quantity: it.quantity, properties: props };
+      if (it.selling_plan_allocation && it.selling_plan_allocation.selling_plan && it.selling_plan_allocation.selling_plan.id)
+        e.selling_plan = it.selling_plan_allocation.selling_plan.id;
+      return e;
+    });
+  }
 
-    }).catch(function () { return null; });
+  function cleanupRkey(rkey) {
+    return readCart().then(function (c) {
+      return (c.items || [])
+        .filter(function (it) { return it.properties && it.properties._rkey === rkey; })
+        .reduce(function (p, it) { return p.then(function () { return changeLineQty(it.key, 0).catch(function () {}); }); }, Promise.resolve());
+    }).catch(function () {});
+  }
+
+  function reorderAndNavigate(dest) {
+    readCart().then(function (snapshot) {
+      var items = snapshot.items || [];
+      var savedCodes = (snapshot.discount_codes || []).map(function (d) { return d.code; }).filter(Boolean);
+
+      function goToCheckout() {
+        var url = dest || '/checkout';
+        if (savedCodes.length) url += (url.indexOf('?') !== -1 ? '&' : '?') + 'discount=' + encodeURIComponent(savedCodes[0]);
+        window.location.href = url;
+      }
+
+      if (items.length <= 1) { goToCheckout(); return; }
+
+      var alreadyOrdered = items.every(function (it, i) {
+        return parseInt(it.properties && it.properties._seq, 10) === i + 1;
+      });
+      if (alreadyOrdered) { goToCheckout(); return; }
+
+      var _reload;
+      try { _reload = window.location.reload; window.location.reload = function () {}; } catch (e) {}
+      var _rcqc = window.reloadCartOnQtyChange;
+      if (typeof _rcqc === 'function') window.reloadCartOnQtyChange = function () {};
+      function restore() {
+        try { if (_reload) window.location.reload = _reload; } catch (e) {}
+        if (typeof _rcqc === 'function') window.reloadCartOnQtyChange = _rcqc;
+      }
+
+      var rkey    = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      var payload = buildPayload(items, rkey);
+      if (payload.some(function (p) { return !p.id; })) { restore(); goToCheckout(); return; }
+
+      var expectedMidCount = items.length + payload.length;
+
+      addItems(payload)
+        .then(function () { return readCart(); })
+        .then(function (mid) {
+          if ((mid.items || []).length !== expectedMidCount) throw new Error('mid count mismatch');
+          var ours = (mid.items || []).filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+          if (ours.length !== payload.length) throw new Error('add verify failed');
+          var updates = (mid.items || []).map(function (it) {
+            return (it.properties && it.properties._rkey === rkey) ? it.quantity : 0;
+          });
+          return updateCart({ updates: updates });
+        })
+        .then(function (final) {
+          var fi   = final.items || [];
+          var ours = fi.filter(function (it) { return it.properties && it.properties._rkey === rkey; });
+          if (fi.length === payload.length && ours.length === payload.length) {
+            var attrs = {};
+            if (snapshot.attributes) {
+              for (var k in snapshot.attributes) {
+                if (Object.prototype.hasOwnProperty.call(snapshot.attributes, k)) attrs[k] = snapshot.attributes[k];
+              }
+            }
+            attrs[DONE_ATTR] = rkey;
+            var upd = { attributes: attrs };
+            if (snapshot.note) upd.note = snapshot.note;
+            return updateCart(upd).then(function () { restore(); goToCheckout(); });
+          }
+          return cleanupRkey(rkey).then(function () { restore(); goToCheckout(); });
+        })
+        .catch(function (err) {
+          console.error('[B2B]', err.message || err);
+          cleanupRkey(rkey).then(function () { restore(); goToCheckout(); });
+        });
+
+    }).catch(function () { window.location.href = dest || '/checkout'; });
   }
 
   if (path === '/cart') {
     var dest = sessionStorage.getItem(STORE_KEY);
     if (dest) sessionStorage.removeItem(STORE_KEY);
 
-    // Pre-run stamp on page load so it's done before checkout click.
-    // Fast path (all already stamped): just one readCart ~150 ms, zero writes.
-    var stampPromise = stampSeq().catch(function () { return null; });
-
-    if (dest) {
-      stampPromise.then(function () { window.location.href = dest; });
-      return;
-    }
+    if (dest) { reorderAndNavigate(dest); return; }
 
     var locked = false;
     document.addEventListener('click', function (e) {
@@ -1174,13 +1246,12 @@ document.addEventListener('click', function (e) {
       locked = true;
       e.preventDefault();
       e.stopImmediatePropagation();
-      stampPromise.then(function () { window.location.href = '/checkout'; });
+      reorderAndNavigate('/checkout');
     }, true);
 
     return;
   }
 
-  // All other pages: intercept checkout navigation and bounce via /cart
   function isCheckout(url) {
     return url && (url.indexOf('/checkout') !== -1 || url.indexOf('checkout.shopify.com') !== -1);
   }
@@ -1191,30 +1262,18 @@ document.addEventListener('click', function (e) {
 
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a');
-    if (a && isCheckout(a.getAttribute('href'))) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      bounceViaCart(a.getAttribute('href'));
-    }
+    if (a && isCheckout(a.getAttribute('href'))) { e.preventDefault(); e.stopImmediatePropagation(); bounceViaCart(a.getAttribute('href')); }
   }, true);
 
   document.addEventListener('submit', function (e) {
-    if (isCheckout(e.target.getAttribute('action'))) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      bounceViaCart('/checkout');
-    }
+    if (isCheckout(e.target.getAttribute('action'))) { e.preventDefault(); e.stopImmediatePropagation(); bounceViaCart('/checkout'); }
   }, true);
 
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('[name="checkout"], button[type="submit"]');
     if (!btn) return;
     var form = btn.closest('form');
-    if (form && isCheckout(form.getAttribute('action'))) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      bounceViaCart('/checkout');
-    }
+    if (form && isCheckout(form.getAttribute('action'))) { e.preventDefault(); e.stopImmediatePropagation(); bounceViaCart('/checkout'); }
   }, true);
 
 })();
