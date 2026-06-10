@@ -207,7 +207,7 @@
       },
       "15378120609403553491": {
         "type": "shopify://apps/miko-b2b-wholesale-hub/blocks/b2b-pricing/019e7b25-ffc6-7168-aa18-034cd2330822",
-        "disabled": true,
+        "disabled": false,
         "settings": {}
       }
     },
