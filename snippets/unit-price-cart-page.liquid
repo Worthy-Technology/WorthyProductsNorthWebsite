@@ -73,8 +73,8 @@
 {% endif %}
 
 {% assign cart_qty = item.quantity | default: 1 %}
-{% assign base_unit_price_final = WCItem_FinalLinePrice | divided_by: cart_qty | divided_by: pack_size %}
-{% assign base_unit_price_compare = WCItem_OriginalLinePrice | divided_by: cart_qty | divided_by: pack_size %}
+{% assign base_unit_price_final = item.final_line_price | divided_by: cart_qty | divided_by: pack_size %}
+{% assign base_unit_price_compare = item.original_line_price | divided_by: cart_qty | divided_by: pack_size %}
 {% assign unit_price_savings = base_unit_price_compare | minus: base_unit_price_final %}
 
 <div class="cart-unit-price-block unit-price-box" data-row="{{ item.key }}">

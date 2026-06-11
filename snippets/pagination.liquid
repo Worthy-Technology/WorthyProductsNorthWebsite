@@ -36,12 +36,6 @@
           {%- endif -%}
 
           {%- for part in paginate.parts -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: part %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
             <li class="flex">
               {%- if part.is_link -%}

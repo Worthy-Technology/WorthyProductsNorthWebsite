@@ -111,12 +111,6 @@
           {% endif %}
           <ul id="{{ localPosition }}List" role="list" class="disclosure__list custom-scrollbar list-unstyled">
             {%- for language in localization.available_languages -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: language %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <li class="disclosure__item" tabindex="-1">
                 <a
@@ -202,12 +196,6 @@
                   aria-label="{{ 'localization.popular_countries_regions' | t }}"
               >
                 {%- for country in popular_countries -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: country %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                   <li class="disclosure__item" tabindex="-1">
                     <a
@@ -240,12 +228,6 @@
               {{ country_filter }}
 
               {%- for country in localization.available_countries -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: country %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                 <li class="disclosure__item" tabindex="-1">
                   <a

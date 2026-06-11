@@ -69,12 +69,6 @@
           style="flex-wrap: inherit;"
         >
           {%- for block in section.blocks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
             {%- assign this_index = "," | append: forloop.index | append: "," -%}
             {%- if announcements_to_show contains this_index -%}

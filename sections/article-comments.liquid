@@ -28,12 +28,6 @@
                   {%- endif -%}
 
                   {%- for comment in article.comments -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: comment %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                     <article id="{{ comment.id }}" class="article-template__comments-comment js-pagination__item color-{{ section.settings.comment_color_scheme }} isolate gradient card--shadow content-container">
                       {{ comment.content }}
@@ -71,12 +65,6 @@
               </div>
               <ul class="form-status-list caption-large">
                 {%- for field in form.errors -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: field %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                   <li>
                     <a href="#CommentForm-{{ field }}" class="link no-scroll">

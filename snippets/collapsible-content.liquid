@@ -172,12 +172,6 @@
 
                   {%- assign non_empty_tab_index = 0 -%}
                   {%- for block in section.blocks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                     {%- if block.settings.page.content != blank or block.settings.row_content != blank or block.settings.content_embed != blank or section.settings.hide_when_empty == false or request.design_mode -%}
                       {%- if block.type == 'collapsible_row' -%}
@@ -217,12 +211,6 @@
               <div class="section-content{% if remove_content_padding %} p-0{% endif %} lg:p-0 w-full accordion-container">
                 {%- assign non_empty_tab_index = 0 -%}
                 {%- for block in section.blocks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                   {%- if block.type == 'collapsible_row' -%}
                     {%- if block.settings.page.content != blank or block.settings.content_embed != blank or block.settings.row_content != blank or section.settings.hide_when_empty == false or request.design_mode -%}

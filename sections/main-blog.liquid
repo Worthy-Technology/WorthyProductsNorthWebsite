@@ -20,12 +20,6 @@
             </a>
 
             {% for tag in blog.all_tags %}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: tag %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <a  href="{{ tag | link_to_tag: tag | split: 'href="' | last | split: '"' | first }}" class="custom-tab{% if current_tags contains tag %} custom-tab--active{% endif %}">
                 {{- tag -}}
@@ -46,12 +40,6 @@
         grid--1-col-tablet-down"
      >
         {%- for article in blog.articles -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: article %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           {%- if section.settings.blog_card_omit == blank or article.id != section.settings.blog_card_omit.id -%}
             <div

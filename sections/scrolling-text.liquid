@@ -59,12 +59,6 @@
             {% unless section.index < 4 or section.location == 'header' or request.design_mode %}<template class="deferred block lazy-template">{% endunless %}
 
             {%- for i in (1..16) -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: i %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <div class="scrolling-text__content flex items-center"{% unless forloop.first %} aria-hidden="true"{% endunless %}>
                 {%- if forloop.first -%}

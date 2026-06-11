@@ -112,14 +112,8 @@
         >
           <div class="banner__box section-content section-content-{{ section.id }} max-w-{{ section.settings.content_max_width }} content-container content-container--full-width-mobile color-{{ section.settings.container_color_scheme }} gradient items-{{ section.settings.mobile_content_alignment }} md:items-{{ section.settings.desktop_content_alignment }} text-{{ section.settings.mobile_content_alignment }} md:text-{{ section.settings.desktop_content_alignment }}{% if section.settings.show_text_box == 'off' %} pt-0 pb-0{% endif %}{% unless image %} xs:pl-mobile xs:pr-mobile {% if section.settings.show_text_box == 'off' or section.settings.show_text_box == 'mobile' %} md:pl-0 md:pr-0{% endif %}{% endunless %}">
             {%- for block in section.blocks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
-              {%- capture wlm_check -%}{%- render 'wlm-collection' with block , wlm_is_render:'yes' -%}{%- endcapture -%}{%- if wlm_check == blank -%}{%continue%}{%- endif -%}
+              
               {%- if block.type == 'collection_heading' -%}
                 <{{ block.settings.heading_tag }}
                   class="collection__heading inline-richtext section-content__heading color-heading{% if block.settings.heading_size == "custom" %} text-size-custom{% else %} {{ block.settings.heading_size }}{% endif %} self-{{ section.settings.mobile_content_alignment | default: block.settings.mobile_content_alignment }} text-{{ section.settings.mobile_content_alignment | default: block.settings.mobile_content_alignment }} md:self-{{ section.settings.desktop_content_alignment | default: block.settings.desktop_content_alignment }} md:text-{{ section.settings.desktop_content_alignment | default: block.settings.desktop_content_alignment }}"

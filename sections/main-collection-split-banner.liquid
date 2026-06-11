@@ -1,8 +1,3 @@
-{%- comment -%} Wholesale_Hub_Product_Visibility_Resource_Page Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility" %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% render "orbit_wholesale_page_replacement" %}
-{%- else -%}
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
 {{ 'component-collection-split-hero.css' | asset_url | stylesheet_tag }}
 
@@ -88,8 +83,6 @@
 </div>
 
 
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_Resource_Page End {%- endcomment -%}
 {% schema %}
 {
   "name": "Collection split banner",

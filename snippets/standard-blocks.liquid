@@ -655,12 +655,6 @@
       {%# Level 1 %}
       {%- capture level_1_options -%}
         {%- for level_1_link in block.settings.filter_menu.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: level_1_link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           <option data-url="{{ level_1_link.url }}" id="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}" value="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}">
             {{ level_1_link.title | escape }}
@@ -671,20 +665,8 @@
       {%# Level 2 %}
       {%- capture level_2_options -%}
         {%- for level_1_link in block.settings.filter_menu.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: level_1_link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           {%- for level_2_link in level_1_link.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: level_2_link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
             <option data-url="{{ level_2_link.url }}" id="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}_{{ level_2_link.handle }}" value="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}_{{ level_2_link.handle }}" data-parent-id="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}">
               {{ level_2_link.title | escape }}
@@ -696,28 +678,10 @@
       {%# Level 3 %}
       {%- capture level_3_options -%}
         {%- for level_1_link in block.settings.filter_menu.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: level_1_link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           {%- for level_2_link in level_1_link.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: level_2_link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
             {%- for level_3_link in level_2_link.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: level_3_link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <option data-url="{{ level_3_link.url }}" id="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}_{{ level_2_link.handle }}_{{ level_3_link.handle }}" value="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}_{{ level_2_link.handle }}_{{ level_3_link.handle }}" data-parent-id="{{ section.id }}_{{ block.id }}_{{ level_1_link.handle }}_{{ level_2_link.handle }}">
                 {{ level_3_link.title | escape }}

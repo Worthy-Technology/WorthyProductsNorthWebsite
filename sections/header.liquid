@@ -198,12 +198,6 @@
           assign mega_menu_labels = mega_menu_link_labels | downcase | replace: ',,', ',' | replace: ' ,', ',' | replace: ', ', ',' | split: ','
         -%}
         {%- for link in section.settings.menu.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           {%- liquid
             assign link_title = link.title | downcase

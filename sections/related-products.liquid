@@ -70,17 +70,7 @@
               aria-label="{{ 'general.slider.name' | t }}"
           >
             {% for recommendation in recommendations.products %}
-              {% capture wlm_check %}{% include 'wlm-product' with recommendation  %}{% endcapture %}
-                {% unless wlm_check contains "Liquid error" %}
-                {% include 'wlm-product' with recommendation %}
-                {% endunless %}
 
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: recommendation %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <li
                   id="Slide-{{ section.id }}-{{ forloop.index }}"

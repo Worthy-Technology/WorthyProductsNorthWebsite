@@ -1,12 +1,6 @@
 {%- assign show_on_product_page = false -%}
 {%- if section.blocks.size > 0 -%}
   {% for sticker in section.blocks %}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: sticker %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
     {%- if sticker.settings.text != blank and sticker.settings.match_links != blank or sticker.settings.match_collections != blank or sticker.settings.match_products != blank -%}
       <div
@@ -14,21 +8,9 @@
           id="sticker-{{ sticker.id }}"
           {% if sticker.settings.match_links %}data-match-links={{ sticker.settings.match_links | downcase | newline_to_br | strip_newlines | split: '<br />' | join: "||" | json }}{% endif %}
           {% if sticker.settings.match_collections %}data-match-collections="{% for sticker_collection in sticker.settings.match_collections %}{{ sticker_collection.id }}{% unless forloop.last %}||{% endunless %}{% endfor %}"{% endif %}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: sticker_collection %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           {% if sticker.settings.match_products %}
             data-match-products="{% for sticker_product in sticker.settings.match_products %}{{ sticker_product.id }}{% unless forloop.last %}||{% endunless %}{% endfor %}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: sticker_product %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 "
             {% if show_on_product_page %}data-show-product-page="{{ show_on_product_page }}"{% endif %}
           {% endif %}
@@ -43,12 +25,6 @@
 
   <style>
     {% for sticker in section.blocks %}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: sticker %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
       {%- liquid
         # Determine the font size

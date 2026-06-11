@@ -39,12 +39,6 @@
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
               {%- assign menu = section.settings.menu_burger | default: section.settings.menu -%}
               {%- for link in menu.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                 {%- liquid
                   assign icon_setting = "drawer_icon_" | append: forloop.index
@@ -108,12 +102,6 @@
                               {%- endif -%}
 
                               {%- for childlink in link.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: childlink %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                                 <li>
                                   {%- if childlink.links == blank -%}
@@ -148,12 +136,6 @@
                                             tabindex="-1"
                                           >
                                             {%- for grandchildlink in childlink.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: grandchildlink %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                                               <li>
                                                 <a

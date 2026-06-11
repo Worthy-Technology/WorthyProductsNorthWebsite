@@ -27,12 +27,6 @@
 {% endcomment %}
 
 {%- for filter in results.filters -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: filter %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
   {% liquid
     assign show_filter_count_actual = show_filter_count
@@ -159,12 +153,6 @@
                   role="list"
               >
                 {%- for value in sorted_values -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: value %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                   {% liquid
                     assign input_id = id | append: 'Filter-' | append: filter.param_name | escape | append: '-' | append: forloop.index

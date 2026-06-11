@@ -10,12 +10,6 @@
   <link rel="stylesheet" href="{{ 'image-hotspot.css' | asset_url }}" media="print" onload="this.media='all'">
 
   {%- for block in hotspot_blocks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
     {% liquid
       assign x_desktop = block.settings.hotspot_horizontal_position_override_desktop | default: block.settings.hotspot_horizontal_position_desktop | replace: '%', '' | strip | plus: 0

@@ -45,8 +45,6 @@
               <tbody role="rowgroup">
                 {%- for order in customer.orders -%}
 
-                  {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: order %}{%- endcapture -%}
-                  {%- if hide_resource == "true" -%}{% continue %}{%- endif -%}
 
                   {%- assign items_available = '' -%}
                   {%- assign items_oos = '' -%}
@@ -54,8 +52,6 @@
 
                   {%- for li in order.line_items -%}
 
-                    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: li %}{%- endcapture -%}
-                    {%- if hide_resource == "true" -%}{% continue %}{%- endif -%}
 
                     {%- if li.variant and li.variant.id -%}
 
@@ -158,8 +154,6 @@
 
               {% for part in paginate.parts %}
 
-                {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: part %}{%- endcapture -%}
-                {%- if hide_resource == "true" -%}{% continue %}{%- endif -%}
 
                 <li>
                   {% if part.is_link %}

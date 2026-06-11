@@ -180,12 +180,6 @@
   {%- capture product_icons -%}
     <div class="flex flex-wrap gap-05 justify-{{ settings.product_icons_alignment }}">
       {%- for icon in card_product.metafields.custom.icons.value -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: icon %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
         {%- assign image_height = settings.product_icons_size | divided_by: icon.aspect_ratio -%}
         {% capture sizes %}(max-width: {{ settings.product_icons_size | times: 2 }}px) 50vw, {{ settings.product_icons_size | times: 2 }}px{% endcapture %}
@@ -480,12 +474,6 @@
                       assign highlight_excess_count = 0
                     -%}
                     {%- for highlight in card_product.metafields.custom.highlights.value -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: highlight %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                       {%- assign highlight_count = highlight_count | plus: 1 -%}
                       {%- if forloop.index <= settings.card_highlight_badge_max or settings.card_highlight_badge_max == 0 -%}
@@ -506,12 +494,6 @@
             {%- if settings.card_option_badge_options and horizontal_class == blank -%}
               {%- assign highlight_options = settings.card_option_badge_options | downcase | replace: ',,', ',' | replace: ' ,', ',' | replace: ', ', ',' | split: ',' -%}
               {%- for option in card_product.options_with_values -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: option %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                 {%- assign option_name_downcase = option.name | downcase -%}
                 {%- if highlight_options contains option_name_downcase -%}
@@ -532,12 +514,6 @@
                           assign highlight_excess_count = 0
                         -%}
                         {%- for value in option.values -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: value %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                           {%- assign highlight_count = highlight_count | plus: 1 -%}
                           {%- if forloop.index <= settings.card_option_badge_max or settings.card_option_badge_max == 0 -%}
@@ -673,12 +649,6 @@
                           <span>{{ 'sections.quick_order_list.each_html' | t: money: price }}</span>
                         </li>
                         {%- for price_break in card_product.selected_or_first_available_variant.quantity_price_breaks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: price_break %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                           <li>
                             <span>

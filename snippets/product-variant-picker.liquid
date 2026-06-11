@@ -23,12 +23,6 @@
     {%- assign size_chart_options = block.settings.size_chart_options | downcase | replace: ',,', ',' | replace: ' ,', ',' | replace: ', ', ',' | split: ',' -%}
 
     {%- for option in product.options_with_values -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: option %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
       {%- liquid
         assign option_name_downcase = option.name | downcase

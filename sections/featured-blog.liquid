@@ -100,12 +100,6 @@
         >
           {%- if section.settings.blog != blank -%}
             {%- for article in section.settings.blog.articles limit: section.settings.posts_to_show -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: article %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <li
                 id="Slide-{{ section.id }}-{{ forloop.index }}"
@@ -146,12 +140,6 @@
           {%- else -%}
 
             {% for i in (1..columns_to_display) -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: i %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <li
                   id="Slide-{{ section.id }}-{{ forloop.index }}"

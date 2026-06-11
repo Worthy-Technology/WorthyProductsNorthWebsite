@@ -15,8 +15,6 @@
   {% for block in section.blocks %}
 
     {%- comment -%} Orbit Wholesale Visibility Start {%- endcomment -%}
-    {%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-    {%- if hide_resource == "true" %}{% continue %}{% endif %}
     {%- comment -%} Orbit Wholesale Visibility End {%- endcomment -%}
 
     {% if customer.tags contains block.settings.customer_tag %}

@@ -69,12 +69,6 @@
           <select class="{% unless section.settings.search == 'icon' %}styled-select styled-select-xs {% endunless %}select__select caption-large js-product-types" id="{{ input_id }}_header-product-type" name="filter.p.product_type">
             <option value=""{% if active_product_type == blank %} selected{% endif %}>{{ 'general.search.all_product_types' | t }}</option>
             {%- for type in shop.types -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: type %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               {% if type != blank %}
                 <option value="{{ type }}"{% if type == active_product_type %} selected{% endif %}>{{ type }}</option>
@@ -141,12 +135,6 @@
           <div class="search-suggestions color-{{ section.settings.search_bar_color_scheme }} gradient pt-3{% if section.settings.search == 'bar' %} hidden-md{% endif %}">
             <ul class="list-unstyled flex flex-wrap justify-center gap-1" aria-label="{{- 'templates.search.popular_searches' | t | escape -}}">
               {%- for suggestion in suggestions -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: suggestion %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                 <li>
                   <a href="{{ routes.search_url }}?options%5Bprefix%5D=last&q={{ suggestion | url_encode }}" class="predictive-search__item predictive-search__suggestion link link--text border">
@@ -168,12 +156,6 @@
             <p class="predictive-search__subheading font-medium t3 mb-1 mt-1 pl-15 pr-15">{{- 'templates.search.popular_searches' | t -}}</p>
             <ul class="list-unstyled">
               {%- for suggestion in suggestions -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: suggestion %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                 <li>
                   <a href="{{ routes.search_url }}?options%5Bprefix%5D=last&q={{ suggestion | url_encode }}" class="predictive-search__item link link--text ">

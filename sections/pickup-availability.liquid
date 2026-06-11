@@ -70,21 +70,9 @@
     {%- unless product_variant.product.has_only_default_variant -%}
       <p class="pickup-availability-variant p-2 pb-0">
         {%- for product_option in product_variant.product.options_with_values -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: product_option %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
           {{ product_option.name | escape }}:&nbsp;
           {%- for value in product_option.values -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: value %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
             {%- if product_option.selected_value == value -%}
               <span>{{ value | escape }}</span>
@@ -97,12 +85,6 @@
 
     <ul class="pickup-availability-list list-unstyled" role="list" data-store-availability-drawer-content>
       {%- for availability in pick_up_availabilities -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: availability %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
         <li class="pickup-availability-list__item gradient color-scheme-2 border-radius-panel mt-2 border p-2 pb-1">
           <h3 class="text-body t4 font-bold mt-0 mb-0">{{ availability.location.name | escape }}</h3>

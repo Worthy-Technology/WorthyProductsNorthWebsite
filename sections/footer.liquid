@@ -45,12 +45,6 @@
         {%- if section.blocks.size > 0 -%}
           <div class="footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet {{ footer_grid_class }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
             {%- for block in section.blocks -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: block %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
               <div
                 class="footer-block grid__item{% if block.settings.wider %} footer-block--wider{% endif %}{% if block.type == 'link_list' %} footer-block--menu{% endif %}"
@@ -99,12 +93,6 @@
                       <ul class="footer-block__details-content list-unstyled{% if collapsible == false %} footer-block--not-collapsible{% endif %}">
                         {%- if block.settings.menu != blank -%}
                           {%- for link in block.settings.menu.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                             <li>
                               <a
@@ -191,12 +179,6 @@
             <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
             <ul class="list list-payment pt-0" role="list">
               {%- for type in shop.enabled_payment_types -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: type %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                 <li class="list-payment__item">
                   {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
@@ -236,12 +218,6 @@
               <span class="hidden-xs">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
               <ul class="footer__mini-links flex flex-wrap items-center justify-center md:justify-start list-unstyled mt-1 md:mt-0">
                 {%- for link in section.settings.bottom_bar_links.links -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: link %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
                   {%- if link != blank -%}
                     <li>

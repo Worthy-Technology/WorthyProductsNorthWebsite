@@ -28,18 +28,8 @@
           class="collection-list grid grid--{{ columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--scaled"
           role="list"
         >
-          {%- for collection in collections -%}{%- capture wlm_check -%}{%- render 'wlm-collection' with collection , wlm_is_render:'yes' -%}{%- endcapture -%}{%- if wlm_check == blank -%}{%continue%}{%- endif -%}
-            {% capture wlm_check %}{% include 'wlm-collection' with collection%}{% endcapture %}
-                {% unless wlm_check contains "Liquid error" %}
-                {% include 'wlm-collection' with collection %}
-                {% endunless %}
+          {%- for collection in collections -%}
 
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop Start {%- endcomment -%}
-{%- capture hide_resource -%}{% render "orbit_wholesale_product_visibility", resource: collection %}{%- endcapture -%}
-{%- if hide_resource == "true" -%}
-  {% continue %}
-{%- endif -%}
-{%- comment -%} Wholesale_Hub_Product_Visibility_For_Loop End {%- endcomment -%}
 
              
             <li
