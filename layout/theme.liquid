@@ -989,7 +989,8 @@ document.addEventListener('click', function (e) {
    {% comment %} End Back in Stock Block CSS - Pratham {% endcomment %}
 
 
-<script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+{% comment %} &fix= busts year-long browser caches after the 2026-06-12 wishlist auto-heal update {% endcomment %}
+<script src="{{ 'wishlist.js' | asset_url }}&fix=20260612" defer="defer"></script>
 {% if customer %}
   <script>
     // This creates the bridge between Shopify's database and your Javascript
