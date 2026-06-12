@@ -258,19 +258,37 @@ async function renderWishlistPage() {
   }
 
   // Step 3: Fill in missing handles using the Liquid lookup map
-  const merged = workerItems.map(item => ({
+  let merged = workerItems.map(item => ({
     id: item.id,
     handle: item.handle || handleMap[String(item.id)] || null
   }));
 
-  // Step 4: One-time migration — save resolved handles to worker as json type
-  // After this fires, Liquid will output ALL items on next page load (no 50-item cap)
-  const needsMigration = merged.some((item, i) => item.handle && !workerItems[i].handle);
-  if (needsMigration) {
+  // Step 3b: Auto-heal — the worker drops items saved without handles, which
+  // shrank some customers' lists (June 2026 incident). If the worker list is
+  // drastically smaller than the account's favorites metafield, merge the
+  // missing metafield items back in. Threshold avoids resurrecting items the
+  // customer deliberately removed; localStorage avoids re-healing each visit.
+  const legacyItems = window.wishlistData || [];
+  const workerIds = new Set(merged.map(item => String(item.id)));
+  const lostItems = legacyItems.filter(p => p.id && p.handle && !workerIds.has(String(p.id)));
+  const healKey = 'wishlistHealed:' + customerId;
+  const lossDetected = lostItems.length > 0 && workerItems.length < legacyItems.length * 0.6;
+  if (lossDetected && !localStorage.getItem(healKey)) {
+    merged = merged.concat(lostItems.map(p => ({ id: p.id, handle: p.handle })));
+  }
+
+  // Step 4: Persist handles/healed items back to the worker — but ONLY when
+  // every item has a handle. The worker discards null-handle items on save,
+  // so persisting a partial list would permanently lose them.
+  const grew = merged.length > workerItems.length;
+  const filledHandles = workerItems.some((item, i) => !item.handle && merged[i].handle);
+  if ((grew || filledHandles) && merged.every(item => item.handle)) {
     fetch(WISHLIST_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ customerId, action: 'migrate_handles', items: merged })
+    }).then(res => {
+      if (res.ok && lossDetected) localStorage.setItem(healKey, '1');
     }).catch(() => {});
   }
 
@@ -286,18 +304,27 @@ async function renderWishlistPage() {
   grid.innerHTML = '';
   const productCards = [];
 
-  for (const productObj of favorites) {
-    try {
-      const response = await fetch(`/products/${productObj.handle}?view=wishlist-item`);
-      const html = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const cardWrapper = doc.querySelector('.grid__item');
-      if (cardWrapper) {
-        grid.appendChild(cardWrapper);
-        productCards.push(cardWrapper);
-      }
-    } catch (e) { console.error('Item load fail:', e); }
+  // Fetch cards in parallel batches (sequential loading took ~40s on large
+  // lists), then append in original order.
+  const BATCH = 10;
+  const htmlResults = new Array(favorites.length).fill(null);
+  for (let i = 0; i < favorites.length; i += BATCH) {
+    await Promise.all(favorites.slice(i, i + BATCH).map((productObj, j) =>
+      fetch(`/products/${productObj.handle}?view=wishlist-item`)
+        .then(r => r.text())
+        .then(html => { htmlResults[i + j] = html; })
+        .catch(e => console.error('Item load fail:', e))
+    ));
+  }
+  const parser = new DOMParser();
+  for (const html of htmlResults) {
+    if (!html) continue;
+    const doc = parser.parseFromString(html, 'text/html');
+    const cardWrapper = doc.querySelector('.grid__item');
+    if (cardWrapper) {
+      grid.appendChild(cardWrapper);
+      productCards.push(cardWrapper);
+    }
   }
 
   if (sidebar) sidebar.style.display = 'block';
