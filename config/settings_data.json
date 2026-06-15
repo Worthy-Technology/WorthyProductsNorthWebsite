@@ -172,39 +172,6 @@
     },
     "content_for_index": [],
     "blocks": {
-      "6610233760104865948": {
-        "type": "shopify://apps/pushowl-brevo/blocks/pushowl-app-embed-3d2ff2b5/fa20c3ba-38bf-43e0-ba5c-431f6ae07d95",
-        "disabled": false,
-        "settings": {}
-      },
-      "10077418179866729617": {
-        "type": "shopify://apps/hidepay/blocks/hidepay-frontend/ced40b5a-eb19-49dc-a57f-5e5a6bca7bf9",
-        "disabled": false,
-        "settings": {
-          "drawerId": "additional-checkout-buttons"
-        }
-      },
-      "1064529437809880580": {
-        "type": "shopify://apps/miko-loyalty-and-rewards/blocks/loyalty-embed/019e4968-51f5-7319-82d6-54354d710bb0",
-        "disabled": false,
-        "settings": {
-          "points_label": "pts",
-          "position": "bottom-right",
-          "logo": "shopify://shop_images/Worthy_Product_Transparent.png",
-          "heading_font": "assistant_n4",
-          "body_font": "assistant_n4",
-          "corner_radius": 16,
-          "badge_color": "#82aceb",
-          "panel_bg": "#ffffff",
-          "panel_text": "#0f172a",
-          "hero_gradient_from": "#82aceb",
-          "hero_gradient_to": "#ffffff",
-          "panel_title": "Worthy Rewards Program",
-          "guest_message": "Join Worthy Rewards",
-          "guest_panel_title": "Earn rewards with every purchase",
-          "guest_panel_subtitle": "Sign up to start earning points and unlock exclusive perks."
-        }
-      },
       "15378120609403553491": {
         "type": "shopify://apps/miko-b2b-wholesale-hub/blocks/b2b-pricing/019e7b25-ffc6-7168-aa18-034cd2330822",
         "disabled": false,
