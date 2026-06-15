@@ -358,67 +358,6 @@
   </script>
 {%- endif -%}
 
-
-
-
-{% comment %} Start Loader and Redirect to correct Products - Pratham {% endcomment %}
- {% comment %}
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  setTimeout(function() {
-    var allCards = document.querySelectorAll('product-card, .product-card, .product-card-wrapper, .card-wrapper');
-    var visibleCards = 0;
-    allCards.forEach(function(card) {
-      var style = window.getComputedStyle(card);
-      if (style.display !== 'none' && style.visibility !== 'hidden' && card.offsetParent !== null) {
-        visibleCards++;
-      }
-    });
-
-    if (visibleCards === 0) {
-      // Create loader overlay
-      var loader = document.createElement('div');
-      loader.id = 'drusk-loader-overlay';
-      loader.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:white;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;";
-      loader.innerHTML = `
-        <div style="font-size:2em;margin-bottom:1em;">
-          Loading your products<span id="drusk-dots">.</span>
-        </div>
-        <div style="border:6px solid #f3f3f3;border-top:6px solid #363636;border-radius:50%;width:60px;height:60px;animation:drusk-spin 1s linear infinite;"></div>
-        <style>
-        @keyframes drusk-spin {
-          0% { transform: rotate(0deg);}
-          100% { transform: rotate(360deg);}
-        }
-        </style>
-      `;
-      document.body.appendChild(loader);
-
-      // Animate the dots
-      var dots = document.getElementById('drusk-dots');
-      var dotCount = 1;
-      var dotInterval = setInterval(function() {
-        dotCount = (dotCount % 3) + 1;
-        dots.textContent = '.'.repeat(dotCount);
-      }, 350);
-
-      setTimeout(function() {
-        clearInterval(dotInterval);
-        window.location.href = '/collections/all';
-      }, 1500); // Loader and animation visible for 1 second before redirect
-    }
-  }, 200);
-});
-</script>
-<noscript>
-  <div style="padding:2em;text-align:center;">
-    <h2>You are not allowed to view the products in this collection.</h2>
-    <p>Please <a href="/collections/all">click here</a> to browse products you are allowed to see.</p>
-  </div>
-</noscript>
-{% endcomment %}
-{% comment %} End Loader and Redirect to correct Products - Pratham {% endcomment %}
-
 {% unless customer.tags contains 'caltex' %}
 {% render 'unit-price-product-grid' %}
 {% endunless %}
