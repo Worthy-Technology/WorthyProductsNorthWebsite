@@ -881,59 +881,7 @@ document.addEventListener('click', function (e) {
       <script src="{{ 'instant-page.js' | asset_url }}" defer="defer"></script>
     {%- endunless -%}
 
-    {% comment %} START Redirect Customers to right collections - Pratham  {% endcomment %}
-      {% if collection.handle == 'all' and customer %}
-      {% assign collection_redirect = '' %}
-      {% if customer.tags contains 'Mobil New' %}
-        {% assign collection_redirect = '/collections/mobil' %}
-        {% elsif customer.tags contains 'Mobil Existing' %}
-        {% assign collection_redirect = '/collections/mobil' %}
-        {% elsif customer.tags contains 'mobil' %}
-        {% assign collection_redirect = '/collections/mobil' %}
-        {% elsif customer.tags contains 'caltex' %}
-        {% assign collection_redirect = '/collections/caltex' %}
-        {% elsif customer.tags contains 'NZMPEA' %}
-        {% assign collection_redirect = '/collections/nzmpea' %}
-        {% elsif customer.tags contains 'Metromart' %}
-        {% assign collection_redirect = '/collections/metromart' %}
-      {% endif %}
-          
-      {% if collection_redirect != '' %}
-        <script>
-          // Show loader
-          var loader = document.createElement('div');
-          loader.id = 'drusk-loader-overlay';
-          loader.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:white;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;";
-          loader.innerHTML = `
-            <div style="font-size:2em;margin-bottom:1em;">
-              Loading your products<span id="drusk-dots">.</span>
-            </div>
-            <div style="border:6px solid #f3f3f3;border-top:6px solid #363636;border-radius:50%;width:60px;height:60px;animation:drusk-spin 1s linear infinite;"></div>
-            <style>
-            @keyframes drusk-spin {
-              0% { transform: rotate(0deg);}
-              100% { transform: rotate(360deg);}
-            }
-            </style>
-          `;
-          document.body.appendChild(loader);
-
-          // Animate the dots
-          var dots = loader.querySelector('#drusk-dots');
-          var dotCount = 1;
-          var dotInterval = setInterval(function() {
-            dotCount = (dotCount % 3) + 1;
-            dots.textContent = '.'.repeat(dotCount);
-          }, 50);
-
-          setTimeout(function() {
-            clearInterval(dotInterval);
-            location.replace("{{ collection_redirect }}");
-          }, 50); // Minimal seconds delay before redirecting
-        </script>
-      {% endif %}
-    {% endif %}
-    {% comment %} END Redirect Customers to right collections - Pratham {% endcomment %}
+    
 
     {% comment %} Start Back in Stock Block CSS - Pratham {% endcomment %}
       <style>
