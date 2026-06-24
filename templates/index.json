@@ -75,7 +75,7 @@
           "settings": {
             "image": "shopify://shop_images/LOL_-_Worthy_Products_2.webp",
             "mobile_image": "shopify://shop_images/LOL_-_Worthy_Products_1.webp",
-            "image_overlay_opacity": 16,
+            "image_overlay_opacity": 2,
             "image_link": "shopify://collections/lol",
             "horizontal_offset": 3.2,
             "vertical_offset": -1.2,
