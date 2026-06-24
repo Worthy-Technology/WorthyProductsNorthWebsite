@@ -79,7 +79,7 @@
             "image_link": "shopify://collections/lol",
             "horizontal_offset": 3.2,
             "vertical_offset": -1.2,
-            "desktop_content_position": "md:justify-start md:items-start",
+            "desktop_content_position": "md:justify-start md:items-center",
             "mobile_content_position": "justify-center items-center",
             "content_max_width": "l",
             "desktop_content_alignment": "left",
