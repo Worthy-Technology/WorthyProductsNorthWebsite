@@ -70,6 +70,48 @@
     "slideshow_hc4nU7": {
       "type": "slideshow",
       "blocks": {
+        "slide_8TVwmi": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/LOL_-_Worthy_Products_2.webp",
+            "mobile_image": "shopify://shop_images/LOL_-_Worthy_Products_1.webp",
+            "image_overlay_opacity": 16,
+            "image_link": "shopify://collections/lol",
+            "horizontal_offset": 3.2,
+            "vertical_offset": -1.2,
+            "desktop_content_position": "md:justify-start md:items-start",
+            "mobile_content_position": "justify-center items-center",
+            "content_max_width": "l",
+            "desktop_content_alignment": "left",
+            "mobile_content_alignment": "center",
+            "show_text_box": "mobile",
+            "caption": "",
+            "caption_text_style": "caption-with-letter-spacing",
+            "caption_text_size": "t7",
+            "heading": "Meet LOL <em>Bubble Tea</em>",
+            "heading_italic_convert": "outline",
+            "heading_size": "h3",
+            "heading_size_custom": 3.8,
+            "heading_line_height_custom": 1,
+            "heading_tag": "h2",
+            "text": "<p>NZ's First RTD Bubble Tea with Real Popping Pearls</p>",
+            "text_size": "t4",
+            "button_text_size": "t5",
+            "button_label_1": "Shop now",
+            "button_link_1": "shopify://collections/lol",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "color_scheme": "scheme-7"
+          }
+        },
         "slide_bMYq4n": {
           "type": "slide",
           "settings": {
@@ -154,48 +196,6 @@
             "color_scheme": "scheme-3"
           }
         },
-        "slide_8TVwmi": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Exeter_Meat_-_Worthy_Products.webp",
-            "mobile_image": "shopify://shop_images/Exeter_Meat_-_Worthy_Products_1.webp",
-            "image_overlay_opacity": 16,
-            "image_link": "shopify://collections/meat-snacks",
-            "horizontal_offset": 3.2,
-            "vertical_offset": -1.2,
-            "desktop_content_position": "md:justify-start md:items-center",
-            "mobile_content_position": "justify-center items-center",
-            "content_max_width": "l",
-            "desktop_content_alignment": "left",
-            "mobile_content_alignment": "center",
-            "show_text_box": "mobile",
-            "caption": "",
-            "caption_text_style": "caption-with-letter-spacing",
-            "caption_text_size": "t7",
-            "heading": "Worthy Exclusive <em>Corned Beef </em>",
-            "heading_italic_convert": "glow",
-            "heading_size": "h3",
-            "heading_size_custom": 3.8,
-            "heading_line_height_custom": 1,
-            "heading_tag": "h2",
-            "text": "<p>Premium Corned Beef & Luncheon Meat</p>",
-            "text_size": "t4",
-            "button_text_size": "t5",
-            "button_label_1": "Shop now",
-            "button_link_1": "shopify://collections/meat-snacks",
-            "button_style_1": "secondary",
-            "button_style_1_show_arrow": true,
-            "button_style_1_show_gradient_border": false,
-            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_2": "secondary",
-            "button_style_2_show_arrow": false,
-            "button_style_2_show_gradient_border": false,
-            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
-            "color_scheme": "scheme-3"
-          }
-        },
         "slide_KNgm7F": {
           "type": "slide",
           "settings": {
@@ -240,9 +240,9 @@
         }
       },
       "block_order": [
+        "slide_8TVwmi",
         "slide_bMYq4n",
         "slide_x9GBMc",
-        "slide_8TVwmi",
         "slide_KNgm7F"
       ],
       "settings": {
