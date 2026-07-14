@@ -320,13 +320,21 @@
 </div>
 
 {%- if settings.seo_schema_collection == 'theme' -%}
+  {%- liquid
+    assign collection_schema_description = collection.description | strip_html
+    if collection_schema_description == blank
+      assign collection_schema_description = 'Browse our bulk wholesale ' | append: collection.title | append: ' catalog. Distributed by Worthy Products across New Zealand.'
+    endif
+  -%}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "{{ collection.title | escape }} - Wholesale Confectionery",
-    "description": {{ collection.description | default: 'Browse our bulk wholesale confectionery catalog. Distributed by Worthy Products across New Zealand.' | strip_html | json }},
-    "image": "{{ collection.image.src | image_url: width: 600 | prepend: 'https:' }}",
+    "name": "{{ collection.title | escape }}",
+    "description": {{ collection_schema_description | json }},
+    {%- if collection.image -%}
+    "image": "{{ collection.image | image_url: width: 600 | prepend: 'https:' }}",
+    {%- endif -%}
     "url": "{{ shop.url }}{{ collection.url }}",
     "publisher": {
       "@type": "Organization",
@@ -354,6 +362,38 @@
         {% endfor %}
       ]
     }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need a wholesale account to see pricing on {{ collection.title | escape }}?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Worthy Products is a B2B wholesale distributor, so pricing on {{ collection.title | escape }} is only visible once you're logged into an approved wholesale account. New accounts are welcome and free to set up."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fast do you dispatch {{ collection.title | escape }} orders?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Orders placed before 10am are dispatched the same day, NZ-wide, from our Auckland warehouse."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you supply {{ collection.title | escape }} to dairies, petrol stations and convenience stores across New Zealand?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Worthy Products supplies 3,000+ dairies, petrol stations, supermarkets, convenience stores and school canteens across New Zealand as an FMCG wholesaler and beverage distributor."
+        }
+      }
+    ]
   }
   </script>
 {%- endif -%}

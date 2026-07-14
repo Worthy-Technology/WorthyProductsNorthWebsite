@@ -887,6 +887,71 @@
         "heading_tag": "h2"
       }
     },
+    "rich_text_fmcgSeo1": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_fmcgSeoH": {
+          "type": "heading",
+          "settings": {
+            "heading": "New Zealand's ++ <em><strong>FMCG Wholesaler & Beverage Distributor</strong></em> of Choice",
+            "heading_italic_convert": "accent",
+            "heading_size": "custom",
+            "heading_size_custom": 3.2,
+            "heading_line_height_custom": 1.4,
+            "heading_tag": "h2"
+          }
+        },
+        "text_fmcgSeoT": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Looking for a dependable FMCG wholesaler in New Zealand? Worthy Products has built the kind of wholesale distribution network that dairies, service stations, supermarkets and convenience stores actually rely on. As both a beverage distributor and a full-range wholesale confectionery, grocery and health &amp; beauty supplier, we give retailers a single account instead of juggling half a dozen wholesale suppliers across New Zealand.</p><p>Whether you're comparing FMCG distributors in New Zealand for the first time or switching from an existing wholesale supplier, our Auckland warehouse ships same-day on orders placed before 10am, nationwide. From soft drinks and energy drinks to chocolate, snacks and everyday essentials, Worthy Products is built to be the only wholesale distributor your store needs.</p>",
+            "text_size": "t3"
+          }
+        },
+        "buttons_fmcgSeoB": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t2",
+            "button_label_1": "Become a Wholesale Customer",
+            "button_link_1": "shopify://pages/wholesale-inquiries",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": false,
+            "button_style_2_show_gradient_border": false,
+            "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+          }
+        }
+      },
+      "block_order": [
+        "heading_fmcgSeoH",
+        "text_fmcgSeoT",
+        "buttons_fmcgSeoB"
+      ],
+      "settings": {
+        "desktop_content_position": "left",
+        "content_max_width": "l",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-1",
+        "container_color_scheme": "scheme-1",
+        "show_content_shadow": false,
+        "line_separator": "border-top",
+        "top_padding": "pt-s15",
+        "bottom_padding": "pb-s15",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
     "image_banner_UpXT8f": {
       "type": "image-banner",
       "blocks": {
@@ -1828,6 +1893,7 @@
     "featured_product_cKGeiz",
     "featured_collection_PCNhTz",
     "collection_list_8epked",
+    "rich_text_fmcgSeo1",
     "image_banner_UpXT8f",
     "scrolling_text_9ymWCM",
     "featured_blog_cFnRJH",
