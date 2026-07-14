@@ -715,20 +715,6 @@ document.addEventListener('click', function (e) {
   }
 }
 </script>
-{%- if request.page_type == 'product' -%}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": {{ product.title | json }},
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "5",
-    "reviewCount": "1"
-  }
-}
-</script>
-{%- endif -%}
 </head>
 
   <body class="{{ request.page_type | handleize }}-template page-{{ request.path | handleize | default: 'index' }}{% if template.suffix != blank %} {{ template.suffix | handleize }}-template-suffix{% endif %} gradient button--hover-{{ settings.animations_hover_buttons }}{% if settings.drawer_inset %} side-drawers-inset{% endif %} page-is-loading page-is-not-idle" data-lazy-load-js="{{ settings.lazy_load_js }}">
