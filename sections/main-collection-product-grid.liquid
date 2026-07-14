@@ -364,6 +364,38 @@
     }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need a wholesale account to see pricing on {{ collection.title | escape }}?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Worthy Products is a B2B wholesale distributor, so pricing on {{ collection.title | escape }} is only visible once you're logged into an approved wholesale account. New accounts are welcome and free to set up."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fast do you dispatch {{ collection.title | escape }} orders?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Orders placed before 10am are dispatched the same day, NZ-wide, from our Auckland warehouse."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you supply {{ collection.title | escape }} to dairies, petrol stations and convenience stores across New Zealand?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Worthy Products supplies 3,000+ dairies, petrol stations, supermarkets, convenience stores and school canteens across New Zealand as an FMCG wholesaler and beverage distributor."
+        }
+      }
+    ]
+  }
+  </script>
 {%- endif -%}
 
 {% unless customer.tags contains 'caltex' %}
