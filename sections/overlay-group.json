@@ -156,7 +156,7 @@
         "buttons_MAc4Jc"
       ],
       "settings": {
-        "mode": "test",
+        "mode": "enabled",
         "show_trigger": "delay",
         "show_delay": 4,
         "popup_id": "",
@@ -166,7 +166,7 @@
         "desktop_content_alignment": "left",
         "mobile_content_alignment": "left",
         "content_padding": 4,
-        "image": "shopify://shop_images/image_f6925b39-319c-41ca-9e5b-96e3bf7b2cda.png",
+        "image": "shopify://shop_images/image_2.png",
         "image_position_desktop": "right",
         "image_position_mobile": "top",
         "image_size_desktop": 400,
