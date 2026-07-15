@@ -155,6 +155,7 @@
         "text_CTWmBF",
         "buttons_MAc4Jc"
       ],
+      "disabled": true,
       "settings": {
         "mode": "enabled",
         "show_trigger": "delay",
