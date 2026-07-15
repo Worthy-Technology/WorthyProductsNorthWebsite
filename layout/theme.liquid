@@ -85,7 +85,9 @@ document.addEventListener('click', function (e) {
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- if settings.seo_title_tag_store_name %} &ndash; {{ shop.name }}{% endif -%}
+      {%- if settings.seo_title_tag_store_name -%}
+        {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- endif -%}
     </title>
 
     {% if page_description %}
