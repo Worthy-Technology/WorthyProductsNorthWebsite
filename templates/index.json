@@ -904,7 +904,7 @@
         "text_fmcgSeoT": {
           "type": "text",
           "settings": {
-            "text": "<p>Looking for a dependable FMCG wholesaler in New Zealand? Worthy Products has built the kind of wholesale distribution network that dairies, service stations, supermarkets and convenience stores actually rely on. As both a beverage distributor and a full-range wholesale confectionery, grocery and health &amp; beauty supplier, we give retailers a single account instead of juggling half a dozen wholesale suppliers across New Zealand.</p><p>Whether you're comparing FMCG distributors in New Zealand for the first time or switching from an existing wholesale supplier, our Auckland warehouse ships same-day on orders placed before 10am, nationwide. From soft drinks and energy drinks to chocolate, snacks and everyday essentials, Worthy Products is built to be the only wholesale distributor your store needs.</p>",
+            "text": "<p>Looking for a dependable FMCG wholesaler in New Zealand? Worthy Products has built the kind of wholesale distribution network that dairies, service stations, supermarkets and convenience stores actually rely on. As both a beverage distributor and a full-range wholesale confectionery, grocery and health & beauty supplier, we give retailers a single account instead of juggling half a dozen wholesale suppliers across New Zealand.</p><p>Whether you're comparing FMCG distributors in New Zealand for the first time or switching from an existing wholesale supplier, our Auckland warehouse ships same-day on orders placed before 10am, nationwide. From soft drinks and energy drinks to chocolate, snacks and everyday essentials, Worthy Products is built to be the only wholesale distributor your store needs.</p>",
             "text_size": "t3"
           }
         },
@@ -942,8 +942,8 @@
         "image_cover": true,
         "desktop_content_alignment": "left",
         "mobile_content_alignment": "left",
-        "text_max_width": "m",
-        "content_layout": "no-overlap-separate",
+        "text_max_width": "",
+        "content_layout": "overlap",
         "section_color_scheme": "scheme-1",
         "color_scheme": "scheme-1",
         "show_content_shadow": false,
