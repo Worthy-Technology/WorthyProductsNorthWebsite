@@ -888,7 +888,7 @@
       }
     },
     "rich_text_fmcgSeo1": {
-      "type": "rich-text",
+      "type": "image-with-text",
       "blocks": {
         "heading_fmcgSeoH": {
           "type": "heading",
@@ -933,12 +933,19 @@
         "buttons_fmcgSeoB"
       ],
       "settings": {
-        "desktop_content_position": "left",
-        "content_max_width": "l",
+        "image": "shopify://shop_images/Warehouse_Image.png",
+        "desktop_section_height": 550,
+        "mobile_section_height": 0,
+        "desktop_media_width": 48,
+        "desktop_media_scale": 100,
+        "layout": "text_first",
+        "image_cover": true,
         "desktop_content_alignment": "left",
         "mobile_content_alignment": "left",
+        "text_max_width": "m",
+        "content_layout": "no-overlap-separate",
         "section_color_scheme": "scheme-1",
-        "container_color_scheme": "scheme-1",
+        "color_scheme": "scheme-1",
         "show_content_shadow": false,
         "line_separator": "border-top",
         "top_padding": "pt-s15",
