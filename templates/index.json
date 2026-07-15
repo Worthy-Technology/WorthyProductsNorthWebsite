@@ -935,7 +935,7 @@
       "settings": {
         "image": "shopify://shop_images/Warehouse_Image.png",
         "desktop_section_height": 550,
-        "mobile_section_height": 0,
+        "mobile_section_height": 400,
         "desktop_media_width": 48,
         "desktop_media_scale": 100,
         "layout": "text_first",
