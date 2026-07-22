@@ -1,7 +1,7 @@
 
 {%- comment -%}
   Displays a product badge
-  
+
   Parameters:
   - badge_product: {Object} - Product liquid object.
   - max_badges: {Number} - Max of number of badges to display (Defaults to settings.badge_max, optional)
@@ -37,6 +37,19 @@
       assign badge_position = badge_position | replace: 'bottom', 'top'
     endif
   -%}
+
+  {%- comment -%} --- CLEARANCE (auto-managed by the Odoo connector) --- {%- endcomment -%}
+  {%- assign is_clearance = false -%}
+  {%- if badge_product.tags contains 'Clearance' or badge_product.metafields.clearance.is_clearance -%}
+    {%- assign is_clearance = true -%}
+  {%- endif -%}
+
+  {%- if is_clearance and num_badges < max_badges -%}
+    <span class="badge badge--clearance badge--bottom-left badge--{{ settings.badge_shape }}">
+      {{- 'Clearance' -}}
+    </span>
+    {%- assign num_badges = num_badges | plus: 1 -%}
+  {%- endif -%}
 
   {%- if num_badges < max_badges and badge_product.metafields.custom.badge != blank and settings.badge_custom_show -%}
     {%- liquid
@@ -83,7 +96,7 @@
     endfor
   -%}
 
-  {%- if num_badges < max_badges and settings.badge_sale_show and largest_discount > 0 -%}
+  {%- if num_badges < max_badges and settings.badge_sale_show and largest_discount > 0 and is_clearance == false -%}
     <span class="badge badge--sale badge--bottom-left badge--{{ settings.badge_shape }}">
       {%- if settings.badge_sale_type == "text" -%}
         {{- 'products.product.on_sale' | t -}}
@@ -152,3 +165,12 @@
     {{- product_badge -}}
   </div>
 {%- endif -%}
+
+{%- comment -%} Worthy brand colours for the clearance badges. {%- endcomment -%}
+{% stylesheet %}
+  .badge.badge--clearance {
+    background: #EB3D4F;
+    color: #FEFEFE;
+    border: none !important;
+  }
+{% endstylesheet %}

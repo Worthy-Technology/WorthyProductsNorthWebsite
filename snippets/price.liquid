@@ -61,6 +61,28 @@
   endif
 -%}
 
+{%- comment -%}
+  Clearance chips (below title, above price). Auto-managed by the Odoo connector.
+  - Clearance badge: PRODUCT PAGE ONLY (guarded by request.page_type). Collection/card
+    views already show the Clearance badge via product-badge.liquid on the image -- this
+    prevents a duplicate badge on cards, since price.liquid also renders inside cards.
+  - Best-before: shows anywhere the product's expiry metafield is set (cards + PDP).
+{%- endcomment -%}
+{%- assign is_clearance = false -%}
+{%- if product.tags contains 'Clearance' or product.metafields.clearance.is_clearance -%}
+  {%- assign is_clearance = true -%}
+{%- endif -%}
+{%- if is_clearance and request.page_type == 'product' or product.metafields.clearance.expiry_date != blank -%}
+  <div class="clearance-chip-row">
+    {%- if is_clearance and request.page_type == 'product' -%}
+      <span class="clearance-pdp-badge">Clearance</span>
+    {%- endif -%}
+    {%- if product.metafields.clearance.expiry_date != blank -%}
+      <span class="clearance-expiry-line">Best before {{ product.metafields.clearance.expiry_date.value | date: '%d %b %Y' }}</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
 <div
   class="
     price
@@ -104,20 +126,20 @@
       {%- else -%}
         <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
         <span class="price-item price-item--regular">
-          
+
           {%- comment -%} --- B2B LOGIC START --- {%- endcomment -%}
           {% assign original_price = target.metafields.custom.original_retail_price.value %}
-          
+
           {%- comment -%} GET PACK SIZE {%- endcomment -%}
           {% assign pack_count = nil %}
           {% if target.unit_price_measurement.quantity_value %}
              {% assign pack_count = target.unit_price_measurement.quantity_value %}
           {% endif %}
-          
+
           {%- if original_price > price -%}
              {%- comment -%} 1. RED Final Price (First) {%- endcomment -%}
-             <span class="price-item price-item--sale price-item--last" 
-                   {% if pack_count %}data-pack-count="{{ pack_count }}"{% endif %} 
+             <span class="price-item price-item--sale price-item--last"
+                   {% if pack_count %}data-pack-count="{{ pack_count }}"{% endif %}
                    style="color: var(--price-sale-color, #D32F2F); font-weight: bold; margin-right: 5px;">
                {{ money_price }}
              </span>
@@ -142,10 +164,10 @@
 <div class="price__sale">
       {%- comment -%} --- SALE BLOCK (Fixed Price Items) --- {%- endcomment -%}
       <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
-      
+
       {%- comment -%} 1. GET PACK SIZE (Crucial for Green Box) {%- endcomment -%}
-      {%- liquid 
-        assign pack_count = nil 
+      {%- liquid
+        assign pack_count = nil
         if target.unit_price_measurement.quantity_value
           assign pack_count = target.unit_price_measurement.quantity_value
         endif
@@ -157,10 +179,10 @@
             style="color: var(--price-sale-color, #D32F2F); font-weight: bold; margin-right: 5px;">
         {{ money_price }}
       </span>
-      
+
       {%- unless product.price_varies == false and product.compare_at_price_varies %}
         <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
-        
+
         {%- comment -%} 3. Grey Strikethrough (Second) {%- endcomment -%}
         <span>
           <s class="price-item price-item--regular" style="color: #999;">
@@ -190,3 +212,42 @@
     </small>
   </div>
 </div>
+
+{%- comment -%}
+  Clearance chip styling -- capsule pills, Worthy palette. justify-content is bound
+  to the card's own --text-alignment variable (left/center/right) so the chip row
+  always lines up with the title and price above/below it, instead of defaulting
+  to flex's own left-start behaviour regardless of the merchant's card setting.
+{%- endcomment -%}
+{% stylesheet %}
+  .clearance-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: var(--text-alignment, flex-start);
+    gap: 0.4rem;
+    margin: 0.3rem 0;
+  }
+  .clearance-pdp-badge {
+    display: inline-block;
+    background: #EB3D4F;
+    color: #FEFEFE;
+    font-weight: 700;
+    font-size: 0.8em;
+    line-height: 1.2;
+    padding: 0.25em 0.75em;
+    border-radius: 999px;
+    border: none;
+  }
+  .clearance-expiry-line {
+    display: inline-block;
+    background: #FDB714;
+    color: #66270F;
+    font-weight: 600;
+    font-size: 0.8em;
+    line-height: 1.2;
+    padding: 0.25em 0.6em;
+    border-radius: 999px;
+    border: none;
+  }
+{% endstylesheet %}

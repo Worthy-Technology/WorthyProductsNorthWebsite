@@ -43,3 +43,28 @@
 <meta name="theme:version" content="2.3.0">
 <meta name="theme:preset" content="{% if settings.color_overlay == '#010101' %}tech{% elsif settings.color_overlay == '#020202' %}fashion{% elsif settings.color_overlay == '#030303' %}toys{% elsif settings.color_overlay == '#040404' %}pets{% elsif settings.color_overlay == '#050505' %}automotive{% elsif settings.color_overlay == '#060606' %}food{% else %}unknown{% endif %}">
 {% if request.design_mode %}<meta name="theme:contact" content="{{ shop.email | escape }}">{% endif %}
+
+{%- comment -%}
+  Worthy: highlight the Clearance nav link as a small floating capsule pill -- style the
+  INNER SPAN, not the outer <a>. The <a> keeps the theme's normal row height/padding
+  (so it still lines up with sibling nav items and keeps the full-row tap target on
+  mobile); only the text-sized span gets the coloured, fully-rounded pill background,
+  which is what makes it read as a compact capsule that doesn't touch the row's own
+  top/bottom edges.
+{%- endcomment -%}
+{% stylesheet %}
+  a.header__menu-item[href="/collections/clearance"] > span,
+  a.menu-drawer__menu-item[href="/collections/clearance"] > span {
+    display: inline-block;
+    background-color: #EB3D4F;
+    color: #FEFEFE !important;
+    border-radius: 999px;
+    padding: 0.3em 0.9em;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  a.header__menu-item[href="/collections/clearance"]:hover > span,
+  a.menu-drawer__menu-item[href="/collections/clearance"]:hover > span {
+    background-color: #C1324A;
+  }
+{% endstylesheet %}
