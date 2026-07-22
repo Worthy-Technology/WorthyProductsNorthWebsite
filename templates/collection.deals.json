@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "breadcrumbs": {
@@ -6,7 +15,8 @@
       "settings": {
         "spacing": 1,
         "color_scheme": "",
-        "line_separator": ""
+        "line_separator": "",
+        "visibility": ""
       }
     },
     "banner": {
@@ -15,7 +25,7 @@
         "heading_qjjEMQ": {
           "type": "heading",
           "settings": {
-            "heading": "Up to 20% off",
+            "heading": "Clearance",
             "heading_italic_convert": "",
             "heading_size": "h0",
             "heading_size_custom": 2.4,
@@ -26,12 +36,13 @@
         "text_k6GTtn": {
           "type": "text",
           "settings": {
-            "text": "<p>Brands you'll like at prices you'll love.<\/p>",
+            "text": "",
             "text_size": "t1"
           }
         },
         "spacer_wR4hYR": {
           "type": "spacer",
+          "disabled": true,
           "settings": {
             "show_line_separator": true,
             "spacing_top": 3.6,
@@ -42,6 +53,7 @@
         },
         "caption_FeUzj9": {
           "type": "caption",
+          "disabled": true,
           "settings": {
             "caption": "Hurry, deals end in...",
             "caption_text_style": "caption-with-letter-spacing",
@@ -50,6 +62,7 @@
         },
         "countdown_8RAYFT": {
           "type": "countdown",
+          "disabled": true,
           "settings": {
             "end_date": "",
             "end_time": "",
@@ -80,7 +93,7 @@
         "image_overlay_opacity": 20,
         "fix_image": false,
         "image_ratio": "custom",
-        "desktop_section_height": 420,
+        "desktop_section_height": 280,
         "mobile_section_height": 100,
         "full_width": true,
         "full_width_animate": false,
@@ -125,6 +138,8 @@
             "button_link": "",
             "button_style": "primary",
             "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
             "card_link": "",
             "card_color_scheme": "scheme-7"
           }
@@ -154,6 +169,8 @@
             "button_link": "",
             "button_style": "primary",
             "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
             "card_link": "",
             "card_color_scheme": "scheme-7"
           }
@@ -183,6 +200,8 @@
             "button_link": "",
             "button_style": "primary",
             "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
             "card_link": "",
             "card_color_scheme": "scheme-7"
           }
@@ -212,6 +231,8 @@
             "button_link": "",
             "button_style": "primary",
             "button_style_show_arrow": false,
+            "button_style_show_gradient_border": false,
+            "button_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
             "card_link": "",
             "card_color_scheme": "scheme-7"
           }
@@ -223,14 +244,17 @@
         "gallery_item_xY6f34",
         "gallery_item_kpwqAg"
       ],
+      "disabled": true,
       "settings": {
         "columns_desktop": 4,
         "spacing_grid": 16,
+        "spacing_grid_mobile": 16,
         "corner_rounding": "inner",
         "content_padding": 4,
         "desktop_section_height": 310,
         "mobile_section_height": 220,
         "mobile_layout": "grid",
+        "full_width": false,
         "content_max_width": "m",
         "desktop_heading_alignment": "left",
         "mobile_heading_alignment": "left",
@@ -246,7 +270,13 @@
         "line_separator": "",
         "top_padding": "pt-s",
         "bottom_padding": "pb-s",
-        "hide_when_empty": false
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "scrolling_text_dJQUVx": {
@@ -286,10 +316,27 @@
         "speed": 28,
         "direction": "normal",
         "pause_on_hover": false,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "",
+        "italic_convert": "",
+        "heading_size": "h2",
+        "text": "",
+        "text_size": "t3",
+        "view_all_link": "",
+        "view_all_text": "",
+        "view_all_text_size": "t3",
         "color_scheme": "",
         "top_padding": "pt-0",
         "bottom_padding": "pb-0",
-        "hide_when_empty": false
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "product-grid": {
@@ -297,17 +344,23 @@
       "blocks": {
         "inline_promo_gji3mq": {
           "type": "inline_promo",
+          "disabled": true,
           "settings": {
             "position": 9,
-            "visibility": "",
             "promo_image_overlay_opacity": 40,
-            "promo_text": "<p><strong>Upgrade your photography game<\/strong><\/p>",
+            "promo_text": "<p><strong>Upgrade your photography game</strong></p>",
             "promo_url": "",
             "promo_text_size": "h5-size",
             "promo_text_position": "justify-center items-center",
             "promo_text_alignment": "center",
             "promo_text_padding": 1,
-            "promo_text_color": "#ffffff"
+            "promo_text_color": "#ffffff",
+            "visibility": "",
+            "show_at_specific_time_of_day": false,
+            "show_time_morning": true,
+            "show_time_afternoon": true,
+            "show_time_evening": true,
+            "show_time_night": true
           }
         }
       },
@@ -315,7 +368,7 @@
         "inline_promo_gji3mq"
       ],
       "settings": {
-        "full_width": false,
+        "full_width": true,
         "products_per_page": 48,
         "columns_desktop": "5",
         "columns_mobile": "2",
@@ -323,7 +376,10 @@
         "enable_filtering": true,
         "enable_sorting": true,
         "show_filter_count": true,
+        "uppercase_filter_titles": true,
+        "open_all_accordions": true,
         "show_more_number": 8,
+        "filter_text_size": "1.4",
         "box_filters": "Color\nStorage capacity\nBattery life\nRAM\nAvailability\nRefresh rate",
         "box_filter_active": "fill",
         "show_image_box_filter_border": true,
@@ -358,7 +414,7 @@
         "text_7TiKDi": {
           "type": "text",
           "settings": {
-            "text": "<p>Autumn refresh<\/p>",
+            "text": "<p>Autumn refresh</p>",
             "text_size": "t3",
             "content_max_width": "m"
           }
@@ -366,7 +422,7 @@
         "text_bQBc6U": {
           "type": "text",
           "settings": {
-            "text": "<p><strong>Up to 25% off when you sign up<\/strong><\/p>",
+            "text": "<p><strong>Up to 25% off when you sign up</strong></p>",
             "text_size": "t3",
             "content_max_width": "m"
           }
@@ -388,6 +444,7 @@
         "text_bQBc6U",
         "discount_WmGimN"
       ],
+      "disabled": true,
       "settings": {
         "full_width": true,
         "closable": true,
@@ -395,13 +452,18 @@
         "vertical_padding": 2.4,
         "horizontal_padding": 3.5,
         "spacing_grid": 1.8,
-        "visibility": "both",
         "image_overlay_opacity": 0,
         "color_scheme": "scheme-7",
         "line_separator": "",
         "top_padding": "pt-0",
         "bottom_padding": "pb-s",
-        "hide_when_empty": false
+        "visibility": "both",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     },
     "alert_pEUcPR": {
@@ -410,12 +472,13 @@
         "text_XCYYkn": {
           "type": "text",
           "settings": {
-            "text": "<h4>Pssstt...<\/h4><p>Want 20% off selected lines?<\/p>",
+            "text": "<h4>Pssstt...</h4><p>This is the chance. Dont Miss it</p>",
             "text_size": "t3"
           }
         },
         "discount_EqFMUG": {
           "type": "discount",
+          "disabled": true,
           "settings": {
             "discount_code": "YOURCODE10YOURCODE10",
             "text_size": "t5",
@@ -429,12 +492,12 @@
         "text_XCYYkn",
         "discount_EqFMUG"
       ],
+      "disabled": true,
       "settings": {
         "show_delay": 4,
         "auto_close": 0,
         "show_close": true,
         "mode": "enabled",
-        "visibility": "both",
         "desktop_content_position": "md:justify-start md:items-end",
         "mobile_content_position": "justify-start items-end",
         "content_max_width": "xs",
@@ -454,7 +517,14 @@
         "image_size_mobile": 180,
         "image_overlay_opacity": 0,
         "color_scheme": "scheme-3",
-        "hide_when_empty": false
+        "close_color": "",
+        "visibility": "both",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
       }
     }
   },
