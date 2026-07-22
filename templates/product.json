@@ -43,6 +43,13 @@
             "stock_visibility": "either"
           }
         },
+        "custom_liquid_pKsZ92": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% comment %} Start Pack Size Metafield {% endcomment %}\n{% if product.metafields.custom.pack_size.value != blank %}\n  <div class=\"product-pack-size\" style=\"font-size: 0.8em; color: #666; margin-top: 5px;\">\n    <span style=\"color:black;\"> <b>Pack Size:</b> {{ product.metafields.custom.pack_size.value }}</span>\n  </div>\n{% endif %}\n{% comment %} End Pack Size Metafield {% endcomment %}",
+            "stock_visibility": "either"
+          }
+        },
         "price": {
           "type": "price",
           "settings": {
@@ -284,6 +291,7 @@
         "title_3bMpkb",
         "sku_9Yeiy8",
         "custom_liquid_xEEWRV",
+        "custom_liquid_pKsZ92",
         "price",
         "inventory_6gBtL8",
         "variant_picker",
