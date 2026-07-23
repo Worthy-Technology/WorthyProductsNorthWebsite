@@ -424,35 +424,6 @@
         "show_time_night": true
       }
     },
-    "buy_it_again_wPn3xK": {
-      "type": "buy-it-again",
-      "settings": {
-        "products_to_show": 14,
-        "desktop_layout": "carousel",
-        "mobile_layout": "carousel",
-        "columns_desktop": "5",
-        "columns_mobile": "2",
-        "full_width": false,
-        "content_max_width": "m",
-        "desktop_heading_alignment": "left",
-        "mobile_heading_alignment": "left",
-        "title": "Buy it again",
-        "heading_size": "h2",
-        "text": "<p>Reorder what you got last time, in one click.</p>",
-        "text_size": "t3",
-        "color_scheme": "scheme-2",
-        "line_separator": "",
-        "top_padding": "pt-s",
-        "bottom_padding": "pb-s",
-        "visibility": "",
-        "show_at_specific_time_of_day": false,
-        "show_time_morning": true,
-        "show_time_afternoon": true,
-        "show_time_evening": true,
-        "show_time_night": true,
-        "heading_tag": "h2"
-      }
-    },
     "icons_with_text_jjRLYL": {
       "type": "icons-with-text",
       "blocks": {
@@ -603,6 +574,35 @@
         "show_time_afternoon": true,
         "show_time_evening": true,
         "show_time_night": true
+      }
+    },
+    "buy_it_again_wPn3xK": {
+      "type": "buy-it-again",
+      "settings": {
+        "products_to_show": 14,
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "columns_desktop": "5",
+        "columns_mobile": "2",
+        "full_width": true,
+        "content_max_width": "m",
+        "desktop_heading_alignment": "left",
+        "mobile_heading_alignment": "left",
+        "title": "Buy it again",
+        "heading_size": "h2",
+        "text": "<p>Reorder what you got last time, in one click.</p>",
+        "text_size": "t3",
+        "color_scheme": "scheme-2",
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true,
+        "heading_tag": "h2"
       }
     },
     "featured_collection_VgNgUt": {
