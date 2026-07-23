@@ -1,29 +1,270 @@
 {%- comment -%}theme-check-disable NestedSnippet,SchemaJsonFormat{%- endcomment -%}
+{% comment %}
+  "Buy it again" — ranks the products a logged-in customer has bought across ALL
+  their order history by total quantity purchased (most-purchased first), and lets
+  them re-add the whole set to cart in one click.
+
+  Notes / constraints:
+  - Aggregation is done in Liquid over the customer's orders. Orders scanned are
+    capped (limit: 50) to keep page render bounded; that's plenty to establish
+    what a customer buys most often.
+  - Product objects are re-fetched via all_products[handle], which has a hard limit
+    of 20 unique handles per page — products_to_show is capped at 14 in the schema,
+    safely under that.
+  - The one-click add reuses the shared cart-add + out-of-stock-modal logic in
+    snippets/buy-again.liquid via a .buy-again-btn + a JSON payload script.
+{% endcomment %}
 
 {%- liquid
-  assign order_products = blank
+  assign ordered_pairs = ''
+  assign items_available = ''
+  assign items_oos = ''
+  assign items_all = ''
+
   if customer and customer.orders.size > 0
-    assign last_order = customer.orders | sort: 'created_at' | last
-    assign order_products = last_order.line_items | map: 'product' | compact | uniq
+    assign orders_sorted = customer.orders | sort: 'created_at' | reverse
+
+    comment
+      Phase 1 — discover each unique product (newest order first, so first sight
+      captures the most-recent purchase quantity + variant).
+      rows entry: pid^handle^variantid^recentqty^availflag
+    endcomment
+    assign seen = '|'
+    assign rows = ''
+    for order in orders_sorted limit: 50
+      for li in order.line_items
+        if li.product and li.variant
+          assign pid = li.product.id | append: ''
+          assign key = '|' | append: pid | append: '|'
+          unless seen contains key
+            assign seen = seen | append: pid | append: '|'
+            assign avail = '1'
+            unless li.variant.available
+              assign avail = '0'
+            endunless
+            assign vid = li.variant.id | split: '/' | last
+            assign row = pid | append: '^' | append: li.product.handle | append: '^' | append: vid | append: '^' | append: li.quantity | append: '^' | append: avail
+            if rows != ''
+              assign rows = rows | append: '~~'
+            endif
+            assign rows = rows | append: row
+          endunless
+        endif
+      endfor
+    endfor
+
+    comment
+      Phase 2 — for each unique product, sum total quantity across all scanned
+      orders, then build a sortable "paddedtotal^pid" ranking token.
+    endcomment
+    assign ranking = ''
+    assign row_list = rows | split: '~~'
+    for row in row_list
+      assign fields = row | split: '^'
+      assign pid = fields[0]
+      assign total = 0
+      for order in orders_sorted limit: 50
+        for li in order.line_items
+          if li.product and li.variant
+            assign lpid = li.product.id | append: ''
+            if lpid == pid
+              assign total = total | plus: li.quantity
+            endif
+          endif
+        endfor
+      endfor
+      assign padded = total | prepend: '00000000' | slice: -8, 8
+      assign token = padded | append: '^' | append: pid
+      if ranking != ''
+        assign ranking = ranking | append: '~~'
+      endif
+      assign ranking = ranking | append: token
+    endfor
+
+    comment
+      Phase 3 — sort ranking descending (most purchased first) and build a ranked
+      list of "handle^recentqty" pairs. Availability + the actual cart variant are
+      NOT taken from order history (which can reference stale variants for products
+      the Odoo sync has since recreated) — they're resolved from the CURRENT product
+      in the render pass below, so they always match what the card shows.
+    endcomment
+    assign ranking_sorted = ranking | split: '~~' | sort | reverse
+    for token in ranking_sorted
+      assign parts = token | split: '^'
+      assign pid = parts[1]
+      for row in row_list
+        assign fields = row | split: '^'
+        if fields[0] == pid
+          if ordered_pairs != ''
+            assign ordered_pairs = ordered_pairs | append: '~~'
+          endif
+          assign ordered_pairs = ordered_pairs | append: fields[1] | append: '^' | append: fields[3]
+          break
+        endif
+      endfor
+    endfor
   endif
+
+  comment
+    Resolve the ranked handles against the CURRENT catalog: keep only products that
+    still exist and have a variant, cap to products_to_show, and build the cart
+    payload from each product's current first-available variant.
+  endcomment
+  assign display_handles = ''
+  assign shown = 0
+  assign pair_list = ordered_pairs | split: '~~'
+  for pair in pair_list
+    if shown >= section.settings.products_to_show
+      break
+    endif
+    assign pf = pair | split: '^'
+    assign handle = pf[0]
+    assign recentqty = pf[1] | plus: 0
+    if recentqty < 1
+      assign recentqty = 1
+    endif
+    assign p = all_products[handle]
+    if p == empty
+      continue
+    endif
+    assign v = p.selected_or_first_available_variant
+    if v == blank
+      continue
+    endif
+    assign shown = shown | plus: 1
+
+    if display_handles != ''
+      assign display_handles = display_handles | append: ','
+    endif
+    assign display_handles = display_handles | append: handle
+
+    assign name_json = p.title | json
+    assign item_json = '{"id":' | append: v.id | append: ',"quantity":' | append: recentqty | append: ',"name":' | append: name_json | append: '}'
+
+    if items_all != ''
+      assign items_all = items_all | append: ','
+    endif
+    assign items_all = items_all | append: item_json
+
+    if v.available
+      if items_available != ''
+        assign items_available = items_available | append: ','
+      endif
+      assign items_available = items_available | append: item_json
+    else
+      if items_oos != ''
+        assign items_oos = items_oos | append: ','
+      endif
+      assign items_oos = items_oos | append: item_json
+    endif
+  endfor
+
+  assign handle_list = display_handles | split: ','
 -%}
 
-{%- if request.design_mode or order_products.size > 0 -%}
-  {% render 'featured-collection',
-      products_to_show: section.settings.products_to_show,
-      is_product_list: true,
-      products: order_products,
-      product_count: order_products.size,
-      show_onboarding: request.design_mode
-  %}
-
-  {%- if order_products.size > 0 -%}
-    <div class="text-center page-width-desktop" style="margin-top: 1.2rem;">
-      <button type="button" class="button button--primary buy-again-btn" data-order-id="{{ last_order.id }}">
-        Add all items to cart
-      </button>
-    </div>
+{%- if request.design_mode or handle_list.size > 0 -%}
+  {{ 'component-card.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {%- if settings.swatch_enabled -%}
+    {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
+
+  {%- assign bia_slide_count = handle_list.size | at_most: section.settings.products_to_show -%}
+
+  <div class="color-{{ section.settings.color_scheme }} isolate gradient {{ section.settings.line_separator }} {{ section.settings.visibility }} {%- render 'class-time-of-day-to-show' -%}">
+    <div class="buy-it-again section__inner {{ section.settings.top_padding }} {{ section.settings.bottom_padding }}{% if section.settings.full_width %} section-grid-wrapper--full-width{% endif %}">
+
+      <div class="buy-it-again__head title-wrapper page-width flex flex-wrap items-center justify-between gap-1 text-{{ section.settings.mobile_heading_alignment }} md:text-{{ section.settings.desktop_heading_alignment }}">
+        <div class="inline-block max-w-{{ section.settings.content_max_width }}">
+          {%- if section.settings.title != blank -%}
+            <{{ section.settings.heading_tag | default: 'h2' }} class="section-title title inline-richtext {{ section.settings.heading_size }} m-0">
+              {%- render 'animated-text' with section.settings.title -%}
+            </{{ section.settings.heading_tag | default: 'h2' }}>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="section-text rte {{ section.settings.text_size }} mt-05">{{ section.settings.text }}</div>
+          {%- endif -%}
+        </div>
+
+        {%- if handle_list.size > 0 and items_available != '' -%}
+          <button
+            type="button"
+            class="button button--secondary buy-again-btn buy-it-again__add-all"
+            data-order-id="buyitagain"
+            style="--buttons-radius: 0; --buttons-radius-outset: 0;"
+          >
+            Add all items to cart
+          </button>
+        {%- endif -%}
+      </div>
+
+      {%- if handle_list.size > 0 -%}
+        <slider-component class="slider-mobile-gutter page-width-desktop slider-component-desktop{% if section.settings.full_width %} slider-component-full-width{% endif %}">
+          <ul
+            id="Slider-{{ section.id }}"
+            data-id="{{ section.id }}"
+            class="section-grid grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.columns_desktop }}-col-desktop grid--scaled grid--{{ section.settings.columns_mobile }}-col-tablet-down slider slider--desktop slider--tablet grid--peek"
+            role="list"
+            aria-label="{{ 'general.slider.name' | t }}"
+          >
+            {%- for handle in handle_list -%}
+              {%- assign bia_product = all_products[handle] -%}
+              {%- if bia_product != empty -%}
+                <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="grid__item slider__slide">
+                  {% render 'card-product',
+                    card_product: bia_product,
+                    section_id: section.id,
+                    columns_desktop: section.settings.columns_desktop,
+                    columns_mobile: section.settings.columns_mobile
+                  %}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+
+          <div class="slider-buttons page-width no-js-hidden">
+            <button
+              type="button"
+              class="slider-button button-control tap-target slider-button--prev"
+              name="previous"
+              aria-label="{{ 'general.slider.previous_slide' | t }}"
+              aria-controls="Slider-{{ section.id }}"
+            >
+              {% render 'icon-caret' %}
+            </button>
+
+            <div class="slider-counter caption visually-hidden">
+              <span class="slider-counter--current">1</span>
+              <span aria-hidden="true"> / </span>
+              <span>{{ 'general.slider.of' | t }}</span>
+              <span class="slider-counter--total">{{ bia_slide_count }}</span>
+            </div>
+
+            <button
+              type="button"
+              class="slider-button button-control tap-target slider-button--next"
+              name="next"
+              aria-label="{{ 'general.slider.next_slide' | t }}"
+              aria-controls="Slider-{{ section.id }}"
+            >
+              {% render 'icon-caret' %}
+            </button>
+
+            <div class="slider-scrollbar__track" style="--num-slides: {{ bia_slide_count }}" data-num-slides="{{ bia_slide_count }}">
+              <div class="slider-scrollbar__indicator"></div>
+            </div>
+          </div>
+        </slider-component>
+      {%- endif -%}
+
+      {%- if items_all != '' -%}
+        <script type="application/json" id="order-buyitagain-items">
+          { "available":[{{ items_available }}], "oos":[{{ items_oos }}], "all":[{{ items_all }}] }
+        </script>
+      {%- endif -%}
+    </div>
+  </div>
 {%- endif -%}
 
 {% schema %}
@@ -38,7 +279,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows the products from the logged-in customer's most recent order, with a one-click button to add them all to the cart again. Hidden for guests and for customers with no orders."
+      "content": "Shows the products the logged-in customer buys most often (ranked by total quantity purchased across their order history), with a one-click button to add them all to the cart. Hidden for guests and for customers with no orders."
     },
     {
       "type": "range",
@@ -48,30 +289,6 @@
       "step": 1,
       "default": 8,
       "label": "Maximum products to show"
-    },
-    {
-      "type": "header",
-      "content": "Grid/carousel"
-    },
-    {
-      "type": "select",
-      "id": "desktop_layout",
-      "default": "carousel",
-      "label": "Desktop layout",
-      "options": [
-        { "value": "carousel", "label": "Carousel" },
-        { "value": "grid", "label": "Grid" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "mobile_layout",
-      "default": "carousel",
-      "label": "Mobile layout",
-      "options": [
-        { "value": "carousel", "label": "Carousel" },
-        { "value": "grid", "label": "Grid" }
-      ]
     },
     {
       "type": "select",
@@ -99,12 +316,45 @@
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "Set carousel/grid to full screen width",
-      "default": false
+      "label": "Set grid to full screen width",
+      "default": true
     },
     {
       "type": "header",
-      "content": "Header layout"
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Buy it again",
+      "info": "Enter ++ for a line break.",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "visible_if": "{{ section.settings.title != blank }}",
+      "options": [
+        { "value": "h4", "label": "XS" },
+        { "value": "h3", "label": "S" },
+        { "value": "h2", "label": "M" },
+        { "value": "h1", "label": "L" },
+        { "value": "h0", "label": "XL" }
+      ],
+      "default": "h2",
+      "label": "Heading size"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2",
+      "info": "For SEO purposes, there should only be one H1 tag on the page.",
+      "label": "Heading tag"
     },
     {
       "type": "select",
@@ -133,37 +383,12 @@
     },
     {
       "type": "header",
-      "content": "Heading"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "title",
-      "default": "Buy it again",
-      "info": "Enter ++ for a line break.",
-      "label": "Heading"
-    },
-    {
-      "type": "select",
-      "id": "heading_size",
-      "visible_if": "{{ section.settings.title != blank }}",
-      "options": [
-        { "value": "h4", "label": "XS" },
-        { "value": "h3", "label": "S" },
-        { "value": "h2", "label": "M" },
-        { "value": "h1", "label": "L" },
-        { "value": "h0", "label": "XL" }
-      ],
-      "default": "h2",
-      "label": "Heading size"
-    },
-    {
-      "type": "header",
       "content": "Description"
     },
     {
       "type": "richtext",
       "id": "text",
-      "default": "<p>Reorder what you got last time, in one click.</p>",
+      "default": "<p>Reorder what you buy most, in one click.</p>",
       "label": "Description"
     },
     {
@@ -281,18 +506,6 @@
       "visible_if": "{{ section.settings.show_at_specific_time_of_day }}",
       "default": true,
       "label": "Show at night (9pm - 5am)"
-    },
-    {
-      "type": "select",
-      "id": "heading_tag",
-      "options": [
-        { "value": "h1", "label": "H1" },
-        { "value": "h2", "label": "H2" },
-        { "value": "h3", "label": "H3" }
-      ],
-      "default": "h2",
-      "info": "For SEO purposes, there should only be one H1 tag on the page.",
-      "label": "Heading tag"
     }
   ],
   "presets": [
