@@ -16,7 +16,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign ordered_handles = ''
+  assign ordered_pairs = ''
   assign items_available = ''
   assign items_oos = ''
   assign items_all = ''
@@ -82,8 +82,11 @@
     endfor
 
     comment
-      Phase 3 — sort ranking descending (most purchased first) and, for each pid,
-      pull its row fields to build the ordered handle list + cart payloads.
+      Phase 3 — sort ranking descending (most purchased first) and build a ranked
+      list of "handle^recentqty" pairs. Availability + the actual cart variant are
+      NOT taken from order history (which can reference stale variants for products
+      the Odoo sync has since recreated) — they're resolved from the CURRENT product
+      in the render pass below, so they always match what the card shows.
     endcomment
     assign ranking_sorted = ranking | split: '~~' | sort | reverse
     for token in ranking_sorted
@@ -92,51 +95,82 @@
       for row in row_list
         assign fields = row | split: '^'
         if fields[0] == pid
-          assign handle = fields[1]
-          assign vid = fields[2]
-          assign recentqty = fields[3]
-          assign availflag = fields[4]
-
-          if ordered_handles != ''
-            assign ordered_handles = ordered_handles | append: ','
+          if ordered_pairs != ''
+            assign ordered_pairs = ordered_pairs | append: '~~'
           endif
-          assign ordered_handles = ordered_handles | append: handle
-
-          assign name_json = handle | json
-          assign item_json = '{"id":' | append: vid | append: ',"quantity":' | append: recentqty | append: ',"name":' | append: name_json | append: '}'
-
-          if items_all != ''
-            assign items_all = items_all | append: ','
-          endif
-          assign items_all = items_all | append: item_json
-
-          if availflag == '1'
-            if items_available != ''
-              assign items_available = items_available | append: ','
-            endif
-            assign items_available = items_available | append: item_json
-          else
-            if items_oos != ''
-              assign items_oos = items_oos | append: ','
-            endif
-            assign items_oos = items_oos | append: item_json
-          endif
-
+          assign ordered_pairs = ordered_pairs | append: fields[1] | append: '^' | append: fields[3]
           break
         endif
       endfor
     endfor
   endif
 
-  assign handle_list = ordered_handles | split: ','
+  comment
+    Resolve the ranked handles against the CURRENT catalog: keep only products that
+    still exist and have a variant, cap to products_to_show, and build the cart
+    payload from each product's current first-available variant.
+  endcomment
+  assign display_handles = ''
+  assign shown = 0
+  assign pair_list = ordered_pairs | split: '~~'
+  for pair in pair_list
+    if shown >= section.settings.products_to_show
+      break
+    endif
+    assign pf = pair | split: '^'
+    assign handle = pf[0]
+    assign recentqty = pf[1] | plus: 0
+    if recentqty < 1
+      assign recentqty = 1
+    endif
+    assign p = all_products[handle]
+    if p == empty
+      continue
+    endif
+    assign v = p.selected_or_first_available_variant
+    if v == blank
+      continue
+    endif
+    assign shown = shown | plus: 1
+
+    if display_handles != ''
+      assign display_handles = display_handles | append: ','
+    endif
+    assign display_handles = display_handles | append: handle
+
+    assign name_json = p.title | json
+    assign item_json = '{"id":' | append: v.id | append: ',"quantity":' | append: recentqty | append: ',"name":' | append: name_json | append: '}'
+
+    if items_all != ''
+      assign items_all = items_all | append: ','
+    endif
+    assign items_all = items_all | append: item_json
+
+    if v.available
+      if items_available != ''
+        assign items_available = items_available | append: ','
+      endif
+      assign items_available = items_available | append: item_json
+    else
+      if items_oos != ''
+        assign items_oos = items_oos | append: ','
+      endif
+      assign items_oos = items_oos | append: item_json
+    endif
+  endfor
+
+  assign handle_list = display_handles | split: ','
 -%}
 
 {%- if request.design_mode or handle_list.size > 0 -%}
   {{ 'component-card.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
   {%- if settings.swatch_enabled -%}
     {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
+
+  {%- assign bia_slide_count = handle_list.size | at_most: section.settings.products_to_show -%}
 
   <div class="color-{{ section.settings.color_scheme }} isolate gradient {{ section.settings.line_separator }} {{ section.settings.visibility }} {%- render 'class-time-of-day-to-show' -%}">
     <div class="buy-it-again section__inner {{ section.settings.top_padding }} {{ section.settings.bottom_padding }}{% if section.settings.full_width %} section-grid-wrapper--full-width{% endif %}">
@@ -166,24 +200,62 @@
       </div>
 
       {%- if handle_list.size > 0 -%}
-        <ul
-          class="section-grid grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.columns_desktop }}-col-desktop grid--scaled grid--{{ section.settings.columns_mobile }}-col-tablet-down"
-          role="list"
-        >
-          {%- for handle in handle_list limit: section.settings.products_to_show -%}
-            {%- assign bia_product = all_products[handle] -%}
-            {%- if bia_product != empty -%}
-              <li class="grid__item">
-                {% render 'card-product',
-                  card_product: bia_product,
-                  section_id: section.id,
-                  columns_desktop: section.settings.columns_desktop,
-                  columns_mobile: section.settings.columns_mobile
-                %}
-              </li>
-            {%- endif -%}
-          {%- endfor -%}
-        </ul>
+        <slider-component class="slider-mobile-gutter page-width-desktop slider-component-desktop{% if section.settings.full_width %} slider-component-full-width{% endif %}">
+          <ul
+            id="Slider-{{ section.id }}"
+            data-id="{{ section.id }}"
+            class="section-grid grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.columns_desktop }}-col-desktop grid--scaled grid--{{ section.settings.columns_mobile }}-col-tablet-down slider slider--desktop slider--tablet grid--peek"
+            role="list"
+            aria-label="{{ 'general.slider.name' | t }}"
+          >
+            {%- for handle in handle_list -%}
+              {%- assign bia_product = all_products[handle] -%}
+              {%- if bia_product != empty -%}
+                <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="grid__item slider__slide">
+                  {% render 'card-product',
+                    card_product: bia_product,
+                    section_id: section.id,
+                    columns_desktop: section.settings.columns_desktop,
+                    columns_mobile: section.settings.columns_mobile
+                  %}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+
+          <div class="slider-buttons page-width no-js-hidden">
+            <button
+              type="button"
+              class="slider-button button-control tap-target slider-button--prev"
+              name="previous"
+              aria-label="{{ 'general.slider.previous_slide' | t }}"
+              aria-controls="Slider-{{ section.id }}"
+            >
+              {% render 'icon-caret' %}
+            </button>
+
+            <div class="slider-counter caption visually-hidden">
+              <span class="slider-counter--current">1</span>
+              <span aria-hidden="true"> / </span>
+              <span>{{ 'general.slider.of' | t }}</span>
+              <span class="slider-counter--total">{{ bia_slide_count }}</span>
+            </div>
+
+            <button
+              type="button"
+              class="slider-button button-control tap-target slider-button--next"
+              name="next"
+              aria-label="{{ 'general.slider.next_slide' | t }}"
+              aria-controls="Slider-{{ section.id }}"
+            >
+              {% render 'icon-caret' %}
+            </button>
+
+            <div class="slider-scrollbar__track" style="--num-slides: {{ bia_slide_count }}" data-num-slides="{{ bia_slide_count }}">
+              <div class="slider-scrollbar__indicator"></div>
+            </div>
+          </div>
+        </slider-component>
       {%- endif -%}
 
       {%- if items_all != '' -%}

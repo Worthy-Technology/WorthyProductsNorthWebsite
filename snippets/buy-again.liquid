@@ -8,18 +8,27 @@
   don't need to rebuild the available/out-of-stock split themselves -- they only
   need a .buy-again-btn with data-order-id matching that order's id.
 {% endcomment %}
-{%- if customer and customer.orders.size > 0 -%}
+{%- comment -%} Guests never get a reorder button, so render nothing for them (keeps guest/Lighthouse payload untouched). {%- endcomment -%}
+{%- if customer -%}
+{%- if customer.orders.size > 0 -%}
   {%- assign last_order = customer.orders | sort: 'created_at' | last -%}
   {%- assign items_available = '' -%}
   {%- assign items_oos = '' -%}
   {%- assign items_all = '' -%}
 
   {%- for li in last_order.line_items -%}
-    {%- if li.variant and li.variant.id -%}
-      {%- assign numeric_variant_id = li.variant.id | split: '/' | last -%}
+    {%- comment -%}
+      Resolve the CURRENT variant from the live product (li.product), not the order's
+      historical variant — products the Odoo sync has recreated (e.g. clearance
+      mirrors) keep a stale/unavailable variant id on old line items, which both
+      mis-flags stock and sends a dead id to /cart/add.js.
+    {%- endcomment -%}
+    {%- assign cur_variant = li.product.selected_or_first_available_variant -%}
+    {%- if li.product and cur_variant != blank and cur_variant.id -%}
+      {%- assign numeric_variant_id = cur_variant.id -%}
       {%- assign qty = li.quantity -%}
       {%- assign name_json = li.title | json -%}
-      {%- assign treat_oos = li.variant.available == false -%}
+      {%- assign treat_oos = cur_variant.available == false -%}
 
       {%- capture item_json -%}{"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}{%- endcapture -%}
 
@@ -87,31 +96,65 @@
       document.body.style.overflow = '';
     }
 
-    async function addItemsBatch(items) {
-      const res = await fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ items }),
-      });
-      if (!res.ok) throw new Error('add failed');
-      return res;
+    // Add one line item; on failure capture Shopify's real reason (e.g. stock).
+    async function addOne(item) {
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ items: [item] }),
+        });
+        if (res.ok) return { ok: true, item };
+        let desc = '';
+        try {
+          const d = await res.json();
+          desc = d.description || d.message || '';
+        } catch (_) {}
+        return { ok: false, item, desc };
+      } catch (_) {
+        return { ok: false, item, desc: '' };
+      }
     }
 
-    async function addItemsIndividually(items) {
-      const failed = [];
+    // Add items one-by-one so a single out-of-stock line can't block the rest.
+    async function addItems(items) {
+      const results = [];
       for (const it of items) {
-        try {
-          const res = await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ items: [it] }),
-          });
-          if (!res.ok) failed.push(it);
-        } catch (_) {
-          failed.push(it);
-        }
+        results.push(await addOne(it));
       }
-      return failed;
+      return results;
+    }
+
+    // Some added, some didn't -> go to cart but tell them what was skipped.
+    function finish(results, btn, original) {
+      const added = results.filter((r) => r.ok);
+      const failed = results.filter((r) => !r.ok);
+
+      if (added.length > 0) {
+        if (failed.length > 0) {
+          const names = failed.map((r) => r.item.name).join(', ');
+          alert(
+            added.length +
+              ' item(s) added to your cart. We could not add: ' +
+              names +
+              ' (likely out of stock or low stock).'
+          );
+        }
+        window.location.href = '/cart';
+        return;
+      }
+
+      // Nothing added at all — surface the first real reason if we have one.
+      const reason = (failed.find((r) => r.desc) || {}).desc;
+      alert(
+        reason
+          ? 'Could not add items to your cart: ' + reason
+          : 'Could not add these items — they may be out of stock right now.'
+      );
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
     }
 
     let bamPending = null;
@@ -130,22 +173,19 @@
       if (e.target.id === 'bam-proceed') {
         if (!bamPending) return;
         const { avail, btn, original } = bamPending;
-
-        try {
-          try {
-            await addItemsBatch(avail);
-          } catch (_) {
-            const failed = await addItemsIndividually(avail);
-            if (failed.length === avail.length) throw new Error('all failed');
+        bamClose();
+        if (!avail.length) {
+          alert('The remaining items are out of stock, so there is nothing to add.');
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = original;
           }
-          bamClose();
-          window.location.href = '/cart';
-        } catch (_) {
-          alert('Sorry, we could not add items to your cart.');
-          btn.disabled = false;
-          btn.textContent = original;
           bamPending = null;
+          return;
         }
+        const results = await addItems(avail);
+        finish(results, btn, original);
+        bamPending = null;
         return;
       }
 
@@ -174,19 +214,9 @@
       const original = btn.textContent;
       btn.textContent = 'Adding...';
 
-      try {
-        try {
-          await addItemsBatch(avail);
-        } catch (_) {
-          const failed = await addItemsIndividually(avail);
-          if (failed.length === avail.length) throw new Error('all failed');
-        }
-        window.location.href = '/cart';
-      } catch (_) {
-        alert('Sorry, we could not add items to your cart.');
-        btn.disabled = false;
-        btn.textContent = original;
-      }
+      const results = await addItems(avail);
+      finish(results, btn, original);
     });
   })();
 </script>
+{%- endif -%}
