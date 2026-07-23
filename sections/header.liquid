@@ -402,6 +402,24 @@
         </a>
       {%- endif -%}
 
+      {% comment %} Start Reorder Last Order Quick Link {% endcomment %}
+      {%- if customer and customer.orders.size > 0 -%}
+        {%- assign last_order_for_header = customer.orders | sort: 'created_at' | last -%}
+        {%- assign header_reorder_count = last_order_for_header.line_items | where: 'variant' | size -%}
+        {%- if header_reorder_count > 0 -%}
+          <button
+            type="button"
+            class="header__icon header__icon--account link focus-inset buy-again-btn"
+            data-order-id="{{ last_order_for_header.id }}"
+            title="Reorder your last order"
+          >
+            {%- render 'icon-refresh' -%}
+            <span class="visually-hidden">Reorder your last order</span>
+          </button>
+        {%- endif -%}
+      {%- endif -%}
+      {% comment %} End Reorder Last Order Quick Link {% endcomment %}
+
       {%- if section.settings.custom_icon != blank -%}
         <a href="{{ section.settings.custom_icon_url }}" class="header__icon header__icon--custom link focus-inset"
             {% if section.settings.custom_icon_label %} title={{ section.settings.custom_icon_label | json }}{% endif %}

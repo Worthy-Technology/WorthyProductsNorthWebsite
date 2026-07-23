@@ -1,0 +1,192 @@
+{% comment %}
+  Shared "Buy again" confirmation modal + cart-adding logic, used by the account
+  order history table, the single order page, the header reorder icon, and the
+  homepage "Buy it again" section. Render this once, globally (see layout/theme.liquid).
+
+  Also emits the logged-in customer's most recent order as a ready-to-use JSON
+  payload (id="order-{id}-items"), so surfaces other than the account/order pages
+  don't need to rebuild the available/out-of-stock split themselves -- they only
+  need a .buy-again-btn with data-order-id matching that order's id.
+{% endcomment %}
+{%- if customer and customer.orders.size > 0 -%}
+  {%- assign last_order = customer.orders | sort: 'created_at' | last -%}
+  {%- assign items_available = '' -%}
+  {%- assign items_oos = '' -%}
+  {%- assign items_all = '' -%}
+
+  {%- for li in last_order.line_items -%}
+    {%- if li.variant and li.variant.id -%}
+      {%- assign numeric_variant_id = li.variant.id | split: '/' | last -%}
+      {%- assign qty = li.quantity -%}
+      {%- assign name_json = li.title | json -%}
+      {%- assign treat_oos = li.variant.available == false -%}
+
+      {%- capture item_json -%}{"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}{%- endcapture -%}
+
+      {%- if items_all != '' -%}{%- assign items_all = items_all | append: ',' -%}{%- endif -%}
+      {%- assign items_all = items_all | append: item_json -%}
+
+      {%- if treat_oos -%}
+        {%- if items_oos != '' -%}{%- assign items_oos = items_oos | append: ',' -%}{%- endif -%}
+        {%- assign items_oos = items_oos | append: item_json -%}
+      {%- else -%}
+        {%- if items_available != '' -%}{%- assign items_available = items_available | append: ',' -%}{%- endif -%}
+        {%- assign items_available = items_available | append: item_json -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if items_all != '' -%}
+    <script type="application/json" id="order-{{ last_order.id }}-items">
+      { "available":[{{ items_available }}], "oos":[{{ items_oos }}], "all":[{{ items_all }}] }
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+<div id="buy-again-modal" aria-hidden="true" role="dialog" aria-modal="true"
+     style="position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999;">
+  <div class="bam-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.5);"></div>
+
+  <div class="bam-panel"
+       style="position:relative; background:#fff; max-width:560px; width:92%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.2); padding:20px;">
+    <h3 style="margin:0 0 10px 0; font-size:18px;">Some items are not in stock</h3>
+    <p>These products are currently not available</p>
+
+    <ul id="bam-oos-list" style="margin:0 0 16px 18px; padding:0; list-style:disc;"></ul>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button type="button" class="button button--secondary button--small" id="bam-cancel">Cancel</button>
+      <button type="button" class="button button--primary button--small" id="bam-proceed">Proceed to add rest</button>
+    </div>
+
+    <button id="bam-close" aria-label="Close"
+            style="position:absolute; top:10px; right:12px; background:transparent; border:0; font-size:20px; cursor:pointer;">×</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    if (window.__buyAgainInit) return;
+    window.__buyAgainInit = true;
+
+    function bamOpen(oosNames) {
+      const modal = document.getElementById('buy-again-modal');
+      const list = document.getElementById('bam-oos-list');
+      list.innerHTML = '';
+      oosNames.forEach((n) => {
+        const li = document.createElement('li');
+        li.textContent = n;
+        list.appendChild(li);
+      });
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function bamClose() {
+      document.getElementById('buy-again-modal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    async function addItemsBatch(items) {
+      const res = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ items }),
+      });
+      if (!res.ok) throw new Error('add failed');
+      return res;
+    }
+
+    async function addItemsIndividually(items) {
+      const failed = [];
+      for (const it of items) {
+        try {
+          const res = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ items: [it] }),
+          });
+          if (!res.ok) failed.push(it);
+        } catch (_) {
+          failed.push(it);
+        }
+      }
+      return failed;
+    }
+
+    let bamPending = null;
+
+    document.addEventListener('click', async function (e) {
+      if (e.target.id === 'bam-close' || e.target.id === 'bam-cancel' || e.target.classList.contains('bam-overlay')) {
+        bamClose();
+        if (bamPending && bamPending.btn) {
+          bamPending.btn.disabled = false;
+          bamPending.btn.textContent = bamPending.original;
+          bamPending = null;
+        }
+        return;
+      }
+
+      if (e.target.id === 'bam-proceed') {
+        if (!bamPending) return;
+        const { avail, btn, original } = bamPending;
+
+        try {
+          try {
+            await addItemsBatch(avail);
+          } catch (_) {
+            const failed = await addItemsIndividually(avail);
+            if (failed.length === avail.length) throw new Error('all failed');
+          }
+          bamClose();
+          window.location.href = '/cart';
+        } catch (_) {
+          alert('Sorry, we could not add items to your cart.');
+          btn.disabled = false;
+          btn.textContent = original;
+          bamPending = null;
+        }
+        return;
+      }
+
+      const btn = e.target.closest('.buy-again-btn');
+      if (!btn) return;
+
+      const orderId = btn.dataset.orderId;
+      const jsonEl = document.getElementById(`order-${orderId}-items`);
+      if (!jsonEl) return;
+
+      const payload = JSON.parse(jsonEl.textContent.trim());
+      const oos = payload.oos || [];
+      const avail = payload.available || [];
+
+      if (!avail.length && !oos.length) return;
+
+      if (oos.length) {
+        bamOpen(oos.map((i) => i.name));
+        btn.disabled = true;
+        bamPending = { avail, btn, original: btn.textContent };
+        btn.textContent = 'Ready to add';
+        return;
+      }
+
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = 'Adding...';
+
+      try {
+        try {
+          await addItemsBatch(avail);
+        } catch (_) {
+          const failed = await addItemsIndividually(avail);
+          if (failed.length === avail.length) throw new Error('all failed');
+        }
+        window.location.href = '/cart';
+      } catch (_) {
+        alert('Sorry, we could not add items to your cart.');
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+  })();
+</script>
