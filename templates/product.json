@@ -21,6 +21,26 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "miko_b2b_wholesale_pricing_request_quote_CAWBen": {
+          "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/request-quote/019e7b25-ffc6-7168-aa18-034cd2330822",
+          "settings": {
+            "button_background": "#1a1a1a",
+            "button_text_color": "#ffffff",
+            "default_qty": 10
+          }
+        },
+        "miko_b2b_wholesale_pricing_submit_purchase_order_9ireb3": {
+          "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/submit-purchase-order/019e7b25-ffc6-7168-aa18-034cd2330822",
+          "settings": {
+            "heading": "Submit a purchase order",
+            "subheading": "Enter your SKUs and quantities, or paste them from a CSV. We confirm every PO before it becomes an order.",
+            "submit_label": "Submit purchase order",
+            "login_message": "Purchase orders are for approved wholesale customers. Please log in with your wholesale account.",
+            "no_access_message": "Your account does not have wholesale access. Please contact us to apply for a wholesale account.",
+            "button_background": "#1a1a1a",
+            "button_text_color": "#ffffff"
+          }
+        },
         "title_3bMpkb": {
           "type": "title",
           "settings": {
@@ -288,6 +308,8 @@
         }
       },
       "block_order": [
+        "miko_b2b_wholesale_pricing_request_quote_CAWBen",
+        "miko_b2b_wholesale_pricing_submit_purchase_order_9ireb3",
         "title_3bMpkb",
         "sku_9Yeiy8",
         "custom_liquid_xEEWRV",
