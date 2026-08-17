@@ -23,6 +23,7 @@
       "blocks": {
         "miko_b2b_wholesale_pricing_request_quote_CAWBen": {
           "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/request-quote/019e7b25-ffc6-7168-aa18-034cd2330822",
+          "disabled": true,
           "settings": {
             "button_background": "#1a1a1a",
             "button_text_color": "#ffffff",
@@ -31,6 +32,7 @@
         },
         "miko_b2b_wholesale_pricing_submit_purchase_order_9ireb3": {
           "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/submit-purchase-order/019e7b25-ffc6-7168-aa18-034cd2330822",
+          "disabled": true,
           "settings": {
             "heading": "Submit a purchase order",
             "subheading": "Enter your SKUs and quantities, or paste them from a CSV. We confirm every PO before it becomes an order.",
