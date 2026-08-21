@@ -580,16 +580,15 @@
       "type": "buy-it-again",
       "settings": {
         "products_to_show": 14,
-        "desktop_layout": "carousel",
-        "mobile_layout": "carousel",
         "columns_desktop": "5",
         "columns_mobile": "2",
         "full_width": true,
+        "title": "Buy it again",
+        "heading_size": "h2",
+        "heading_tag": "h2",
         "content_max_width": "m",
         "desktop_heading_alignment": "left",
         "mobile_heading_alignment": "left",
-        "title": "Buy it again",
-        "heading_size": "h2",
         "text": "<p>Reorder what you got last time, in one click.</p>",
         "text_size": "t3",
         "color_scheme": "scheme-2",
@@ -601,15 +600,14 @@
         "show_time_morning": true,
         "show_time_afternoon": true,
         "show_time_evening": true,
-        "show_time_night": true,
-        "heading_tag": "h2"
+        "show_time_night": true
       }
     },
     "featured_collection_VgNgUt": {
       "type": "featured-collection",
       "name": "Featured collection",
       "settings": {
-        "collection": "oxyshred-energy-drinks",
+        "collection": "new-arrivals",
         "products_to_show": 24,
         "desktop_layout": "carousel",
         "mobile_layout": "carousel",
