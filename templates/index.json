@@ -1410,7 +1410,7 @@
             "submit_label": "Submit purchase order",
             "login_message": "Purchase orders are for approved wholesale customers. Please log in with your wholesale account.",
             "no_access_message": "Your account does not have wholesale access. Please contact us to apply for a wholesale account.",
-            "button_background": "#1a1a1a",
+            "button_background": "#2277C7",
             "button_text_color": "#ffffff"
           }
         }
