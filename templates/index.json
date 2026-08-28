@@ -1398,6 +1398,39 @@
         "show_time_evening": true,
         "show_time_night": true
       }
+    },
+    "178787993043b607b1": {
+      "type": "apps",
+      "blocks": {
+        "miko_b2b_wholesale_pricing_submit_purchase_order_CFExWw": {
+          "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/submit-purchase-order/019e7b25-ffc6-7168-aa18-034cd2330822",
+          "settings": {
+            "heading": "Submit a purchase order",
+            "subheading": "Enter your SKUs and quantities, or paste them from a CSV. We confirm every PO before it becomes an order.",
+            "submit_label": "Submit purchase order",
+            "login_message": "Purchase orders are for approved wholesale customers. Please log in with your wholesale account.",
+            "no_access_message": "Your account does not have wholesale access. Please contact us to apply for a wholesale account.",
+            "button_background": "#1a1a1a",
+            "button_text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "miko_b2b_wholesale_pricing_submit_purchase_order_CFExWw"
+      ],
+      "settings": {
+        "include_margins": true,
+        "color_scheme": "",
+        "line_separator": "",
+        "top_padding": "pt-0",
+        "bottom_padding": "pb-0",
+        "visibility": "",
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
     }
   },
   "order": [
@@ -1415,6 +1448,7 @@
     "scrolling_text_9ymWCM",
     "stats_JYTTVY",
     "scrolling_text_XDEjRT",
-    "icons_with_text_f3bxbj"
+    "icons_with_text_f3bxbj",
+    "178787993043b607b1"
   ]
 }
