@@ -24,7 +24,7 @@
         "heading_6EfVmd": {
           "type": "heading",
           "settings": {
-            "heading": "Looking to Open a Credit Account for Your Business?",
+            "heading": "Submit Your Purchase Order within minutes",
             "heading_italic_convert": "",
             "heading_size": "h3",
             "heading_size_custom": 2.4,
@@ -35,33 +35,14 @@
         "text_jPRiYz": {
           "type": "text",
           "settings": {
-            "text": "<p>Fill out our Credit Application and Direct Debit Forms and one of our friendly team members will be in touch shortly.</p>",
+            "text": "<p>Add your products below or upload your purchase order. We accept PDF, Excel and CSV Formats</p>",
             "text_size": "t3"
-          }
-        },
-        "buttons_6A3YAb": {
-          "type": "buttons",
-          "settings": {
-            "button_text_size": "t5",
-            "button_label_1": "Download Credit Application Form",
-            "button_link_1": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Account_Request_Form_Worthy_Products.pdf?v=1763413461",
-            "button_style_1": "primary",
-            "button_style_1_show_arrow": true,
-            "button_style_1_show_gradient_border": false,
-            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
-            "button_label_2": "Download Direct Debit Form",
-            "button_link_2": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/DD_Form_Worthy_Products.pdf?v=1763413461",
-            "button_style_2": "secondary",
-            "button_style_2_show_arrow": true,
-            "button_style_2_show_gradient_border": true,
-            "button_2_border_gradient": "linear-gradient(136deg, rgba(209, 224, 241, 1) 11%, rgba(37, 89, 193, 1) 84%)"
           }
         }
       },
       "block_order": [
         "heading_6EfVmd",
-        "text_jPRiYz",
-        "buttons_6A3YAb"
+        "text_jPRiYz"
       ],
       "name": "Rich text",
       "settings": {
@@ -77,6 +58,39 @@
         "bottom_padding": "pb-s",
         "visibility": "",
         "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
+    },
+    "1787881723b8cf89b6": {
+      "type": "apps",
+      "blocks": {
+        "miko_b2b_wholesale_pricing_submit_purchase_order_9tK6wH": {
+          "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/submit-purchase-order/019e7b25-ffc6-7168-aa18-034cd2330822",
+          "settings": {
+            "heading": "Submit a purchase order",
+            "subheading": "Enter your SKUs and quantities, or paste them from a CSV. We confirm every PO before it becomes an order.",
+            "submit_label": "Submit purchase order",
+            "login_message": "Purchase orders are for approved wholesale customers. Please log in with your wholesale account.",
+            "no_access_message": "Your account does not have wholesale access. Please contact us to apply for a wholesale account.",
+            "button_background": "#2277C7",
+            "button_text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "miko_b2b_wholesale_pricing_submit_purchase_order_9tK6wH"
+      ],
+      "settings": {
+        "include_margins": true,
+        "color_scheme": "",
+        "line_separator": "",
+        "top_padding": "pt-0",
+        "bottom_padding": "pb-0",
+        "visibility": "",
         "show_at_specific_time_of_day": false,
         "show_time_morning": true,
         "show_time_afternoon": true,
@@ -258,6 +272,7 @@
   "order": [
     "breadcrumbs",
     "rich_text_3wjwRH",
+    "1787881723b8cf89b6",
     "main",
     "contact_form_PJxtT9"
   ]
