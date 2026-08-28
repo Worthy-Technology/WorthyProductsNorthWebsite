@@ -824,8 +824,8 @@
             "button_link_1": "shopify://collections/best-sellers",
             "button_style_1": "secondary",
             "button_style_1_show_arrow": true,
-            "button_style_1_show_gradient_border": false,
-            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)"
+            "button_style_1_show_gradient_border": true,
+            "button_1_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 42%, rgba(37, 89, 193, 1) 100%)"
           }
         },
         "heading_tLdCG3": {
