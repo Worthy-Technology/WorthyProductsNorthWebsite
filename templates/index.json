@@ -808,7 +808,7 @@
         "heading_QgwRbi": {
           "type": "heading",
           "settings": {
-            "heading": "Try Canada Dry Ginger Ale",
+            "heading": "Add Bestsellers to your shelves",
             "heading_italic_convert": "light",
             "heading_size": "h4",
             "heading_size_custom": 2.4,
@@ -821,7 +821,7 @@
           "settings": {
             "button_text_size": "t6",
             "button_label_1": "Order now",
-            "button_link_1": "shopify://products/canada-dry-ginger-ale-355ml-1x12",
+            "button_link_1": "shopify://collections/best-sellers",
             "button_style_1": "secondary",
             "button_style_1_show_arrow": true,
             "button_style_1_show_gradient_border": false,
