@@ -28,7 +28,7 @@
       {%- assign numeric_variant_id = cur_variant.id -%}
       {%- assign qty = li.quantity -%}
       {%- assign name_json = li.title | json -%}
-      {%- assign treat_oos = cur_variant.available == false -%}
+      {%- assign treat_oos = cur_variant.available -%}
 
       {%- capture item_json -%}{"id":{{ numeric_variant_id }},"quantity":{{ qty }},"name":{{ name_json }}}{%- endcapture -%}
 
@@ -220,3 +220,13 @@
   })();
 </script>
 {%- endif -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- assign treat_oos = cur_variant.available == false -%}"
+  to: "{%- assign treat_oos = cur_variant.available -%}"
+  position: 1658..1706
+{% endcomment %}

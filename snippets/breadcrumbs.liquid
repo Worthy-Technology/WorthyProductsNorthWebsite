@@ -42,8 +42,8 @@
 
   case template.name
     when 'blog', 'page'
-      assign item_title = [template.name].title
-      assign item_url = [template.name].url
+      assign item_title = self[template.name].title
+      assign item_url = self[template.name].url
     when 'collection', 'product'
       assign collections_label = 'breadcrumbs.collections' | t
     when 'list-collections'
@@ -247,4 +247,16 @@
       }
     </script>
   {%- endunless -%}
-{%- endif -%}
+{%- endif -%}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "      assign item_title = [template.name].title"
+  to: "      assign item_title = self[template.name].title"
+  position: 1834..1885
+- from: "      assign item_url = [template.name].url"
+  to: "      assign item_url = self[template.name].url"
+  position: 1886..1933
+{%- endcomment -%}
