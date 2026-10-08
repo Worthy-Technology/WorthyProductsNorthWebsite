@@ -73,10 +73,9 @@
         "slide_8TVwmi": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/LOL_-_Worthy_Products_2.webp",
-            "mobile_image": "shopify://shop_images/LOL_-_Worthy_Products_1.webp",
-            "image_overlay_opacity": 2,
-            "image_link": "shopify://collections/lol",
+            "image": "shopify://shop_images/Farrarelle_Sparkling_Water_Banner_-_Worthy_Products.jpg",
+            "image_overlay_opacity": 0,
+            "image_link": "shopify://collections/ferrarelle-sparkling-water",
             "horizontal_offset": 3.2,
             "vertical_offset": -1.2,
             "desktop_content_position": "md:justify-start md:items-center",
@@ -88,17 +87,17 @@
             "caption": "",
             "caption_text_style": "caption-with-letter-spacing",
             "caption_text_size": "t7",
-            "heading": "Meet LOL <em>Bubble Tea</em>",
-            "heading_italic_convert": "outline",
+            "heading": "100% Naturally Sparkling Water. ++Now in New Zealand&nbsp;",
+            "heading_italic_convert": "accent_color",
             "heading_size": "h3",
             "heading_size_custom": 3.8,
             "heading_line_height_custom": 1,
             "heading_tag": "h2",
-            "text": "<p>NZ's First RTD Bubble Tea with Real Popping Pearls</p>",
+            "text": "",
             "text_size": "t4",
             "button_text_size": "t5",
             "button_label_1": "Shop now",
-            "button_link_1": "shopify://collections/lol",
+            "button_link_1": "shopify://collections/ferrarelle-sparkling-water",
             "button_style_1": "primary",
             "button_style_1_show_arrow": true,
             "button_style_1_show_gradient_border": false,
@@ -248,7 +247,7 @@
       "settings": {
         "visible_for_tag": "",
         "hide_for_tag": "mobil,caltex",
-        "slide_animation": "wipe",
+        "slide_animation": "slide",
         "slider_visual": "dots",
         "pagination_position": "below",
         "autoplay": "autoplay_with_pause",
@@ -258,7 +257,7 @@
         "mobile_section_height": 380,
         "full_width": "on",
         "show_text_below": true,
-        "color_scheme": "scheme-1",
+        "color_scheme": "scheme-7",
         "line_separator": "",
         "accessibility_info": "Slideshow about our brand",
         "top_padding": "pt-s05",
@@ -1398,39 +1397,6 @@
         "show_time_evening": true,
         "show_time_night": true
       }
-    },
-    "178787993043b607b1": {
-      "type": "apps",
-      "blocks": {
-        "miko_b2b_wholesale_pricing_submit_purchase_order_CFExWw": {
-          "type": "shopify://apps/miko-b2b-wholesale-pricing/blocks/submit-purchase-order/019e7b25-ffc6-7168-aa18-034cd2330822",
-          "settings": {
-            "heading": "Submit a purchase order",
-            "subheading": "Enter your SKUs and quantities, or paste them from a CSV. We confirm every PO before it becomes an order.",
-            "submit_label": "Submit purchase order",
-            "login_message": "Purchase orders are for approved wholesale customers. Please log in with your wholesale account.",
-            "no_access_message": "Your account does not have wholesale access. Please contact us to apply for a wholesale account.",
-            "button_background": "#2277C7",
-            "button_text_color": "#ffffff"
-          }
-        }
-      },
-      "block_order": [
-        "miko_b2b_wholesale_pricing_submit_purchase_order_CFExWw"
-      ],
-      "settings": {
-        "include_margins": true,
-        "color_scheme": "",
-        "line_separator": "",
-        "top_padding": "pt-0",
-        "bottom_padding": "pb-0",
-        "visibility": "",
-        "show_at_specific_time_of_day": false,
-        "show_time_morning": true,
-        "show_time_afternoon": true,
-        "show_time_evening": true,
-        "show_time_night": true
-      }
     }
   },
   "order": [
@@ -1448,7 +1414,6 @@
     "scrolling_text_9ymWCM",
     "stats_JYTTVY",
     "scrolling_text_XDEjRT",
-    "icons_with_text_f3bxbj",
-    "178787993043b607b1"
+    "icons_with_text_f3bxbj"
   ]
 }
