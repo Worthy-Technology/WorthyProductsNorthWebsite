@@ -74,6 +74,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/Farrarelle_Sparkling_Water_Banner_-_Worthy_Products.jpg",
+            "mobile_image": "shopify://shop_images/Ferrarelle_Mobile_banner.jpg",
             "image_overlay_opacity": 0,
             "image_link": "shopify://collections/ferrarelle-sparkling-water",
             "horizontal_offset": 3.2,
