@@ -235,7 +235,7 @@
             "button_style_2_show_arrow": false,
             "button_style_2_show_gradient_border": false,
             "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
-            "color_scheme": "scheme-3"
+            "color_scheme": "scheme-2"
           }
         },
         "slide_H2NovCc": {
@@ -277,7 +277,7 @@
             "button_style_2_show_arrow": false,
             "button_style_2_show_gradient_border": false,
             "button_2_border_gradient": "linear-gradient(136deg, rgba(10, 234, 237, 1) 11%, rgba(250, 13, 253, 1) 84%)",
-            "color_scheme": "scheme-3"
+            "color_scheme": "scheme-2"
           }
         }
       },
