@@ -1,0 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {}
+    },
+    "trade_application": {
+      "type": "trade-application",
+      "settings": {
+        "heading": "Apply for a trade account",
+        "intro": "Complete the account application and direct debit authority online. It takes about five minutes, and our team will be in touch shortly.",
+        "brand": "worthy-products",
+        "endpoint": "https://dutch-rusk-catalog-manager.onrender.com/api/trade-application",
+        "team_email": "admin@worthyproducts.nz",
+        "credit_pdf": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Account_Request_Form_Worthy_Products_f64aaa77-0e4b-484d-a849-d11c8bf3a5e4.pdf?v=1793136132",
+        "dd_pdf": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/DD_Form_Worthy_Products_924cc8ce-4b7b-407d-906f-6f8f74c4cfb6.pdf?v=1793136132"
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "trade_application"
+  ]
+}

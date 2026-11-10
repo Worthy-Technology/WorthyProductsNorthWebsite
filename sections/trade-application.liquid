@@ -1,0 +1,605 @@
+{%- comment -%}
+  Online trade account application.
+  Collects everything on the Account Application Form and the Direct Debit
+  Authority, with drawn signatures, and posts it to the Catalog Manager app,
+  which fills the original PDFs and emails them to the team.
+  If scripts fail to load, the PDF download links at the bottom still work.
+{%- endcomment -%}
+
+<style>
+  .ta { --ta-blue:#2156C3; --ta-blue-dark:#1a459c; --ta-tint:#f2f6fd; --ta-line:#d5dbe6; --ta-text:#1c2333; --ta-muted:#5c6577; --ta-red:#c0392b;
+    max-width:860px; margin:0 auto; padding:24px 16px 56px; color:var(--ta-text); font-size:16px; line-height:1.5; box-sizing:border-box; }
+  .ta *, .ta *::before, .ta *::after { box-sizing:border-box; }
+  .ta h1 { font-size:30px; line-height:1.2; margin:0 0 8px; color:var(--ta-text); }
+  .ta .ta-intro { color:var(--ta-muted); margin:0 0 24px; font-size:16px; }
+  .ta-steps { display:flex; gap:8px; list-style:none; margin:0 0 20px; padding:0; }
+  .ta-steps li { flex:1; font-size:13px; font-weight:600; color:var(--ta-muted); padding-top:10px; border-top:4px solid var(--ta-line); }
+  .ta-steps li.is-on { color:var(--ta-blue); border-color:var(--ta-blue); }
+  .ta-steps li.is-done { color:var(--ta-text); border-color:#7CAFFF; }
+  .ta-steps li span { display:block; font-weight:400; font-size:12px; }
+  .ta-card { background:#fff; border:1px solid var(--ta-line); border-radius:12px; padding:28px; box-shadow:0 1px 3px rgba(20,30,60,.06); }
+  .ta fieldset { border:0; padding:0; margin:0; min-width:0; }
+  .ta-step[hidden] { display:none; }
+  .ta h2 { font-size:22px; margin:0 0 4px; color:var(--ta-text); }
+  .ta .ta-sub { color:var(--ta-muted); margin:0 0 20px; font-size:15px; }
+  .ta h3 { font-size:16px; margin:28px 0 12px; padding-top:20px; border-top:1px solid var(--ta-line); color:var(--ta-text); }
+  .ta-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ta-grid-3 { display:grid; grid-template-columns:2fr 1.3fr 1fr; gap:12px; margin-bottom:12px; }
+  .ta-full { grid-column:1 / -1; }
+  .ta-field { display:flex; flex-direction:column; min-width:0; }
+  .ta-field label, .ta-legend { font-size:14px; font-weight:600; margin:0 0 6px; color:var(--ta-text); }
+  .ta-req::after { content:" *"; color:var(--ta-red); }
+  .ta-opt { font-weight:400; color:var(--ta-muted); }
+  .ta input[type=text], .ta input[type=email], .ta input[type=tel] {
+    width:100%; height:48px; padding:0 14px; font:inherit; font-size:16px; color:var(--ta-text); background:#fff;
+    border:1px solid #b9c1cf; border-radius:8px; outline:0; box-shadow:none; margin:0; appearance:none; }
+  .ta input:focus-visible, .ta canvas:focus-visible { border-color:var(--ta-blue); box-shadow:0 0 0 3px rgba(33,86,195,.2); }
+  .ta .is-bad input, .ta input.is-bad, .ta .ta-sig.is-bad canvas { border-color:var(--ta-red); }
+  .ta-err { color:var(--ta-red); font-size:13px; margin-top:5px; min-height:0; }
+  .ta-err:empty { display:none; }
+  .ta-money { position:relative; }
+  .ta-money::before { content:"$"; position:absolute; left:14px; top:12px; color:var(--ta-muted); }
+  .ta-money input { padding-left:28px !important; }
+  .ta-radios { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .ta-radios label { display:flex; align-items:center; gap:8px; min-height:48px; padding:0 14px; border:1px solid #b9c1cf; border-radius:8px; cursor:pointer; font-weight:500; font-size:15px; margin:0; background:#fff; }
+  .ta-radios input { accent-color:var(--ta-blue); width:18px; height:18px; margin:0; flex:none; }
+  .ta-radios label:has(input:checked) { border-color:var(--ta-blue); background:var(--ta-tint); }
+  .ta-check { display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--ta-tint); border-radius:8px; cursor:pointer; font-size:15px; margin:16px 0 0; }
+  .ta-check input { width:20px; height:20px; margin:2px 0 0; accent-color:var(--ta-blue); flex:none; }
+  .ta-check.ta-plain { background:none; padding:0; margin:8px 0 0; font-size:14px; color:var(--ta-muted); }
+  .ta-rowlabel { font-size:13px; color:var(--ta-muted); font-weight:600; margin:0 0 6px; }
+  .ta-legal { border:1px solid var(--ta-line); border-radius:8px; background:#fafbfd; padding:16px 18px; max-height:300px; overflow:auto; font-size:13.5px; line-height:1.55; color:#2c3446; -webkit-overflow-scrolling:touch; }
+  .ta-legal h4 { font-size:13.5px; margin:14px 0 4px; }
+  .ta-legal h4:first-child { margin-top:0; }
+  .ta-legal p { margin:0 0 6px; }
+  .ta-legal ol, .ta-legal ul { margin:0 0 6px; padding-left:20px; }
+  .ta-sig { margin-top:16px; }
+  .ta-sig-box { position:relative; }
+  .ta-sig canvas { display:block; width:100%; height:170px; border:1px solid #b9c1cf; border-radius:8px; background:#fff; touch-action:none; cursor:crosshair; }
+  .ta-sig-hint { position:absolute; left:0; right:0; bottom:38px; text-align:center; color:#a3abba; font-size:14px; pointer-events:none; }
+  .ta-sig-line { position:absolute; left:8%; right:8%; bottom:34px; border-bottom:1px dashed #c3cad8; pointer-events:none; }
+  .ta-sig.has-ink .ta-sig-hint { display:none; }
+  .ta-sig-clear { position:absolute; top:8px; right:8px; background:#fff; border:1px solid var(--ta-line); border-radius:6px; padding:6px 12px; font:inherit; font-size:13px; cursor:pointer; color:var(--ta-text); min-height:32px; }
+  .ta-bank { display:grid; grid-template-columns:2fr 4fr 7fr 3fr; gap:10px; }
+  .ta-bank input { text-align:center; letter-spacing:3px; padding:0 6px !important; font-variant-numeric:tabular-nums; }
+  .ta-bank small { display:block; text-align:center; font-size:12px; color:var(--ta-muted); margin-top:4px; }
+  .ta-note { background:var(--ta-tint); border-left:4px solid var(--ta-blue); border-radius:0 8px 8px 0; padding:12px 14px; font-size:14px; margin:0 0 20px; }
+  .ta-nav { display:flex; justify-content:space-between; gap:12px; margin-top:28px; padding-top:20px; border-top:1px solid var(--ta-line); }
+  .ta-btn { min-height:50px; padding:0 28px; border-radius:8px; font:inherit; font-size:16px; font-weight:600; cursor:pointer; border:1px solid var(--ta-blue); background:var(--ta-blue); color:#fff; }
+  .ta-btn:hover { background:var(--ta-blue-dark); }
+  .ta-btn.ta-ghost { background:#fff; color:var(--ta-blue); }
+  .ta-btn[disabled] { opacity:.6; cursor:wait; }
+  .ta-alert { background:#fdecea; border:1px solid #f1b0a8; color:#8c1d12; border-radius:8px; padding:12px 14px; font-size:14px; margin:16px 0 0; }
+  .ta-alert[hidden] { display:none; }
+  .ta-done { text-align:center; padding:24px 8px; }
+  .ta-done-icon { width:64px; height:64px; border-radius:50%; background:#e6f5ec; color:#1e8e4e; font-size:34px; line-height:64px; margin:0 auto 16px; }
+  .ta-fallback { margin:20px 0 0; font-size:14px; color:var(--ta-muted); text-align:center; }
+  .ta-fallback a { color:var(--ta-blue); text-decoration:underline; }
+  .ta-hp { position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden; }
+  @media (max-width:640px) {
+    .ta { padding:16px 12px 40px; }
+    .ta h1 { font-size:24px; }
+    .ta-card { padding:18px 16px; border-radius:10px; }
+    .ta-grid { grid-template-columns:1fr; gap:14px; }
+    .ta-grid-3 { grid-template-columns:1fr; gap:8px; padding-bottom:12px; border-bottom:1px dashed var(--ta-line); }
+    .ta-radios { grid-template-columns:1fr 1fr; }
+    .ta-steps li span { display:none; }
+    .ta-steps li { font-size:12px; }
+    .ta-bank { grid-template-columns:2fr 4fr; }
+    .ta-bank .ta-b-acc { grid-column:1 / -1; order:3; }
+    .ta-bank .ta-b-suf { order:4; grid-column:1 / 2; }
+    .ta-nav { flex-direction:column-reverse; }
+    .ta-btn { width:100%; }
+    .ta-sig canvas { height:150px; }
+  }
+</style>
+
+<div class="ta" id="trade-application" data-endpoint="{{ section.settings.endpoint | escape }}" data-brand="{{ section.settings.brand | escape }}">
+  <h1>{{ section.settings.heading | escape }}</h1>
+  <p class="ta-intro">{{ section.settings.intro | escape }}</p>
+
+  <ol class="ta-steps" aria-hidden="true">
+    <li data-step-tab="1" class="is-on">1. Business<span>Company details</span></li>
+    <li data-step-tab="2">2. People<span>Contacts and references</span></li>
+    <li data-step-tab="3">3. Terms<span>Accept and sign</span></li>
+    <li data-step-tab="4">4. Direct debit<span>Bank authority</span></li>
+  </ol>
+
+  <div class="ta-card">
+    <form id="ta-form" novalidate autocomplete="on">
+      <div class="ta-hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      {%- comment -%} STEP 1 {%- endcomment -%}
+      <fieldset class="ta-step" data-step="1">
+        <h2>Business details</h2>
+        <p class="ta-sub">Fields marked <span style="color:#c0392b">*</span> are required.</p>
+        <div class="ta-grid">
+          <div class="ta-field"><label class="ta-req" for="ta-companyName">Company name</label><input type="text" id="ta-companyName" name="companyName" maxlength="120" autocomplete="organization" required><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-tradingName">Trading name <span class="ta-opt">(optional)</span></label><input type="text" id="ta-tradingName" name="tradingName" maxlength="80"><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-companyRegNumber">Company registration number <span class="ta-opt">(optional)</span></label><input type="text" id="ta-companyRegNumber" name="companyRegNumber" maxlength="40"><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-gstNumber">GST registration number <span class="ta-opt">(optional)</span></label><input type="text" id="ta-gstNumber" name="gstNumber" maxlength="40"><div class="ta-err"></div></div>
+          <div class="ta-field ta-full" data-field="companyType">
+            <div class="ta-legend ta-req" id="ta-ct-label">Company type</div>
+            <div class="ta-radios" role="radiogroup" aria-labelledby="ta-ct-label">
+              <label><input type="radio" name="companyType" value="Sole Trader"> Sole Trader</label>
+              <label><input type="radio" name="companyType" value="Individual"> Individual</label>
+              <label><input type="radio" name="companyType" value="Partnership"> Partnership</label>
+              <label><input type="radio" name="companyType" value="Company"> Company</label>
+            </div>
+            <div class="ta-err"></div>
+          </div>
+          <div class="ta-field ta-full"><label class="ta-req" for="ta-businessAddress">Business address</label><input type="text" id="ta-businessAddress" name="businessAddress" maxlength="200" autocomplete="street-address" required><div class="ta-err"></div></div>
+          <div class="ta-field ta-full">
+            <label class="ta-req" for="ta-deliveryAddress">Delivery address</label><input type="text" id="ta-deliveryAddress" name="deliveryAddress" maxlength="200" required><div class="ta-err"></div>
+            <label class="ta-check ta-plain"><input type="checkbox" id="ta-sameAddress"> Same as business address</label>
+          </div>
+          <div class="ta-field"><label class="ta-req" for="ta-email">Email address</label><input type="email" id="ta-email" name="email" maxlength="120" autocomplete="email" inputmode="email" required><div class="ta-err"></div></div>
+          <div class="ta-field"><label class="ta-req" for="ta-estimatedPurchases">Estimated purchases per month</label><div class="ta-money"><input type="text" id="ta-estimatedPurchases" name="estimatedPurchases" maxlength="30" inputmode="decimal" required></div><div class="ta-err"></div></div>
+        </div>
+      </fieldset>
+
+      {%- comment -%} STEP 2 {%- endcomment -%}
+      <fieldset class="ta-step" data-step="2" hidden>
+        <h2>Contacts and references</h2>
+        <p class="ta-sub">Who we should talk to about orders and accounts.</p>
+
+        <div class="ta-rowlabel">1. Business contact person</div>
+        <div class="ta-grid">
+          <div class="ta-field"><label class="ta-req" for="ta-contactName">Name</label><input type="text" id="ta-contactName" name="contactName" maxlength="100" autocomplete="name" required><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-contactDesignation">Designation <span class="ta-opt">(optional)</span></label><input type="text" id="ta-contactDesignation" name="contactDesignation" maxlength="60" autocomplete="organization-title"><div class="ta-err"></div></div>
+          <div class="ta-field"><label class="ta-req" for="ta-contactMobile">Mobile</label><input type="tel" id="ta-contactMobile" name="contactMobile" maxlength="30" autocomplete="tel" required><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-contactLandline">Landline <span class="ta-opt">(optional)</span></label><input type="tel" id="ta-contactLandline" name="contactLandline" maxlength="30"><div class="ta-err"></div></div>
+          <div class="ta-field ta-full"><label for="ta-contactEmail">Email <span class="ta-opt">(optional)</span></label><input type="email" id="ta-contactEmail" name="contactEmail" maxlength="120" inputmode="email"><div class="ta-err"></div></div>
+        </div>
+
+        <h3>2. Accounts department contact <span class="ta-opt">(optional)</span></h3>
+        <div class="ta-grid">
+          <div class="ta-field"><label for="ta-accountsName">Name</label><input type="text" id="ta-accountsName" name="accountsName" maxlength="100"><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-accountsDesignation">Designation</label><input type="text" id="ta-accountsDesignation" name="accountsDesignation" maxlength="60"><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-accountsMobile">Mobile</label><input type="tel" id="ta-accountsMobile" name="accountsMobile" maxlength="30"><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-accountsLandline">Landline</label><input type="tel" id="ta-accountsLandline" name="accountsLandline" maxlength="30"><div class="ta-err"></div></div>
+          <div class="ta-field ta-full"><label for="ta-accountsEmail">Email</label><input type="email" id="ta-accountsEmail" name="accountsEmail" maxlength="120" inputmode="email"><div class="ta-err"></div></div>
+        </div>
+
+        <h3>Directors, partners or proprietors</h3>
+        <p class="ta-sub">At least one is required.</p>
+        <div class="ta-grid">
+          {%- for i in (1..3) -%}
+            <div class="ta-field"><label {% if i == 1 %}class="ta-req"{% endif %} for="ta-director{{ i }}Name">Name {{ i }}{% if i > 1 %} <span class="ta-opt">(optional)</span>{% endif %}</label><input type="text" id="ta-director{{ i }}Name" name="director{{ i }}Name" maxlength="100"><div class="ta-err"></div></div>
+            <div class="ta-field"><label {% if i == 1 %}class="ta-req"{% endif %} for="ta-director{{ i }}Phone">Contact number {{ i }}{% if i > 1 %} <span class="ta-opt">(optional)</span>{% endif %}</label><input type="tel" id="ta-director{{ i }}Phone" name="director{{ i }}Phone" maxlength="40"><div class="ta-err"></div></div>
+          {%- endfor -%}
+        </div>
+
+        <h3>Trade or credit references <span class="ta-opt">(optional)</span></h3>
+        {%- for i in (1..3) -%}
+          <div class="ta-grid-3">
+            <div class="ta-field"><label for="ta-ref{{ i }}Name">Supplier {{ i }}</label><input type="text" id="ta-ref{{ i }}Name" name="ref{{ i }}Name" maxlength="100"></div>
+            <div class="ta-field"><label for="ta-ref{{ i }}Phone">Contact number</label><input type="tel" id="ta-ref{{ i }}Phone" name="ref{{ i }}Phone" maxlength="40"></div>
+            <div class="ta-field"><label for="ta-ref{{ i }}Monthly">Monthly purchases</label><div class="ta-money"><input type="text" id="ta-ref{{ i }}Monthly" name="ref{{ i }}Monthly" maxlength="30" inputmode="decimal"></div></div>
+          </div>
+        {%- endfor -%}
+      </fieldset>
+
+      {%- comment -%} STEP 3 {%- endcomment -%}
+      <fieldset class="ta-step" data-step="3" hidden>
+        <h2>Terms and Conditions of Trade</h2>
+        <p class="ta-sub">Please read the terms, then accept and sign.</p>
+        <div class="ta-legal" tabindex="0">
+          <h4>1. DEFINITIONS</h4>
+          <p>Unless the context otherwise requires, the following definitions shall apply to these terms of trade:</p>
+          <p>&ldquo;Worthy Products Ltd/Worthy/Worthy Products/We&rdquo; means Worthy Products Limited and any of its related companies that have supplied or services and shall include the successors and assigns of the company.</p>
+          <p>&ldquo;Customer&rdquo; means the Applicant / Customer(s) named in this application for the credit account and shall include the Customer&rsquo;s trustee and executors if an individual or its successors, assigns or administrators.</p>
+          <h4>2. ACCEPTANCE OF TERMS AND CONDITIONS</h4>
+          <p>Use of this account shall constitute acceptance of these Terms and Conditions of Supply notwithstanding that the application has not been completed and or signed by or behalf of the customer.</p>
+          <h4>3. LIABILTY</h4>
+          <p>3.1 All Claims must be in writing and no claims recognised after 14 days of receipt of products or services.</p>
+          <p>3.2 Where contents and conditions of contents are unknown and out of sight, claims will be considered only where there are signs of damage.</p>
+          <h4>4. QUOTES</h4>
+          <p>4.1 Quotes we supply in writing are valid for 14 days and if the customer decides to change any such variable, we reserve the right to adjust such quote.</p>
+          <p>4.2 Verbal Quotes over the phone are estimates only and if necessary, can change if we feel we were not given reasonable information.</p>
+          <h4>5. PAYMENT</h4>
+          <p>5.1 The Customer shall pay for the goods and service no later than the 20th of the month following the date of the invoice or as may otherwise within the Payment Terms within which goods are supplied or delivered.</p>
+          <p>5.2 Worthy may at any time in its sole discretion withdraw the provision of the credit to the customer.</p>
+          <h4>6. DEFAULT</h4>
+          <p>6.1 In the event of any default under clause 5.1 (above) the full amount owing to Worthy shall immediately become due and payable.</p>
+          <p>6.2 Worthy may take immediate action if the Customer is in default under any agreement with Worthy or commits an act of insolvency or bankruptcy, goes into liquidation or receivership, enters into a creditors composition or has its credit standing impaired in any way.</p>
+          <p>6.3 If the customer fails to pay the amount due on or before the due date Worthy (without prejudice to its other rights and remedies) shall be entitled to charge interest at the rate of 2% per month compounded monthly on the 20th of each month on the outstanding amount balance.</p>
+          <p>6.4 The Customer will pay all costs and expenses (including costs on a solicitor / client basis and debt collectors&rsquo; costs) the Worthy incurs in enforcing or attempting to enforce the Worthy&rsquo;s rights under this clause. The Worthy may deduct any costs and expenses incurred from the proceeds of sale of any Goods recovered from the Customer.</p>
+          <h4>7. CREDIT INFORMATION</h4>
+          <p>The Customer authorises Worthy to enquire from any person, company or organisation for information Worthy may require to furnish credit information. Under the Privacy Act 1993 the customer has the right to access and correct their personal information held by Worthy.</p>
+          <h4>8. DELIVERY</h4>
+          <p>8.1 The Customer shall provide suitable access to the customers delivery site in all-weather condition&rsquo;s for Worthy delivery vehicles. Any damage to footpaths, kerbs, drains and other property by any Worthy vehicles delivering beyond the kerb line shall be the Customer&rsquo;s responsibility.</p>
+          <p>8.2 If Worthy is unable to deliver the goods or preform a service because of any cause beyond its control (including any force majeure event event) it may suspend delivery without incurring any liability for loss or damage suffered by the customer.</p>
+          <h4>9. VARIATIONS</h4>
+          <p>Worthy reserve the right to make and notify the Customer of amendments to these Terms and Conditions of Supply at any time.</p>
+          <h4>10. TERMINATION</h4>
+          <p>Worthy and the Customer each have the right to terminate this credit facility on giving five (5) working days&rsquo; notice in writing, but no such termination shall release the Customer from payment of any monies owed to Worthy.</p>
+          <h4>11. ENFORCEMENT</h4>
+          <p>The Customer irrevocably give Worthy Products and its agents the right to enter upon the customers (including leased premises), without giving notice and without being liable to the customer, if Worthy Products has cause to exercise any rights it has under section 109 of the PPSA.</p>
+        </div>
+
+        <div data-field="acceptTerms">
+          <label class="ta-check"><input type="checkbox" name="acceptTerms"> <span>I/We hereby apply to open a credit account with Worthy Products Limited. I/We have already read and fully understand Worthy Products Limited&rsquo;s Terms and Conditions of Trade and agree to abide by them.</span></label>
+          <div class="ta-err"></div>
+        </div>
+
+        <div class="ta-grid" style="margin-top:20px">
+          <div class="ta-field"><label class="ta-req" for="ta-acceptName">Your full name</label><input type="text" id="ta-acceptName" name="acceptName" maxlength="100" required><div class="ta-err"></div></div>
+          <div class="ta-field"><label class="ta-req" for="ta-acceptDesignation">Designation</label><input type="text" id="ta-acceptDesignation" name="acceptDesignation" maxlength="50" required><div class="ta-err"></div></div>
+        </div>
+        <div class="ta-sig" data-sig="acceptSignature">
+          <div class="ta-legend ta-req">Signature</div>
+          <div class="ta-sig-box"><canvas tabindex="0" aria-label="Draw your signature"></canvas><div class="ta-sig-line"></div><div class="ta-sig-hint">Sign here with your finger or mouse</div><button type="button" class="ta-sig-clear">Clear</button></div>
+          <div class="ta-err"></div>
+        </div>
+
+        <h3>Guarantee <span class="ta-opt" id="ta-guar-flag">(optional)</span></h3>
+        <div class="ta-legal" style="max-height:none">
+          <p>In consideration of Worthy Products Limited agreeing to supply <strong id="ta-guar-company">the customer</strong> (the customer) with products and services on credit, I/We hereby jointly and severally agree with Worthy Products Limited as follows:</p>
+          <p>To guarantee the due performance by the customer of the terms and conditions attached hereto and the payment of any moneys advanced by way of credit to the customer.</p>
+          <p>That this agreement shall be a continuing guarantee to Worthy Products Limited for all debts of the Customer with Worthy Products Limited, in respect of products and services supplied to the customer.</p>
+        </div>
+        <div class="ta-grid" style="margin-top:16px">
+          <div class="ta-field"><label for="ta-guarantorName" data-guar-req>Guarantor name(s)</label><input type="text" id="ta-guarantorName" name="guarantorName" maxlength="100"><div class="ta-err"></div></div>
+          <div class="ta-field"><label for="ta-guarantorPosition" data-guar-req>Position in company</label><input type="text" id="ta-guarantorPosition" name="guarantorPosition" maxlength="60"><div class="ta-err"></div></div>
+        </div>
+        <div class="ta-sig" data-sig="guarantorSignature">
+          <div class="ta-legend" data-guar-req>Guarantor signature</div>
+          <div class="ta-sig-box"><canvas tabindex="0" aria-label="Draw the guarantor signature"></canvas><div class="ta-sig-line"></div><div class="ta-sig-hint">Guarantor signs here</div><button type="button" class="ta-sig-clear">Clear</button></div>
+          <div class="ta-err"></div>
+        </div>
+      </fieldset>
+
+      {%- comment -%} STEP 4 {%- endcomment -%}
+      <fieldset class="ta-step" data-step="4" hidden>
+        <h2>Direct debit authority</h2>
+        <p class="ta-sub">This is a separate authority for your bank. Please read it carefully before signing.</p>
+        <div class="ta-note">Initiator: <strong>WORTHY Products Limited</strong> &nbsp;|&nbsp; Authorisation code: <strong>0241439</strong></div>
+
+        <div class="ta-grid">
+          <div class="ta-field ta-full"><label class="ta-req" for="ta-ddAccountName">My account to be debited (account name)</label><input type="text" id="ta-ddAccountName" name="ddAccountName" maxlength="80" required><div class="ta-err"></div></div>
+          <div class="ta-field ta-full"><label class="ta-req" for="ta-ddBankName">Name of my bank</label><input type="text" id="ta-ddBankName" name="ddBankName" maxlength="60" required><div class="ta-err"></div></div>
+          <div class="ta-field ta-full" data-field="ddNumber">
+            <div class="ta-legend ta-req">Bank account number</div>
+            <div class="ta-bank">
+              <div><input type="text" name="ddBank" inputmode="numeric" maxlength="2" placeholder="00" aria-label="Bank, 2 digits" data-len="2"><small>Bank</small></div>
+              <div><input type="text" name="ddBranch" inputmode="numeric" maxlength="4" placeholder="0000" aria-label="Branch, 4 digits" data-len="4"><small>Branch</small></div>
+              <div class="ta-b-acc"><input type="text" name="ddAccount" inputmode="numeric" maxlength="7" placeholder="0000000" aria-label="Account, 7 digits" data-len="7"><small>Account</small></div>
+              <div class="ta-b-suf"><input type="text" name="ddSuffix" inputmode="numeric" maxlength="3" placeholder="00" aria-label="Suffix, 2 or 3 digits" data-len="3"><small>Suffix</small></div>
+            </div>
+            <div class="ta-err"></div>
+          </div>
+        </div>
+
+        <h3>From the acceptor to my bank</h3>
+        <div class="ta-legal" style="max-height:none">
+          <p>I authorise you to debit my account with the amounts of direct debit instructions received from <strong>WORTHY Products Limited</strong> (the &lsquo;Initiator&rsquo;) with the authorisation code specified on this authority and in accordance with this authority until further notice from me.</p>
+          <p>I agree that this authority is subject to:</p>
+          <ul><li>my bank's terms and conditions that relate to my account, and</li><li>the terms and conditions listed below.</li></ul>
+          <h4>Specific conditions relating to notices and disputes</h4>
+          <ol>
+            <li>I agree that the initiator must give me at least 2 days&rsquo; notice prior to each direct debit, provided that where the direct debit is in a series, the Initiator is only required to provide 2 days&rsquo; notice prior to the first direct debit in the series.</li>
+            <li>Changes to the amounts or dates of a series of direct debits require 30 days&rsquo; prior notice to me.</li>
+            <li>I can also agree with the Initiator to receive a same day notice for direct debits specifically requested by me.</li>
+            <li>All notices must be in writing, but can be delivered electronically, if I have agreed that with the Initiator.</li>
+            <li>I can also ask you to reverse a direct debit up to 120 days after the direct debit if:
+              <ul><li>I didn&rsquo;t receive proper notice of the amount and date of the direct debit, or</li><li>I received notice but the amount or date of the direct debit is different from the amount or date on the notice.</li></ul></li>
+            <li>If you dishonour a direct debit but the Initiator retries it within 5 business days of the original direct debit, I understand that the Initiator doesn&rsquo;t need to notify me again about that direct debit.</li>
+          </ol>
+        </div>
+
+        <div data-field="ddAuthorise">
+          <label class="ta-check"><input type="checkbox" name="ddAuthorise"> <span>I authorise this direct debit and I am authorised to operate this bank account.</span></label>
+          <div class="ta-err"></div>
+        </div>
+
+        <div class="ta-sig" data-sig="ddSignature">
+          <div class="ta-legend ta-req">Authorised signature</div>
+          <div class="ta-sig-box"><canvas tabindex="0" aria-label="Draw the authorised signature"></canvas><div class="ta-sig-line"></div><div class="ta-sig-hint">Sign here with your finger or mouse</div><button type="button" class="ta-sig-clear">Clear</button></div>
+          <div class="ta-err"></div>
+        </div>
+        <label class="ta-check ta-plain" style="margin-top:14px"><input type="checkbox" id="ta-second-sig"> This account needs two signatures</label>
+        <div class="ta-sig" data-sig="ddSignature2" hidden>
+          <div class="ta-legend">Second authorised signature</div>
+          <div class="ta-sig-box"><canvas tabindex="0" aria-label="Draw the second authorised signature"></canvas><div class="ta-sig-line"></div><div class="ta-sig-hint">Second signatory signs here</div><button type="button" class="ta-sig-clear">Clear</button></div>
+          <div class="ta-err"></div>
+        </div>
+      </fieldset>
+
+      <div class="ta-alert" id="ta-alert" role="alert" hidden></div>
+      <div class="ta-nav">
+        <button type="button" class="ta-btn ta-ghost" id="ta-back" hidden>Back</button>
+        <span></span>
+        <button type="button" class="ta-btn" id="ta-next">Continue</button>
+      </div>
+    </form>
+
+    <div class="ta-done" id="ta-done" hidden tabindex="-1">
+      <div class="ta-done-icon">&#10003;</div>
+      <h2>Application sent</h2>
+      <p>Thank you. Your signed Account Application and Direct Debit Authority have been sent to our team, and a copy is on its way to <strong id="ta-done-email"></strong>.</p>
+      <p>One of our friendly team members will be in touch shortly.</p>
+    </div>
+  </div>
+
+  <p class="ta-fallback">
+    Prefer paper? Download the
+    <a href="{{ section.settings.credit_pdf }}" target="_blank" rel="noopener">Account Application Form</a> and the
+    <a href="{{ section.settings.dd_pdf }}" target="_blank" rel="noopener">Direct Debit Form</a>, and email them to {{ section.settings.team_email | escape }}.
+  </p>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById('trade-application');
+  if (!root || root.dataset.ready) return;
+  root.dataset.ready = '1';
+  var form = root.querySelector('#ta-form');
+  var steps = [].slice.call(root.querySelectorAll('.ta-step'));
+  var tabs = [].slice.call(root.querySelectorAll('[data-step-tab]'));
+  var back = root.querySelector('#ta-back'), next = root.querySelector('#ta-next'), alertBox = root.querySelector('#ta-alert');
+  var current = 1, sending = false;
+  var el = function (name) { return form.elements[name]; };
+  var val = function (name) { var e = el(name); return e && typeof e.value === 'string' ? e.value.trim() : ''; };
+
+  /* ---------- signature pads ---------- */
+  var pads = {};
+  [].forEach.call(root.querySelectorAll('[data-sig]'), function (wrap) {
+    var canvas = wrap.querySelector('canvas'), ctx = canvas.getContext('2d');
+    var pad = { wrap: wrap, canvas: canvas, ink: false, box: null };
+    pads[wrap.dataset.sig] = pad;
+    function size() {
+      var r = canvas.getBoundingClientRect();
+      if (!r.width) return;
+      var dpr = Math.max(window.devicePixelRatio || 1, 2);
+      var old = pad.ink ? canvas.toDataURL() : null;
+      canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+      ctx.lineWidth = 2.4 * dpr; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111a4d';
+      if (old) { var im = new Image(); im.onload = function () { ctx.drawImage(im, 0, 0, canvas.width, canvas.height); }; im.src = old; }
+      pad.sized = true;
+    }
+    pad.size = size;
+    function point(ev) {
+      var r = canvas.getBoundingClientRect();
+      return { x: (ev.clientX - r.left) * canvas.width / r.width, y: (ev.clientY - r.top) * canvas.height / r.height };
+    }
+    function grow(p) {
+      var b = pad.box;
+      if (!b) pad.box = { x0: p.x, y0: p.y, x1: p.x, y1: p.y };
+      else { b.x0 = Math.min(b.x0, p.x); b.y0 = Math.min(b.y0, p.y); b.x1 = Math.max(b.x1, p.x); b.y1 = Math.max(b.y1, p.y); }
+    }
+    var last = null;
+    canvas.addEventListener('pointerdown', function (ev) {
+      if (!pad.sized) size();
+      ev.preventDefault();
+      try { canvas.setPointerCapture(ev.pointerId); } catch (e) {}
+      last = point(ev); grow(last);
+      ctx.beginPath(); ctx.arc(last.x, last.y, ctx.lineWidth / 2, 0, Math.PI * 2); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
+      pad.ink = true; wrap.classList.add('has-ink'); wrap.classList.remove('is-bad'); wrap.querySelector('.ta-err').textContent = '';
+    });
+    canvas.addEventListener('pointermove', function (ev) {
+      if (!last) return;
+      ev.preventDefault();
+      var p = point(ev);
+      ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      last = p; grow(p);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (n) { canvas.addEventListener(n, function () { last = null; }); });
+    pad.clear = function () { ctx.clearRect(0, 0, canvas.width, canvas.height); pad.ink = false; pad.box = null; wrap.classList.remove('has-ink'); };
+    wrap.querySelector('.ta-sig-clear').addEventListener('click', pad.clear);
+    /* PNG of just the inked area, so it prints as large as the space on the form allows. */
+    pad.png = function () {
+      if (!pad.ink || !pad.box) return '';
+      var m = ctx.lineWidth * 2, b = pad.box;
+      var x = Math.max(0, Math.floor(b.x0 - m)), y = Math.max(0, Math.floor(b.y0 - m));
+      var w = Math.min(canvas.width - x, Math.ceil(b.x1 - b.x0 + m * 2)), h = Math.min(canvas.height - y, Math.ceil(b.y1 - b.y0 + m * 2));
+      if (w < 12 && h < 12) return '';
+      var scale = Math.min(1, 700 / w), out = document.createElement('canvas');
+      out.width = Math.max(1, Math.round(w * scale)); out.height = Math.max(1, Math.round(h * scale));
+      out.getContext('2d').drawImage(canvas, x, y, w, h, 0, 0, out.width, out.height);
+      return out.toDataURL('image/png');
+    };
+  });
+  var resizeTimer;
+  window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { Object.keys(pads).forEach(function (k) { pads[k].size(); }); }, 200); });
+
+  /* ---------- small conveniences ---------- */
+  var same = root.querySelector('#ta-sameAddress');
+  function syncAddress() { if (same.checked) { el('deliveryAddress').value = el('businessAddress').value; clearError('deliveryAddress'); } el('deliveryAddress').readOnly = same.checked; }
+  same.addEventListener('change', syncAddress);
+  el('businessAddress').addEventListener('input', syncAddress);
+
+  function guaranteeRequired() { return val('companyType') === 'Company'; }
+  function syncGuarantee() {
+    var need = guaranteeRequired();
+    root.querySelector('#ta-guar-flag').textContent = need ? '(required for companies)' : '(optional)';
+    [].forEach.call(root.querySelectorAll('[data-guar-req]'), function (n) { n.classList.toggle('ta-req', need); });
+    root.querySelector('#ta-guar-company').textContent = val('companyName') || 'the customer';
+  }
+  [].forEach.call(form.querySelectorAll('[name=companyType]'), function (r) { r.addEventListener('change', function () { syncGuarantee(); clearError('companyType'); }); });
+
+  var bankInputs = [].slice.call(root.querySelectorAll('.ta-bank input'));
+  bankInputs.forEach(function (input, i) {
+    input.addEventListener('input', function () {
+      input.value = input.value.replace(/\D/g, '');
+      clearError('ddNumber');
+      if (input.value.length >= Number(input.dataset.len) && bankInputs[i + 1]) bankInputs[i + 1].focus();
+    });
+    input.addEventListener('paste', function (ev) {
+      var text = (ev.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      if (text.length < 15) return;
+      ev.preventDefault();
+      var cut = [2, 4, 7, 3], at = 0;
+      bankInputs.forEach(function (b, j) { b.value = text.substr(at, cut[j]); at += cut[j]; });
+    });
+  });
+
+  var second = root.querySelector('#ta-second-sig');
+  second.addEventListener('change', function () {
+    pads.ddSignature2.wrap.hidden = !second.checked;
+    if (second.checked) pads.ddSignature2.size(); else pads.ddSignature2.clear();
+  });
+
+  /* ---------- errors ---------- */
+  function holder(name) {
+    var special = root.querySelector('[data-field="' + name + '"]') || root.querySelector('[data-sig="' + name + '"]');
+    if (special) return special;
+    var e = el(name);
+    return e && e.closest ? e.closest('.ta-field') : null;
+  }
+  function setError(name, message) {
+    var h = holder(name); if (!h) return;
+    h.classList.add('is-bad');
+    var box = h.querySelector('.ta-err'); if (box) box.textContent = message;
+  }
+  function clearError(name) {
+    var h = holder(name); if (!h) return;
+    h.classList.remove('is-bad');
+    var box = h.querySelector('.ta-err'); if (box) box.textContent = '';
+  }
+  form.addEventListener('input', function (ev) { if (ev.target.name) clearError(ev.target.name); });
+  form.addEventListener('change', function (ev) { if (ev.target.name) clearError(ev.target.name); });
+
+  var EMAIL = /^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/;
+  function check(step) {
+    var bad = [];
+    var need = function (name, message) { if (!val(name)) bad.push([name, message]); };
+    var mail = function (name) { if (val(name) && !EMAIL.test(val(name))) bad.push([name, 'Please enter a valid email address']); };
+    if (step === 1) {
+      need('companyName', 'Company name is required');
+      if (!val('companyType')) bad.push(['companyType', 'Please choose a company type']);
+      need('businessAddress', 'Business address is required');
+      need('deliveryAddress', 'Delivery address is required');
+      need('email', 'Email address is required'); mail('email');
+      need('estimatedPurchases', 'Estimated monthly purchases is required');
+    }
+    if (step === 2) {
+      need('contactName', 'Business contact name is required');
+      need('contactMobile', 'Business contact mobile is required');
+      mail('contactEmail'); mail('accountsEmail');
+      need('director1Name', 'At least one director, partner or proprietor is required');
+      need('director1Phone', 'Contact number is required');
+    }
+    if (step === 3) {
+      if (!el('acceptTerms').checked) bad.push(['acceptTerms', 'Please accept the Terms and Conditions of Trade']);
+      need('acceptName', 'Your full name is required');
+      need('acceptDesignation', 'Your designation is required');
+      if (!pads.acceptSignature.png()) bad.push(['acceptSignature', 'Please sign in the box']);
+      var started = val('guarantorName') || val('guarantorPosition') || pads.guarantorSignature.ink;
+      if (guaranteeRequired() || started) {
+        need('guarantorName', 'Guarantor name is required');
+        need('guarantorPosition', 'Position in company is required');
+        if (!pads.guarantorSignature.png()) bad.push(['guarantorSignature', 'Guarantor signature is required']);
+      }
+    }
+    if (step === 4) {
+      need('ddAccountName', 'Account name is required');
+      need('ddBankName', 'Name of your bank is required');
+      if (val('ddBank').length !== 2 || val('ddBranch').length !== 4 || val('ddAccount').length !== 7 || val('ddSuffix').length < 2)
+        bad.push(['ddNumber', 'Please enter the full account number: bank (2), branch (4), account (7), suffix (2 or 3)']);
+      if (!el('ddAuthorise').checked) bad.push(['ddAuthorise', 'Please confirm the direct debit authority']);
+      if (!pads.ddSignature.png()) bad.push(['ddSignature', 'Please sign in the box']);
+      if (second.checked && !pads.ddSignature2.png()) bad.push(['ddSignature2', 'Please add the second signature, or untick the box above']);
+    }
+    bad.forEach(function (b) { setError(b[0], b[1]); });
+    if (bad.length) {
+      var h = holder(bad[0][0]);
+      if (h) { h.scrollIntoView({ behavior: 'smooth', block: 'center' }); var f = h.querySelector('input,canvas'); if (f) try { f.focus({ preventScroll: true }); } catch (e) {} }
+    }
+    return !bad.length;
+  }
+
+  /* ---------- steps ---------- */
+  function show(step, scroll) {
+    current = step;
+    steps.forEach(function (s) { s.hidden = Number(s.dataset.step) !== step; });
+    tabs.forEach(function (t) { var n = Number(t.dataset.stepTab); t.classList.toggle('is-on', n === step); t.classList.toggle('is-done', n < step); });
+    back.hidden = step === 1;
+    next.textContent = step === steps.length ? 'Submit application' : 'Continue';
+    alertBox.hidden = true;
+    syncGuarantee();
+    if (step === 3 && !val('acceptName')) el('acceptName').value = val('contactName');
+    if (step === 4 && !val('ddAccountName')) el('ddAccountName').value = val('companyName');
+    Object.keys(pads).forEach(function (k) { if (!pads[k].wrap.hidden) pads[k].size(); });
+    if (scroll) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  back.addEventListener('click', function () { if (!sending && current > 1) show(current - 1, true); });
+  next.addEventListener('click', function () {
+    if (sending || !check(current)) return;
+    if (current < steps.length) show(current + 1, true); else submit();
+  });
+  form.addEventListener('submit', function (ev) { ev.preventDefault(); });
+  form.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' && ev.target.tagName === 'INPUT' && ev.target.type !== 'checkbox' && ev.target.type !== 'radio') { ev.preventDefault(); next.click(); } });
+
+  /* ---------- send ---------- */
+  var FIELD_STEP = { companyName:1, companyType:1, businessAddress:1, deliveryAddress:1, email:1, estimatedPurchases:1,
+    contactName:2, contactMobile:2, contactEmail:2, accountsEmail:2, director1Name:2, director1Phone:2,
+    acceptTerms:3, acceptName:3, acceptDesignation:3, acceptSignature:3, guarantorName:3, guarantorPosition:3, guarantorSignature:3,
+    ddAccountName:4, ddBankName:4, ddBank:4, ddBranch:4, ddAccount:4, ddSuffix:4, ddAuthorise:4, ddSignature:4 };
+
+  function payload() {
+    var list = function (prefix, keys) { return [1, 2, 3].map(function (i) { var o = {}; keys.forEach(function (k) { o[k.toLowerCase()] = val(prefix + i + k); }); return o; }); };
+    var data = { brand: root.dataset.brand, website: val('website'),
+      directors: list('director', ['Name', 'Phone']), references: list('ref', ['Name', 'Phone', 'Monthly']),
+      acceptTerms: el('acceptTerms').checked, ddAuthorise: el('ddAuthorise').checked,
+      acceptSignature: pads.acceptSignature.png(), guarantorSignature: pads.guarantorSignature.png(),
+      ddSignature: pads.ddSignature.png(), ddSignature2: second.checked ? pads.ddSignature2.png() : '' };
+    ['companyName','tradingName','companyRegNumber','gstNumber','companyType','businessAddress','deliveryAddress','email','estimatedPurchases',
+     'contactName','contactDesignation','contactEmail','contactLandline','contactMobile',
+     'accountsName','accountsDesignation','accountsEmail','accountsLandline','accountsMobile',
+     'acceptName','acceptDesignation','guarantorName','guarantorPosition',
+     'ddAccountName','ddBankName','ddBank','ddBranch','ddAccount','ddSuffix'].forEach(function (k) { data[k] = val(k); });
+    if (data.estimatedPurchases && data.estimatedPurchases.charAt(0) !== '$') data.estimatedPurchases = '$' + data.estimatedPurchases;
+    data.references.forEach(function (r) { if (r.monthly && r.monthly.charAt(0) !== '$') r.monthly = '$' + r.monthly; });
+    return data;
+  }
+
+  function fail(message) { alertBox.textContent = message; alertBox.hidden = false; alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
+  function submit() {
+    sending = true; next.disabled = true; back.disabled = true; next.textContent = 'Sending your application...'; alertBox.hidden = true;
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 90000);
+    var email = val('email');
+    fetch(root.dataset.endpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: JSON.stringify(payload()), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, body: j }; }); })
+      .then(function (res) {
+        if (res.status === 200 && res.body.ok) {
+          form.hidden = true; root.querySelector('.ta-steps').hidden = true;
+          var done = root.querySelector('#ta-done'); root.querySelector('#ta-done-email').textContent = email; done.hidden = false;
+          form.reset(); Object.keys(pads).forEach(function (k) { pads[k].clear(); });
+          root.scrollIntoView({ behavior: 'smooth', block: 'start' }); done.focus({ preventScroll: true });
+          return;
+        }
+        if (res.status === 422 && res.body.errors) {
+          var names = Object.keys(res.body.errors), first = 4;
+          names.forEach(function (n) { first = Math.min(first, FIELD_STEP[n] || 4); });
+          show(first, false);
+          names.forEach(function (n) { setError(/^dd(Bank|Branch|Account|Suffix)$/.test(n) ? 'ddNumber' : n, res.body.errors[n]); });
+          fail('Some details need another look. Please check the highlighted fields.');
+        } else if (res.status === 429) fail('We have received several applications from this connection. Please try again in an hour, or call us.');
+        else fail('Sorry, we could not send your application. Please try again, or use the paper forms below.');
+      })
+      .catch(function () { fail('Sorry, we could not reach our server. Please check your connection and try again.'); })
+      .then(function () { clearTimeout(timer); sending = false; next.disabled = false; back.disabled = false; next.textContent = current === steps.length ? 'Submit application' : 'Continue'; });
+  }
+
+  show(1, false);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Trade application form",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Apply for a trade account" },
+    { "type": "text", "id": "intro", "label": "Intro", "default": "Complete the account application and direct debit authority online. It takes about five minutes, and our team will be in touch shortly." },
+    { "type": "text", "id": "brand", "label": "Brand key", "default": "worthy-products" },
+    { "type": "text", "id": "endpoint", "label": "Form endpoint", "default": "https://dutch-rusk-catalog-manager.onrender.com/api/trade-application" },
+    { "type": "text", "id": "team_email", "label": "Team email (shown for paper forms)", "default": "admin@worthyproducts.nz" },
+    { "type": "url", "id": "credit_pdf", "label": "Account application PDF" },
+    { "type": "url", "id": "dd_pdf", "label": "Direct debit PDF" }
+  ],
+  "presets": [{ "name": "Trade application form" }]
+}
+{% endschema %}
