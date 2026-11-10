@@ -128,7 +128,7 @@
         <div class="ta-grid">
           <div class="ta-field"><label class="ta-req" for="ta-companyName">Company name</label><input type="text" id="ta-companyName" name="companyName" maxlength="120" autocomplete="organization" required><div class="ta-err"></div></div>
           <div class="ta-field"><label for="ta-tradingName">Trading name <span class="ta-opt">(optional)</span></label><input type="text" id="ta-tradingName" name="tradingName" maxlength="80"><div class="ta-err"></div></div>
-          <div class="ta-field"><label for="ta-companyRegNumber">Company registration number <span class="ta-opt">(optional)</span></label><input type="text" id="ta-companyRegNumber" name="companyRegNumber" maxlength="40"><div class="ta-err"></div></div>
+          <div class="ta-field"><label class="ta-req" for="ta-companyRegNumber">Company registration number</label><input type="text" id="ta-companyRegNumber" name="companyRegNumber" maxlength="40" required><div class="ta-err"></div></div>
           <div class="ta-field"><label for="ta-gstNumber">GST registration number <span class="ta-opt">(optional)</span></label><input type="text" id="ta-gstNumber" name="gstNumber" maxlength="40"><div class="ta-err"></div></div>
           <div class="ta-field ta-full" data-field="companyType">
             <div class="ta-legend ta-req" id="ta-ct-label">Company type</div>
@@ -182,11 +182,12 @@
           {%- endfor -%}
         </div>
 
-        <h3>Trade or credit references <span class="ta-opt">(optional)</span></h3>
+        <h3>Trade or credit references</h3>
+        <p class="ta-sub">At least two are required.</p>
         {%- for i in (1..3) -%}
           <div class="ta-grid-3">
-            <div class="ta-field"><label for="ta-ref{{ i }}Name">Supplier {{ i }}</label><input type="text" id="ta-ref{{ i }}Name" name="ref{{ i }}Name" maxlength="100"></div>
-            <div class="ta-field"><label for="ta-ref{{ i }}Phone">Contact number</label><input type="tel" id="ta-ref{{ i }}Phone" name="ref{{ i }}Phone" maxlength="40"></div>
+            <div class="ta-field"><label {% if i < 3 %}class="ta-req"{% endif %} for="ta-ref{{ i }}Name">Supplier {{ i }}{% if i == 3 %} <span class="ta-opt">(optional)</span>{% endif %}</label><input type="text" id="ta-ref{{ i }}Name" name="ref{{ i }}Name" maxlength="100"><div class="ta-err"></div></div>
+            <div class="ta-field"><label {% if i < 3 %}class="ta-req"{% endif %} for="ta-ref{{ i }}Phone">Contact number</label><input type="tel" id="ta-ref{{ i }}Phone" name="ref{{ i }}Phone" maxlength="40"><div class="ta-err"></div></div>
             <div class="ta-field"><label for="ta-ref{{ i }}Monthly">Monthly purchases</label><div class="ta-money"><input type="text" id="ta-ref{{ i }}Monthly" name="ref{{ i }}Monthly" maxlength="30" inputmode="decimal"></div></div>
           </div>
         {%- endfor -%}
@@ -481,6 +482,7 @@
     var mail = function (name) { if (val(name) && !EMAIL.test(val(name))) bad.push([name, 'Please enter a valid email address']); };
     if (step === 1) {
       need('companyName', 'Company name is required');
+      need('companyRegNumber', 'Company registration number is required');
       if (!val('companyType')) bad.push(['companyType', 'Please choose a company type']);
       need('businessAddress', 'Business address is required');
       need('deliveryAddress', 'Delivery address is required');
@@ -493,6 +495,7 @@
       mail('contactEmail'); mail('accountsEmail');
       need('director1Name', 'At least one director, partner or proprietor is required');
       need('director1Phone', 'Contact number is required');
+      [1, 2].forEach(function (i) { need('ref' + i + 'Name', 'Supplier name is required'); need('ref' + i + 'Phone', 'Contact number is required'); });
     }
     if (step === 3) {
       if (!el('acceptTerms').checked) bad.push(['acceptTerms', 'Please accept the Terms and Conditions of Trade']);
@@ -546,8 +549,8 @@
   form.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' && ev.target.tagName === 'INPUT' && ev.target.type !== 'checkbox' && ev.target.type !== 'radio') { ev.preventDefault(); next.click(); } });
 
   /* ---------- send ---------- */
-  var FIELD_STEP = { companyName:1, companyType:1, businessAddress:1, deliveryAddress:1, email:1, estimatedPurchases:1,
-    contactName:2, contactMobile:2, contactEmail:2, accountsEmail:2, director1Name:2, director1Phone:2,
+  var FIELD_STEP = { companyName:1, companyRegNumber:1, companyType:1, businessAddress:1, deliveryAddress:1, email:1, estimatedPurchases:1,
+    contactName:2, contactMobile:2, contactEmail:2, accountsEmail:2, director1Name:2, director1Phone:2, ref1Name:2, ref1Phone:2, ref2Name:2, ref2Phone:2,
     acceptTerms:3, acceptName:3, acceptDesignation:3, acceptSignature:3, guarantorName:3, guarantorPosition:3, guarantorSignature:3,
     ddAccountName:4, ddBankName:4, ddBank:4, ddBranch:4, ddAccount:4, ddSuffix:4, ddAuthorise:4, ddSignature:4 };
 
