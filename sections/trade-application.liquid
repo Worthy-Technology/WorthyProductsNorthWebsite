@@ -74,8 +74,12 @@
   .ta-alert[hidden] { display:none; }
   .ta-done { text-align:center; padding:24px 8px; }
   .ta-done-icon { width:64px; height:64px; border-radius:50%; background:#e6f5ec; color:#1e8e4e; font-size:34px; line-height:64px; margin:0 auto 16px; }
-  .ta-fallback { margin:20px 0 0; font-size:14px; color:var(--ta-muted); text-align:center; }
-  .ta-fallback a { color:var(--ta-blue); text-decoration:underline; }
+  .ta-fallback { margin:28px 0 0; padding-top:24px; border-top:1px solid var(--ta-line); font-size:15px; color:var(--ta-muted); text-align:center; }
+  .ta-fallback p { margin:0 0 14px; }
+  .ta-fallback a:not(.ta-btn) { color:var(--ta-blue); text-decoration:underline; }
+  .ta-fallback-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .ta-fallback-btns .ta-btn { display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-size:15px; padding:0 20px; text-align:center; }
+  .ta-fallback-btns .ta-btn:hover { background:var(--ta-tint); }
   .ta-ac { position:relative; }
   .ta-ac-list { position:absolute; z-index:30; left:0; right:0; top:calc(100% + 4px); margin:0; padding:6px; list-style:none; background:#fff; border:1px solid var(--ta-line); border-radius:8px; box-shadow:0 8px 24px rgba(20,30,60,.14); max-height:280px; overflow:auto; }
   .ta-ac-list[hidden] { display:none; }
@@ -330,11 +334,13 @@
     </div>
   </div>
 
-  <p class="ta-fallback">
-    Prefer paper? Download the
-    <a href="{{ section.settings.credit_pdf }}" target="_blank" rel="noopener">Account Application Form</a> and the
-    <a href="{{ section.settings.dd_pdf }}" target="_blank" rel="noopener">Direct Debit Form</a>, and email them to {{ section.settings.team_email | escape }}.
-  </p>
+  <div class="ta-fallback">
+    <p>Prefer to fill in the paper forms? Download them here and email them to <a href="mailto:{{ section.settings.team_email | escape }}">{{ section.settings.team_email | escape }}</a>.</p>
+    <div class="ta-fallback-btns">
+      <a class="ta-btn ta-ghost" href="{{ section.settings.credit_pdf }}" target="_blank" rel="noopener">Download Account Application Form (PDF)</a>
+      <a class="ta-btn ta-ghost" href="{{ section.settings.dd_pdf }}" target="_blank" rel="noopener">Download Direct Debit Form (PDF)</a>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -586,7 +592,7 @@
           names.forEach(function (n) { setError(/^dd(Bank|Branch|Account|Suffix)$/.test(n) ? 'ddNumber' : n, res.body.errors[n]); });
           fail('Some details need another look. Please check the highlighted fields.');
         } else if (res.status === 429) fail('We have received several applications from this connection. Please try again in an hour, or call us.');
-        else fail('Sorry, we could not send your application. Please try again, or use the paper forms below.');
+        else fail('Sorry, we could not send your application. Please try again, or use the PDF forms below.');
       })
       .catch(function () { fail('Sorry, we could not reach our server. Please check your connection and try again.'); })
       .then(function () { clearTimeout(timer); sending = false; next.disabled = false; back.disabled = false; next.textContent = current === steps.length ? 'Submit application' : 'Continue'; });
@@ -673,7 +679,7 @@
 {
   "name": "Trade application form",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Apply for a trade account" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Apply for a wholesale account" },
     { "type": "text", "id": "intro", "label": "Intro", "default": "Complete the account application and direct debit authority online. It takes about five minutes, and our team will be in touch shortly." },
     { "type": "text", "id": "brand", "label": "Brand key", "default": "worthy-products" },
     { "type": "text", "id": "endpoint", "label": "Form endpoint", "default": "https://dutch-rusk-catalog-manager.onrender.com/api/trade-application" },

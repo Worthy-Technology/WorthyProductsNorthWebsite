@@ -16,7 +16,7 @@
     "trade_application": {
       "type": "trade-application",
       "settings": {
-        "heading": "Apply for a trade account",
+        "heading": "Apply for a wholesale account",
         "intro": "Complete the account application and direct debit authority online. It takes about five minutes, and our team will be in touch shortly.",
         "brand": "worthy-products",
         "endpoint": "https://dutch-rusk-catalog-manager.onrender.com/api/trade-application",
