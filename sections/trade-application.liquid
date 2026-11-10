@@ -76,6 +76,13 @@
   .ta-done-icon { width:64px; height:64px; border-radius:50%; background:#e6f5ec; color:#1e8e4e; font-size:34px; line-height:64px; margin:0 auto 16px; }
   .ta-fallback { margin:20px 0 0; font-size:14px; color:var(--ta-muted); text-align:center; }
   .ta-fallback a { color:var(--ta-blue); text-decoration:underline; }
+  .ta-ac { position:relative; }
+  .ta-ac-list { position:absolute; z-index:30; left:0; right:0; top:calc(100% + 4px); margin:0; padding:6px; list-style:none; background:#fff; border:1px solid var(--ta-line); border-radius:8px; box-shadow:0 8px 24px rgba(20,30,60,.14); max-height:280px; overflow:auto; }
+  .ta-ac-list[hidden] { display:none; }
+  .ta-ac-list li { padding:11px 12px; border-radius:6px; cursor:pointer; font-size:15px; line-height:1.35; }
+  .ta-ac-list li small { display:block; color:var(--ta-muted); font-size:13px; }
+  .ta-ac-list li.is-active, .ta-ac-list li:hover { background:var(--ta-tint); }
+  .ta-ac-by { padding:6px 12px 2px; font-size:11px; color:var(--ta-muted); text-align:right; }
   .ta-hp { position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden; }
   @media (max-width:640px) {
     .ta { padding:16px 12px 40px; }
@@ -95,7 +102,7 @@
   }
 </style>
 
-<div class="ta" id="trade-application" data-endpoint="{{ section.settings.endpoint | escape }}" data-brand="{{ section.settings.brand | escape }}">
+<div class="ta" id="trade-application" data-endpoint="{{ section.settings.endpoint | escape }}" data-brand="{{ section.settings.brand | escape }}" data-maps-key="{{ section.settings.google_maps_key | escape }}">
   <h1>{{ section.settings.heading | escape }}</h1>
   <p class="ta-intro">{{ section.settings.intro | escape }}</p>
 
@@ -129,9 +136,9 @@
             </div>
             <div class="ta-err"></div>
           </div>
-          <div class="ta-field ta-full"><label class="ta-req" for="ta-businessAddress">Business address</label><input type="text" id="ta-businessAddress" name="businessAddress" maxlength="200" autocomplete="street-address" required><div class="ta-err"></div></div>
+          <div class="ta-field ta-full"><label class="ta-req" for="ta-businessAddress">Business address</label><div class="ta-ac"><input type="text" id="ta-businessAddress" name="businessAddress" maxlength="200" autocomplete="street-address" data-address required></div><div class="ta-err"></div></div>
           <div class="ta-field ta-full">
-            <label class="ta-req" for="ta-deliveryAddress">Delivery address</label><input type="text" id="ta-deliveryAddress" name="deliveryAddress" maxlength="200" required><div class="ta-err"></div>
+            <label class="ta-req" for="ta-deliveryAddress">Delivery address</label><div class="ta-ac"><input type="text" id="ta-deliveryAddress" name="deliveryAddress" maxlength="200" data-address required></div><div class="ta-err"></div>
             <label class="ta-check ta-plain"><input type="checkbox" id="ta-sameAddress"> Same as business address</label>
           </div>
           <div class="ta-field"><label class="ta-req" for="ta-email">Email address</label><input type="email" id="ta-email" name="email" maxlength="120" autocomplete="email" inputmode="email" required><div class="ta-err"></div></div>
@@ -585,6 +592,79 @@
       .then(function () { clearTimeout(timer); sending = false; next.disabled = false; back.disabled = false; next.textContent = current === steps.length ? 'Submit application' : 'Continue'; });
   }
 
+  /* ---------- Google address lookup (only when a Maps key is set) ----------
+     Any failure leaves the address boxes as plain text fields. */
+  function addressLookup() {
+    var key = root.dataset.mapsKey;
+    if (!key) return;
+    window.__taMapsReady = function () {
+      var places = window.google && google.maps && google.maps.places;
+      if (!places || !places.AutocompleteSuggestion) return;
+      [].forEach.call(root.querySelectorAll('input[data-address]'), function (input) { attach(input, places); });
+    };
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&loading=async&v=weekly&region=NZ&callback=__taMapsReady';
+    document.head.appendChild(s);
+  }
+  function attach(input, places) {
+    var list = document.createElement('ul');
+    list.className = 'ta-ac-list'; list.hidden = true; list.setAttribute('role', 'listbox');
+    input.parentNode.appendChild(list);
+    input.setAttribute('autocomplete', 'off'); input.setAttribute('role', 'combobox'); input.setAttribute('aria-autocomplete', 'list');
+    var token = null, timer = null, seq = 0, items = [], active = -1;
+    function close() { list.hidden = true; list.innerHTML = ''; items = []; active = -1; }
+    function mark(i) { active = i; [].forEach.call(list.querySelectorAll('li'), function (li, j) { li.classList.toggle('is-active', j === i); }); }
+    function choose(i) {
+      var p = items[i]; if (!p) return;
+      var fallback = p.text && p.text.text ? p.text.text : input.value;
+      close();
+      var place = p.toPlace();
+      place.fetchFields({ fields: ['formattedAddress'] }).then(function () {
+        set(place.formattedAddress || fallback);
+      }).catch(function () { set(fallback); });
+      token = null;
+    }
+    function set(text) {
+      input.value = String(text).replace(/,\s*New Zealand$/i, '');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      close();
+    }
+    function search() {
+      var q = input.value.trim(), mine = ++seq;
+      if (q.length < 4 || input.readOnly) { close(); return; }
+      if (!token) token = new places.AutocompleteSessionToken();
+      places.AutocompleteSuggestion.fetchAutocompleteSuggestions({ input: q, includedRegionCodes: ['nz'], sessionToken: token })
+        .then(function (res) {
+          if (mine !== seq || document.activeElement !== input) return;
+          items = (res.suggestions || []).map(function (x) { return x.placePrediction; }).filter(Boolean).slice(0, 5);
+          list.innerHTML = '';
+          items.forEach(function (p, i) {
+            var li = document.createElement('li'); li.setAttribute('role', 'option');
+            var main = p.mainText && p.mainText.text ? p.mainText.text : (p.text ? p.text.text : '');
+            var sub = p.secondaryText && p.secondaryText.text ? p.secondaryText.text : '';
+            li.appendChild(document.createTextNode(main));
+            if (sub) { var sm = document.createElement('small'); sm.textContent = sub; li.appendChild(sm); }
+            li.addEventListener('mousedown', function (ev) { ev.preventDefault(); choose(i); });
+            list.appendChild(li);
+          });
+          if (items.length) { var by = document.createElement('div'); by.className = 'ta-ac-by'; by.textContent = 'powered by Google'; list.appendChild(by); }
+          list.hidden = !items.length; active = -1;
+        })
+        .catch(function () { close(); });
+    }
+    input.addEventListener('input', function (ev) { if (!ev.isTrusted) return; clearTimeout(timer); timer = setTimeout(search, 250); });
+    input.addEventListener('keydown', function (ev) {
+      if (list.hidden) return;
+      if (ev.key === 'ArrowDown') { ev.preventDefault(); mark(Math.min(active + 1, items.length - 1)); }
+      else if (ev.key === 'ArrowUp') { ev.preventDefault(); mark(Math.max(active - 1, 0)); }
+      else if (ev.key === 'Enter' && active >= 0) { ev.preventDefault(); ev.stopPropagation(); choose(active); }
+      else if (ev.key === 'Escape') close();
+    });
+    input.addEventListener('blur', function () { setTimeout(close, 150); });
+  }
+  try { addressLookup(); } catch (e) {}
+
   show(1, false);
 })();
 </script>
@@ -598,6 +678,7 @@
     { "type": "text", "id": "brand", "label": "Brand key", "default": "worthy-products" },
     { "type": "text", "id": "endpoint", "label": "Form endpoint", "default": "https://dutch-rusk-catalog-manager.onrender.com/api/trade-application" },
     { "type": "text", "id": "team_email", "label": "Team email (shown for paper forms)", "default": "admin@worthyproducts.nz" },
+    { "type": "text", "id": "google_maps_key", "label": "Google Maps key (address lookup)", "info": "Needs Maps JavaScript API and Places API (New). Leave blank to switch address lookup off." },
     { "type": "url", "id": "credit_pdf", "label": "Account application PDF" },
     { "type": "url", "id": "dd_pdf", "label": "Direct debit PDF" }
   ],
