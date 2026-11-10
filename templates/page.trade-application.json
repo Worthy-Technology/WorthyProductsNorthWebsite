@@ -21,6 +21,7 @@
         "brand": "worthy-products",
         "endpoint": "https://dutch-rusk-catalog-manager.onrender.com/api/trade-application",
         "team_email": "admin@worthyproducts.nz",
+        "google_maps_key": "AIzaSyDCfDMFTFjAuvaf3pN0OrC4W2KDyLir-rQ",
         "credit_pdf": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/Account_Request_Form_Worthy_Products_f64aaa77-0e4b-484d-a849-d11c8bf3a5e4.pdf?v=1793136132",
         "dd_pdf": "https://cdn.shopify.com/s/files/1/0530/2176/9881/files/DD_Form_Worthy_Products_924cc8ce-4b7b-407d-906f-6f8f74c4cfb6.pdf?v=1793136132"
       }
