@@ -252,11 +252,56 @@
         "show_time_night": true,
         "heading_tag": "h3"
       }
+    },
+    "rich_text_browse": {
+      "type": "rich-text",
+      "blocks": {
+        "buttons_browse": {
+          "type": "buttons",
+          "settings": {
+            "button_text_size": "t5",
+            "button_label_1": "Browse the range",
+            "button_link_1": "shopify://collections/all",
+            "button_style_1": "primary",
+            "button_style_1_show_arrow": true,
+            "button_style_1_show_gradient_border": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary",
+            "button_style_2_show_arrow": true,
+            "button_style_2_show_gradient_border": false
+          }
+        }
+      },
+      "block_order": [
+        "buttons_browse"
+      ],
+      "name": "Browse the range",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_max_width": "m",
+        "desktop_content_alignment": "center",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "container_color_scheme": "",
+        "show_content_shadow": false,
+        "line_separator": "",
+        "top_padding": "pt-s",
+        "bottom_padding": "pb-s",
+        "visibility": "",
+        "hide_when_empty": false,
+        "show_at_specific_time_of_day": false,
+        "show_time_morning": true,
+        "show_time_afternoon": true,
+        "show_time_evening": true,
+        "show_time_night": true
+      }
     }
   },
   "order": [
     "breadcrumbs",
     "main",
+    "rich_text_browse",
     "rich_text_3wjwRH",
     "contact_form_PJxtT9"
   ]
