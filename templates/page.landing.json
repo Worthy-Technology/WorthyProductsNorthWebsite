@@ -99,7 +99,12 @@
         "view_all_text_size": "t3",
         "color_scheme": "",
         "heading_tag": "h1"
-      }
+      },
+      "custom_css": [
+        ".page-width--narrow {max-width: 96rem;}",
+        "h1 {font-size: clamp(2.8rem, 1.6vw + 2rem, 4rem); line-height: 1.2; margin: 0 0 1.6rem;}",
+        "h2 {font-size: clamp(2.2rem, 0.8vw + 1.8rem, 2.8rem); line-height: 1.25; margin: 2.8rem 0 1.2rem;}"
+      ]
     },
     "contact_form_PJxtT9": {
       "type": "contact-form",
@@ -286,7 +291,7 @@
         "container_color_scheme": "",
         "show_content_shadow": false,
         "line_separator": "",
-        "top_padding": "pt-s",
+        "top_padding": "pt-0",
         "bottom_padding": "pb-s",
         "visibility": "",
         "hide_when_empty": false,
