@@ -691,15 +691,20 @@ document.addEventListener('click', function (e) {
 {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "https://worthyproducts.nz/#organization",
   "name": "Worthy Products",
-  "alternateName": ["Dutch Rusk", "V J Trading", "Worthy", "Worthy Oceania"],
+  "legalName": "Worthy Products Limited",
+  "alternateName": ["V J Trading", "Worthy Products NZ"],
   "url": "https://worthyproducts.nz",
   "logo": "https://worthyproducts.nz/cdn/shop/files/Worthy_Products_Logo.png",
-  "description": "New Zealand wholesale distributor supplying confectionery, beverages, grocery, health and beauty products to 3,000+ NZ dairies, petrol stations, supermarkets, convenience stores and school canteens. Operating from Auckland, we are the exclusive NZ distributor for H2 Coco, Riclan, Lava Lush and Fararelle.",
-  "telephone": "+6495804110",
+  "description": "New Zealand wholesale distributor supplying confectionery, beverages, grocery, health and beauty products to 3,000+ NZ dairies, petrol stations, supermarkets, convenience stores and school canteens. Operating from Auckland, we are the exclusive NZ distributor for H2 Coco, Riclan, Lava Lush and Ferrarelle.",
+  "telephone": "+64 9 580 4110",
+  "email": "admin@worthyproducts.nz",
   "address": {
     "@type": "PostalAddress",
+    "streetAddress": "28 Frost Road, Mount Roskill",
     "addressLocality": "Auckland",
+    "postalCode": "1041",
     "addressCountry": "NZ"
   },
   "areaServed": "NZ",
@@ -713,10 +718,40 @@ document.addEventListener('click', function (e) {
     "@type": "Organization",
     "name": "Worthy Group",
     "alternateName": "Worthy Oceania",
+    "url": "https://worthy.nz",
     "sameAs": "https://www.linkedin.com/company/worthynz/"
   }
 }
 </script>
+{%- if request.page_type == 'index' or template.suffix == 'contact' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WholesaleStore",
+  "@id": "https://worthyproducts.nz/#store",
+  "name": "Worthy Products",
+  "url": "https://worthyproducts.nz",
+  "image": "https://worthyproducts.nz/cdn/shop/files/Worthy_Products_Logo.png",
+  "telephone": "+64 9 580 4110",
+  "email": "admin@worthyproducts.nz",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "28 Frost Road, Mount Roskill",
+    "addressLocality": "Auckland",
+    "postalCode": "1041",
+    "addressCountry": "NZ"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": "08:00",
+    "closes": "16:30"
+  }],
+  "areaServed": "NZ",
+  "parentOrganization": { "@id": "https://worthyproducts.nz/#organization" }
+}
+</script>
+{%- endif -%}
 </head>
 
   <body class="{{ request.page_type | handleize }}-template page-{{ request.path | handleize | default: 'index' }}{% if template.suffix != blank %} {{ template.suffix | handleize }}-template-suffix{% endif %} gradient button--hover-{{ settings.animations_hover_buttons }}{% if settings.drawer_inset %} side-drawers-inset{% endif %} page-is-loading page-is-not-idle" data-lazy-load-js="{{ settings.lazy_load_js }}">
