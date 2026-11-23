@@ -1,0 +1,67 @@
+# Worthy Products — wholesale confectionery, drinks, grocery and health and beauty for New Zealand stores
+
+> Worthy Products is a New Zealand wholesale (FMCG) distributor based in Auckland. It supplies dairies, petrol and service stations, supermarkets, convenience stores, pharmacies, cinemas and school canteens with confectionery, beverages, grocery, health and beauty, cleaning, stationery, lighters, cables and batteries. It is part of the Worthy group (worthy.nz).
+
+## Key facts
+
+- Legal name: Worthy Products Limited. Former trading name: V J Trading.
+- Business type: wholesale distributor for retailers and other businesses across New Zealand.
+- Warehouse and office: 28 Frost Road, Mount Roskill, Auckland 1041, New Zealand.
+- Phone: +64 9 580 4110. Email: admin@worthyproducts.nz
+- Hours: Monday to Friday, 8:00am to 4:30pm (New Zealand time). Closed weekends.
+- South Island: Dutch Rusk (dutchrusk.co.nz) is the South Island branch of Worthy Products, based in Christchurch.
+- Exclusive New Zealand distributor for H2 Coco, Riclan, Lava Lush and Ferrarelle.
+- Supplies more than 3,000 New Zealand stores.
+
+## How a business buys from Worthy Products
+
+1. Apply for a wholesale account: {{ agents.store_url }}/pages/wholesale-inquiries
+2. Once approved, sign in at {{ agents.store_url }} and order online. Orders placed before 10am are usually dispatched the same day.
+3. Questions: {{ agents.store_url }}/pages/contact or +64 9 580 4110.
+
+## Useful pages
+
+- Confectionery: {{ agents.store_url }}/collections/confectionery
+- Beverages: {{ agents.store_url }}/collections/beverages
+- Grocery: {{ agents.store_url }}/collections/grocery
+- Health and beauty: {{ agents.store_url }}/collections/health-beauty
+- Cleaning: {{ agents.store_url }}/collections/cleaning
+- Lighters: {{ agents.store_url }}/collections/lighters
+- Cables and batteries: {{ agents.store_url }}/collections/cables-batteries
+- Stationery: {{ agents.store_url }}/collections/stationery
+- New arrivals: {{ agents.store_url }}/collections/new-arrivals
+- Clearance: {{ agents.store_url }}/collections/clearance
+- H2 Coco coconut water: {{ agents.store_url }}/collections/h2-coco
+- Riclan: {{ agents.store_url }}/collections/riclan
+- Ferrarelle: {{ agents.store_url }}/collections/ferrarelle-sparkling-water
+- Lava Lush: {{ agents.store_url }}/collections/lava-lush
+- Wholesale for dairies: {{ agents.store_url }}/pages/dairy-wholesale-supplier
+- Wholesale for petrol stations: {{ agents.store_url }}/pages/petrol-station-wholesale-supplier
+- Wholesale for supermarkets: {{ agents.store_url }}/pages/supermarket-wholesale-supplier
+- Wholesale for pharmacies: {{ agents.store_url }}/pages/pharmacy-wholesale-supplier
+- Wholesale distributor Auckland: {{ agents.store_url }}/pages/wholesale-distributor-auckland
+- Brands wanting NZ distribution: {{ agents.store_url }}/pages/sell-with-us
+- Product catalogue: {{ agents.store_url }}/pages/product-catalog
+- FAQs: {{ agents.store_url }}/pages/faq
+- About us: {{ agents.store_url }}/pages/about-us
+- Contact: {{ agents.store_url }}/pages/contact
+- Sitemap: {{ agents.sitemap_url }}
+
+## Commerce Protocol (UCP)
+
+This store implements the Universal Commerce Protocol for agent-driven commerce:
+
+- Discovery: `GET {{ agents.ucp_discovery_url }}`
+- MCP endpoint: `POST {{ agents.mcp_endpoint_url }}`
+
+### Supported UCP versions
+{% for version in agents.ucp_versions %}
+- {{ version }}{% if forloop.first %} (latest stable){% endif %}
+{% endfor %}
+
+## Read-only browsing
+
+- Product JSON: `GET /products/{handle}.json`
+- Sitemap: {{ agents.sitemap_url }}
+
+Prices are in {{ agents.currency }}.
