@@ -426,6 +426,14 @@
   ],
   "description": {{ product.description | strip_html | truncate: 250 | json }},
   "sku": {{ product.selected_or_first_available_variant.sku | default: product.id | json }},
+  {%- assign wp_bc = product.selected_or_first_available_variant.barcode | strip | remove: ' ' -%}
+  {%- assign wp_bc_rest = wp_bc | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' -%}
+  {%- if wp_bc != blank and wp_bc_rest == blank -%}
+  {%- case wp_bc.size -%}
+  {%- when 8, 12, 13, 14 %}
+  "gtin": {{ wp_bc | json }},
+  {%- endcase -%}
+  {%- endif %}
   "brand": {
     "@type": "Brand",
     "name": {{ product.vendor | default: "Worthy Products" | json }}
